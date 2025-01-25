@@ -40,29 +40,29 @@
 
     <div class="flex flex-wrap w-full text-slate-800">
         <div class="relative flex-col justify-center hidden object-center h-screen text-center bg-blue-600 select-none md:flex md:w-1/2">
-           
-            <img class="object-cover w-full h-full rounded-lg" src="https://picsum.photos/1920/1080?grayscale" />
-              
+
+            <img class="object-cover w-full h-full rounded-lg" src="https://picsum.photos/1920/1080?nature" />
+
         </div>
         <div class="flex flex-col w-full h-full md:w-1/2">
             <div class="flex justify-center pt-12 md:justify-start md:pl-12">
                 <a href="#" class="h-10 text-2xl font-bold text-blue-600">
-                    <img class="h-20" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Metallica_wordmark.svg/2560px-Metallica_wordmark.svg.png" alt="">
+                    <img class="h-20" src="https://scontent.ftgz3-1.fna.fbcdn.net/v/t39.30808-6/471994538_928265629507552_4932590000560713296_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH7RvdJ0dSeXs_83x6cgb3n4kvebGX0HqfiS95sZfQep43soHhtXg2kxAxsOTqzYAsHutwFhrxYHBqlyG1IhFT9&_nc_ohc=V1PqoF6SIlIQ7kNvgH1tFRP&_nc_zt=23&_nc_ht=scontent.ftgz3-1.fna&_nc_gid=AVU-NxlVXD5fDeosQyTup0x&oh=00_AYAyrG65ah9N5vmkNaJNEwjYdnEErD79HdhXew5kdrft5w&oe=6797BE69" alt="">
                 </a>
             </div>
             <div class="my-auto mx-auto flex flex-col justify-center px-6 pt-8 md:justify-start lg:w-[28rem]">
-                <p class="text-3xl font-bold text-center dark:text-white md:text-left md:leading-tight">Bienvenido de regreso</p>
+                <p class="text-3xl font-bold dark:text-white md:text-left md:leading-tight">Bienvenidos a Mia Rentas</p>
                 {{-- <p class="mt-6 font-medium text-center md:text-left">
                     Already using wobble?
                     <a href="#" class="font-semibold text-blue-700 whitespace-nowrap">Login here</a>
                 </p> --}}
-            
+
                 <div class="relative flex h-px mt-8 bg-gray-200 place-items-center">
                     <div class="absolute h-6 px-4 text-sm text-center text-gray-500 -translate-x-1/2 bg-white left-1/2">
                         Ingrese sus credenciales</div>
                 </div>
                 <form wire:submit.prevent="login" class="flex flex-col items-stretch pt-3 md:pt-8">
-                   
+
                     <div class="flex flex-col pt-4">
                         <div class="mb-0">
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Correo electrónico
@@ -87,14 +87,14 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </span>
-                      
-                   
+
+
                     </div>
                     @include('partials.message', ['input' => 'password'])
                     <a href="{{ route('forget.password') }}"
                         class="text-gray-600 dark:text-white text-md hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">¿Olvidaste tu contraseña?. Click aquí</a>
                     </div>
-                 
+
                     <button type="submit"
                         class="px-4 py-2 mt-6 text-base font-semibold text-center text-white transition bg-blue-600 rounded-lg shadow-md outline-none ring-blue-500 ring-offset-2 hover:bg-blue-700 focus:ring-2 md:w-32">Ingresar</button>
                 </form>
@@ -107,7 +107,7 @@
     function togglePassword() {
     var passwordInput = document.getElementById('password');
     var toggleBtn = document.querySelector('.toggle-password');
-    
+
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
       toggleBtn.innerHTML = `
@@ -130,6 +130,6 @@
       `;
     }
   }
-  
+
   document.querySelector('.toggle-password').addEventListener('click', togglePassword);
 </script>

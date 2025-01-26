@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-    
+
     {{-- test --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -30,8 +30,10 @@
 
 <body class="antialiased">
     <div>
+        @include('partials.navbar')
         @include('partials.alerts')
-        @yield('content')        
+        @yield('content')
+        @include('partials.footer')
     </div>
     @livewireScripts
 </body>

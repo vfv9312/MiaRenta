@@ -23,7 +23,7 @@
                         <span class="sr-only">Toggle sidebar</span>
                     </button>
                     <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Metallica_wordmark.svg/2560px-Metallica_wordmark.svg.png"
+                        <img src="https://scontent.ftgz3-1.fna.fbcdn.net/v/t39.30808-6/471994538_928265629507552_4932590000560713296_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH7RvdJ0dSeXs_83x6cgb3n4kvebGX0HqfiS95sZfQep43soHhtXg2kxAxsOTqzYAsHutwFhrxYHBqlyG1IhFT9&_nc_ohc=V1PqoF6SIlIQ7kNvgH1tFRP&_nc_zt=23&_nc_ht=scontent.ftgz3-1.fna&_nc_gid=AVU-NxlVXD5fDeosQyTup0x&oh=00_AYAyrG65ah9N5vmkNaJNEwjYdnEErD79HdhXew5kdrft5w&oe=6797BE69"
                             class="mr-3 h-14 dark:hidden" alt="Flowbite Logo" />
 
                     </a>
@@ -262,7 +262,7 @@
                                     d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <span class="ml-3">Orden Servicio</span>
+                            <span class="ml-3">Inventario</span>
                         </a>
                     </li>
 

@@ -12,4 +12,9 @@ class DashBoardController extends Controller
         $section = 1;
         return view('pages.dashboard', compact('section'));
     }
+    public function ubicanos()
+    {
+        $section = 2;
+        return view('pages.dashboard', compact('section'));
+    }
 }

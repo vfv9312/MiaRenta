@@ -25,17 +25,21 @@
     <link rel="stylesheet" href="{{ $css }}" id="css">
     <script src="{{ $js }}" id="js"></script> --}}
     {{-- Agrega aquí tus estilos comunes --}}
+    @stack('css')
     @livewireStyles
 </head>
 
-<body class="antialiased">
-    <div>
+<body class="flex flex-col min-h-screen antialiased">
+
         @include('partials.navbar')
         @include('partials.alerts')
+        <div class="flex-1 mt-20 md:mt-10">
         @yield('content')
+        </div>
         @include('partials.footer')
-    </div>
+
     @livewireScripts
+    @stack('js')
 </body>
 
 </html>

@@ -45,9 +45,9 @@
 
         </div>
         <div class="flex flex-col w-full h-full md:w-1/2">
-            <div class="flex justify-center pt-12 md:justify-start md:pl-12">
-                <a href="#" class="h-10 text-2xl font-bold text-blue-600">
-                    <img class="h-20" src="https://scontent.ftgz3-1.fna.fbcdn.net/v/t39.30808-6/471994538_928265629507552_4932590000560713296_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH7RvdJ0dSeXs_83x6cgb3n4kvebGX0HqfiS95sZfQep43soHhtXg2kxAxsOTqzYAsHutwFhrxYHBqlyG1IhFT9&_nc_ohc=V1PqoF6SIlIQ7kNvgH1tFRP&_nc_zt=23&_nc_ht=scontent.ftgz3-1.fna&_nc_gid=AVU-NxlVXD5fDeosQyTup0x&oh=00_AYAyrG65ah9N5vmkNaJNEwjYdnEErD79HdhXew5kdrft5w&oe=6797BE69" alt="">
+            <div class="flex justify-center pt-12 md:justify-center md:pl-12">
+                <a href="{{route('home')}}" class="h-10 text-2xl font-bold text-blue-600 ">
+                    <img class="h-20" src="{{asset('imagenes/logos/logoprueba2.png')}}" alt="">
                 </a>
             </div>
             <div class="my-auto mx-auto flex flex-col justify-center px-6 pt-8 md:justify-start lg:w-[28rem]">

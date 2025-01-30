@@ -319,9 +319,33 @@
 </div>
 </section>
 
+    <section>
+            <!-- Hero Section -->
+    <div class="relative flex flex-col items-center w-full px-4 py-24 md:flex-row"
+    style="background-image: url('./storage/images/logos/bg_white.svg'); background-size: 200px 200px; background-repeat: repeat; background-position: center;">
+    <div class="relative z-0 flex items-center justify-center w-3/4 mb-8 md:w-1/4 md:mb-0 ">
+        <img src="{{asset('imagenes/logos/logoprueba.jpeg')}}" alt="Logo"
+            class="hidden lg:block w-[500px] md:w-[640px] object-cover lg:rotate-90"">
+    </div>
+    <div class="relative z-10 w-full px-4 mb-8 text-left md:w-4/5 md:px-12 md:mb-0">
+        <h2 class="text-[#8E1205] font-bold text-lg">¡Para tus eventos en Tuxtla Gutierrez!</h2>
+        <h2 class="text-[#8E1205] font-bold text-lg mb-6">Donde cada evento es especial.</h2>
+        <h3 class="text-4xl font-medium text-blue-800 md:text-5xl font-cursive">Mía Renta</h3>
+        <p class="mt-4 text-gray-600">
+Es un negocio familiar de renta de mobiliario que nacio en 2018,
+        </p>
+    </div>
 
-<section class="mt-16 md:mt-10">
-    <h1 class="font-bold text-center">Productos en renta :</h1>
+    <div class="relative z-10 flex justify-center w-full p-6 md:w-1/2 md:justify-end">
+        <div class="w-full max-w-sm overflow-hidden">
+            <img src="{{asset('imagenes/logos/logoprueba.jpeg')}}" alt="logo" class="object-cover w-full h-full">
+        </div>
+    </div>
+</div>
+    </section>
+
+    <section>
+
 
 <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
 <div class="grid gap-4">

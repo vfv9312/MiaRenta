@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', 'DashBoardController@home')->name('home');
 Route::get('ubicanos','DashBoardController@ubicanos')->name('ubicanos');
+Route::get('lista-productos','DashBoardController@lista')->name('lista');
+Route::get('ordena-aqui','DashBoardController@orden')->name('orden');
 
 Route::get('login', 'AuthController@login')->name('login');
 Route::get('forget-password', 'AuthController@showForgetPasswordForm')->name('forget.password');

@@ -18,4 +18,14 @@ class DashBoardController extends Controller
         $section = 2;
         return view('pages.dashboard', compact('section'));
     }
+    public function lista()
+    {
+        $section = 3;
+        return view('pages.dashboard', compact('section'));
+    }
+    public function orden()
+    {
+        $section = 4;
+        return view('pages.dashboard', compact('section'));
+    }
 }

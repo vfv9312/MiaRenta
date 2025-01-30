@@ -5,9 +5,9 @@
             @livewire('dashboard.home')
             @break
         @case(2)
-            
+        @livewire('dashboard.ubicanos')
             @break
         @default
-            
+
     @endswitch
 @endsection

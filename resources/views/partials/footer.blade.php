@@ -6,16 +6,16 @@
     </span>
     <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
         <li>
-            <a href="#" class="hover:underline me-4 md:me-6">Acerca de</a>
+            <a href="{{ route('acerca')}}" class="hover:underline me-4 md:me-6">Acerca de</a>
         </li>
         <li>
-            <a href="#" class="hover:underline me-4 md:me-6">Politica de Privacidad</a>
+            <a href="{{ route('politica')}}" class="hover:underline me-4 md:me-6">Politica de Privacidad</a>
         </li>
         <li>
-            <a href="#" class="hover:underline me-4 md:me-6">Quejas y Reclamaciones</a>
+            <a href="{{ route('reclamacion')}}" class="hover:underline me-4 md:me-6">Reclamaciones</a>
         </li>
         <li>
-            <a href="#" class="hover:underline">Contactanos</a>
+            <a href="{{ route('login')}}" class="hover:underline">iniciar sesiones</a>
         </li>
     </ul>
     </div>

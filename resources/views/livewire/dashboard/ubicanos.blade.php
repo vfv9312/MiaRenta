@@ -31,8 +31,14 @@
 
 </section>
 @push('js')
-        <!-- Agregar el enlace a la API de Google Maps con tu clave de API -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBS3nU26RlzB51oLZcfZuZ3h8sbpfE860k&callback=initMap" async defer></script>
+<script>
+    // Obtener la clave de Google Maps desde la configuración de Laravel
+    const googleMapsApiKey = "{{ config('google.maps_api_key') }}";
+</script>
+
+<!-- Agregar el enlace a la API de Google Maps con la clave dinámica -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('google.maps_api_key') }}&callback=initMap" async defer></script>
+
 <script>
     function initMap() {
         // Definir la ubicación de tu negocio (latitud y longitud)

@@ -13,11 +13,11 @@ class Person extends Model
 
     public function setNamesAttribute($value)
     {
-        $this->attributes['names'] = ucwords(strtolower($value));
+        $this->attributes['nombre'] = ucwords(strtolower($value));
     }
 
     public function setSurnamesAttribute($value)
     {
-        $this->attributes['surnames'] = ucwords(strtolower($value));
+        $this->attributes['apellido'] = ucwords(strtolower($value));
     }
 }

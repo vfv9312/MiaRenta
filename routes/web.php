@@ -15,7 +15,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'DashBoardController@home')->name('home');
 Route::get('ubicanos','DashBoardController@ubicanos')->name('ubicanos');
 Route::get('lista-productos','DashBoardController@lista')->name('lista');
-Route::get('ordena-aqui','DashBoardController@orden')->name('orden');
+Route::get('nosotros','DashBoardController@nosotros')->name('nosotros');
+Route::get('politica','DashBoardController@politica')->name('politica');
+Route::get('reclamacion','DashBoardController@reclamacion')->name('reclamacion');
+Route::get('acerca','DashBoardController@acerca')->name('acerca');
+Route::get('orden','DashBoardController@orden')->name('orden');
+Route::get('no-encontrado','DashBoardController@noencontrado')->name('noencontrado');
+
+// Ruta comodín para manejar rutas no encontradas
+Route::fallback(function () {
+    return redirect()->route('noencontrado'); // Redirige a la ruta con nombre "noencontrado"
+});
 
 Route::get('login', 'AuthController@login')->name('login');
 Route::get('forget-password', 'AuthController@showForgetPasswordForm')->name('forget.password');

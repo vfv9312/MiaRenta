@@ -28,4 +28,29 @@ class DashBoardController extends Controller
         $section = 4;
         return view('pages.dashboard', compact('section'));
     }
+    public function nosotros()
+    {
+        $section = 5;
+        return view('pages.dashboard', compact('section'));
+    }
+    public function politica()
+    {
+        $section = 6;
+        return view('pages.dashboard', compact('section'));
+    }
+    public function reclamacion()
+    {
+        $section = 7;
+        return view('pages.dashboard', compact('section'));
+    }
+    public function acerca()
+    {
+        $section = 8;
+        return view('pages.dashboard', compact('section'));
+    }
+    public function noencontrado()
+    {
+        $section = 0;
+        return view('pages.dashboard', compact('section'));
+    }
 }

@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('colonias_id');
+            $table->unsignedBigInteger('status_id');
+            $table->string('calle');
+            $table->string('entre_calles');
+            $table->text('referencia');
+            $table->point('cordenadas')->nullable();
+            $table->integer('cp')->nullable();
             $table->timestamps();
+            $table->foreign('colonias_id')->references('id')->on('colonias');
+            $table->foreign('status_id')->references('id')->on('status');
         });
     }
 

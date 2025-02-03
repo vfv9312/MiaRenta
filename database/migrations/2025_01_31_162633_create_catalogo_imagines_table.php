@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('catalogo_imagines', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('producto_id');
             $table->timestamps();
+            $table->foreign('status_id')->references('id')->on('status');
+            $table->foreign('producto_id')->references('id')->on('productos');
         });
     }
 

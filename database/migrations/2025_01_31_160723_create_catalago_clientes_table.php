@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('catalago_clientes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('direccion_id');
+            $table->unsignedBigInteger('cliente_id');
+            $table->unsignedBigInteger('status_id');
+            $table->tinyInteger('prioridad');
             $table->timestamps();
+            $table->foreign('direccion_id')->references('id')->on('direcciones');
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('status_id')->references('id')->on('status');
         });
     }
 

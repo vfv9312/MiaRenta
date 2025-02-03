@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('alquileres_productos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('alquiler_id');
+            $table->unsignedBigInteger('Catalogo_precio_id');
+            $table->integer('cantidad');
             $table->timestamps();
+            $table->foreign('alquiler_id')->references('id')->on('alquileres');
+            $table->foreign('Catalogo_precio_id')->references('id')->on('catalago_precios');
         });
     }
 

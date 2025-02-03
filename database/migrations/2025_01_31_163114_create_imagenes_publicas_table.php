@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('imagenes_publicas', function (Blueprint $table) {
             $table->id();
+            $table->string('titulo');
+            $table->string('subtitulo');
+            $table->string('ruta');
+            $table->string('descripcion');
+            $table->enum('tipos_imagenes', ['carrusel', 'ubicacion', 'galeria_inicio'])->default('carrusel');
             $table->timestamps();
         });
     }

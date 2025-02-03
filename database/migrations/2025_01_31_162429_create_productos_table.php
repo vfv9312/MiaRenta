@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('catalago_precios', function (Blueprint $table) {
+        Schema::create('productos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('status_id');
-            $table->unsignedBigInteger('producto_id');
-            $table->decimal('precio', 10, 2); // 10 dígitos en total, 2 después del punto decimal
+            $table->unsignedBigInteger('catalogo_tipo_id');
+            $table->unsignedBigInteger('color_id');
+            $table->string('nombre');
+            $table->integer('cantidad');
+            $table->text('descripcion');
+            $table->tinyInteger('prioridad');
             $table->timestamps();
+            $table->foreign('catalogo_tipo_id')->references('id')->on('catalago_tipos');
             $table->foreign('status_id')->references('id')->on('status');
-            $table->foreign('producto_id')->references('id')->on('productos');
+            $table->foreign('color_id')->references('id')->on('colores');
         });
     }
 
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalago_precios');
+        Schema::dropIfExists('productos');
     }
 };

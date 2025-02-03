@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('_detalles_contacto', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('contacto_data_tipo_id');
+            $table->text('recurso');
             $table->timestamps();
+            $table->foreign('contacto_data_tipo_id')->references('id')->on('contactos_data_tipos');
+            $table->foreign('status_id')->references('id')->on('status');
         });
     }
 

@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('catalago_tipos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('categoria_id');
+            $table->unsignedBigInteger('tipo_id');
             $table->timestamps();
+            $table->foreign('categoria_id')->references('id')->on('categorias');
+            $table->foreign('tipo_id')->references('id')->on('tipos');
         });
     }
 

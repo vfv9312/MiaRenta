@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('apellido');
-            $table->string('INE');
-            $table->string('CURP');
-            $table->string('RFC');
+            $table->string('INE')->nullable();
+            $table->string('CURP')->nullable();
+            $table->string('RFC')->nullable();
             $table->timestamps();
         });
     }

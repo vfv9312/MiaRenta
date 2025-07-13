@@ -31,10 +31,7 @@
 
 </section>
 @push('js')
-<script>
-    // Obtener la clave de Google Maps desde la configuración de Laravel
-    const googleMapsApiKey = "{{ config('google.maps_api_key') }}";
-</script>
+
 
 <!-- Agregar el enlace a la API de Google Maps con la clave dinámica -->
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('google.maps_api_key') }}&callback=initMap" async defer></script>

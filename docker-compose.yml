@@ -1,0 +1,89 @@
+version: "3.7"
+services:
+    # Servicio de la aplicación Laravel (PHP + Node)
+    app:
+        build:
+            args:
+                user: laravel
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: mia-app
+        container_name: mia-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        # Exponemos el puerto 5173 para que Vite (Hot Reload) funcione
+        ports:
+            - "5173:5173"
+        # Sincronizamos tu carpeta actual con la del contenedor
+        volumes:
+            - ./:/var/www
+        networks:
+            - laravel
+
+    # Servidor Web Nginx
+    web:
+        image: nginx:alpine
+        container_name: mia-nginx
+        restart: unless-stopped
+        # Puedes entrar a tu web por el puerto 8080 del navegador
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+        networks:
+            - laravel
+
+    # Base de Datos MySQL 8
+    db:
+        image: mysql:8.0
+        container_name: mia-db
+        restart: unless-stopped
+        # Exponemos el puerto 3306 para usar TablePlus o Sequel Ace desde Mac
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            # Permitimos entrar sin contraseña en desarrollo si así está en el .env
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+        networks:
+            - laravel
+
+    # Herramienta Visual para la Base de Datos (phpMyAdmin)
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: mia-phpmyadmin
+        restart: unless-stopped
+        # Accedes por el puerto 8081 en tu navegador
+        ports:
+            - "8081:80"
+        environment:
+            PMA_HOST: db
+            # Permite loguearse sin escribir contraseña
+            ALLOW_WITHOUT_PASSWORD: "true"
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - laravel
+
+    # Servidor de Caché Redis
+    redis:
+        image: redis:alpine
+        container_name: mia-redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./docker/redis/data:/data
+        networks:
+            - laravel
+
+# Red interna para que todos los contenedores se comuniquen entre ellos
+networks:
+    laravel:
+        driver: bridge

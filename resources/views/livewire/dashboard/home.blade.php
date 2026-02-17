@@ -1,264 +1,305 @@
 <div>
-@push('css')
-<style>
-    .lazy-image {
-        border: 2px solid red; /* Borde rojo antes de cargar */
-    }
-
-    .lazy-image.loaded {
-        border: 2px solid green; /* Borde verde después de cargar */
-    }
-</style>
-@endpush
-@push('js')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const lazyImages = document.querySelectorAll('.lazy-image');
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src; // Carga la imagen
-                    img.classList.add('loaded'); // Agrega la clase "loaded"
-                    observer.unobserve(img); // Deja de observar la imagen
+    @push('css')
+        <style>
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .animate-fadeInUp {
+                animation: fadeInUp 0.8s ease-out forwards;
+            }
+
+            .animate-fadeIn {
+                animation: fadeIn 1s ease-out forwards;
+            }
+
+            .delay-200 {
+                animation-delay: 0.2s;
+            }
+
+            .delay-400 {
+                animation-delay: 0.4s;
+            }
+
+            .delay-600 {
+                animation-delay: 0.6s;
+            }
+
+            .service-card:hover .service-icon {
+                transform: scale(1.1) rotate(5deg);
+            }
+
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+        </style>
+    @endpush
+
+    @push('js')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const lazyImages = document.querySelectorAll('.lazy-image');
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.classList.add('opacity-100');
+                            img.classList.remove('opacity-0');
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+
+                lazyImages.forEach(img => {
+                    img.classList.add('transition-opacity', 'duration-1000', 'opacity-0');
+                    observer.observe(img);
+                });
             });
-        });
+        </script>
+    @endpush
 
-        lazyImages.forEach(img => {
-            observer.observe(img); // Observa cada imagen
-        });
-    });
-</script>
-@endpush
-    {{-- Carrusel de imagenes--}}
-<section>
-    {{-- Carrusel de imagenes--}}
-        <div id="default-carousel" class="relative w-full" data-carousel="slide">
-            <!-- Carousel wrapper -->
-            <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-                <!-- Item 1 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('imagenes/carrusel/FONDO1.webp')}}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                    <!-- Texto 1 -->
-                        <!-- Capa overlay semitransparente -->
-            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div> <
+    {{-- Hero Section --}}
+    <section class="relative h-[80vh] flex items-center justify-center overflow-hidden bg-gray-900">
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('imagenes/carrusel/FONDO1.webp') }}" class="object-cover w-full h-full opacity-60"
+                alt="Mia Renta Hero">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80"></div>
+        </div>
+
+        <div class="container relative z-10 px-6 mx-auto text-center">
+            <span
+                class="inline-block px-4 py-1 mb-4 text-sm font-semibold tracking-wider text-white uppercase bg-blue-600 rounded-full animate-fadeIn">
+                Tuxtla Gutiérrez, Chiapas
+            </span>
+            <h1 class="mb-6 text-5xl font-extrabold text-white md:text-7xl animate-fadeInUp">
+                Mía <span class="text-blue-500">Renta</span>
+            </h1>
+            <p class="max-w-2xl mx-auto mb-10 text-xl text-gray-200 animate-fadeInUp delay-200">
+                Mobiliario elegante y de calidad para que tus festejos sean inolvidables. Mesas, sillas, mantelería y
+                más.
+            </p>
+            <div
+                class="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 animate-fadeInUp delay-400">
+                <a href="#servicios"
+                    class="px-8 py-4 text-lg font-bold text-white transition-all bg-blue-700 rounded-full hover:bg-blue-800 hover:shadow-2xl">
+                    Ver Mobiliario
+                </a>
+                <a href="https://wa.me/message/2FM4OVMRRIMIB1"
+                    class="px-8 py-4 text-lg font-bold text-blue-900 transition-all bg-white rounded-full hover:bg-gray-100">
+                    Contactar Ahora
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- Servicios --}}
+    <section id="servicios" class="py-24 bg-white">
+        <div class="container px-6 mx-auto">
+            <div class="mb-16 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Nuestro Catálogo</h2>
+                <div class="w-20 h-1 mx-auto mt-4 bg-blue-600"></div>
+                <p class="mt-4 text-gray-600">Todo lo que necesitas para tu evento en un solo lugar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <!-- Servicio 1: Sillas -->
+                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
                     <div
-                    class="relative z-10 flex flex-col items-center space-y-6 text-center text-white animate-fade-in">
-                    <p
-                        class="text-lg tracking-widest uppercase delay-100 sm:text-xl md:text-2xl opacity-90 animate-slide-down">
-                        Mia Renta | Renta de mesas, siilas, manteles y mas.
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 text-xl font-bold text-gray-900">Sillas</h3>
+                    <p class="text-gray-600">Tiffany, madera, plástico y acojinadas. Modelos para cada estilo.</p>
+                </div>
+
+                <!-- Servicio 2: Mesas -->
+                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 text-xl font-bold text-gray-900">Mesas</h3>
+                    <p class="text-gray-600">Redondas, cuadradas y tablones para 4, 10 o más invitados.</p>
+                </div>
+
+                <!-- Servicio 3: Mantelería -->
+                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 text-xl font-bold text-gray-900">Mantelería</h3>
+                    <p class="text-gray-600">Manteles, fundas y moños en una amplia gama de colores.</p>
+                </div>
+
+                <!-- Servicio 4: Cristalería -->
+                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                    <div
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="mb-2 text-xl font-bold text-gray-900">Cristalería</h3>
+                    <p class="text-gray-600">Vasos, copas y accesorios premium para tu mesa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Info Section --}}
+    <section class="py-24 bg-gray-50">
+        <div class="container px-6 mx-auto">
+            <div class="flex flex-col items-center gap-12 lg:flex-row">
+                <div class="w-full lg:w-1/2">
+                    <img src="{{ asset('imagenes/logos/logoprueba2.png') }}" class="w-auto h-32 mb-8"
+                        alt="Mia Renta Logo">
+                    <h2 class="mb-6 text-3xl font-bold text-gray-900">Calidad y Servicio en cada Detalle</h2>
+                    <p class="mb-8 text-lg text-gray-600">
+                        En **Mía Renta**, nos especializamos en brindar soluciones de mobiliario para eventos sociales y
+                        corporativos en Tuxtla Gutiérrez. Nuestra prioridad es que tu evento sea perfecto, por eso
+                        ofrecemos equipos mantenidos en excelentes condiciones.
                     </p>
-                    <h1 class="text-4xl font-bold leading-tight delay-200 sm:text-5xl md:text-6xl animate-scale-up">
-                        Bienvenido a <span class="text-[#FFDD57]">Mia Renta</span>
-                    </h1>
-                    <a href="/platillos"
-                        class="text-center py-2 px-6 text-white bg-[#052c8e8c] rounded-full text-lg font-medium shadow-lg hover:scale-105 transition-transform duration-300 hover:bg-[#224ab1af] animate-slide-up delay-300">
-                        Descubre lo que puedes conseguir para tu evento
-                    </a>
-                </div>
-
-                </div>
-                <!-- Item 2 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('imagenes/carrusel/FONDO1.webp')}}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            <!-- Capa overlay semitransparente -->
-            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div> <
-                </div>
-                <!-- Item 3 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('imagenes/carrusel/FONDO1.webp')}}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                    <!-- Capa overlay semitransparente -->
-                    <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div> <
-                </div>
-                <!-- Item 4 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('imagenes/carrusel/FONDO1.webp')}}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                        <!-- Capa overlay semitransparente -->
-                    <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div> <
-                </div>
-                <!-- Item 5 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('imagenes/carrusel/FONDO1.webp')}}" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                    <!-- Capa overlay semitransparente -->
-                    <div class="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div> <
-                </div>
-            </div>
-            <!-- Slider indicators -->
-            <div class="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2 rtl:space-x-reverse">
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-                <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
-            </div>
-            <!-- Slider controls -->
-            <button type="button" class="absolute top-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer start-0 group focus:outline-none" data-carousel-prev>
-                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                    </svg>
-                    <span class="sr-only">Anterior</span>
-                </span>
-            </button>
-            <button type="button" class="absolute top-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer end-0 group focus:outline-none" data-carousel-next>
-                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                    </svg>
-                    <span class="sr-only">Siguiente</span>
-                </span>
-            </button>
-        </div>
-</section>
-{{--Intrucciones--}}
-<section>
-            <!-- Hero Section -->
-        <div class="relative flex flex-col items-center w-full px-4 py-24 md:flex-row"
-        style="background-image: url('./storage/images/logos/bg_white.svg'); background-size: 200px 200px; background-repeat: repeat; background-position: center;">
-
-        <div class="relative z-10 w-full px-4 mb-8 text-left md:w-4/5 md:px-12 md:mb-0">
-        <h2 class="text-[#8E1205] font-bold text-lg">¡Para tus eventos en Tuxtla Gutierrez!</h2>
-        {{-- <h2 class="text-[#8E1205] font-bold text-lg mb-6">🔊Puedes soclicitar una orden aqui!👋🏽.</h2> --}}
-        {{-- <h3 class="text-4xl font-medium text-blue-800 md:text-5xl font-cursive">Mía Renta</h3> --}}
-        <img src="{{asset('imagenes/logos/logoprueba2.png')}}" class="w-auto h-44">
-        <p class="mt-4 text-gray-600">
-            Contamos con :
-        </p>
-        <ul class="pl-5 list-none">
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Mantelería</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Cristalería</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Sillas de madera, plastico y acoginadas</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Mesas cuadradas para 4 personas</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Mesas redondas para 10 personas</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Mesas tablon para 10 personas</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Sillas infantiles de plastico</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Mesas infantiles para 10 niños</li>
-          </ul>
-
-          <h1 class="text-[#8E1205] font-bold text-lg mb-6">Metodos de pago</h1>
-            <div class="flex">
-                <img src="{{asset('imagenes/imagenes/visa.png')}}" class="w-auto h-10 ">
-                <img src="{{asset('imagenes/imagenes/mastercard.png')}}" class="w-auto h-10 ">
-                <img src="{{asset('imagenes/imagenes/amex.png')}}" class="w-auto h-10 ">
-                <img src="{{asset('imagenes/imagenes/efectivo.png')}}" class="w-auto h-10 ">
-                <img src="{{asset('imagenes/imagenes/bitcoin.png')}}" class="w-auto h-10 ">
-            </div>
-          <ul class="pl-5 list-none">
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Efectivo</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Tarjeta de Credito o Debito (AMEX, VISA, MASTERCARD)</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Transferencias</li>
-            <li class="before:content-['✓'] before:text-green-500 before:font-bold before:mr-2">Bitcoin</li>
-          </ul>
-        </div>
-
-
-        <div class="relative z-10 flex justify-center w-full p-6 md:w-1/2 md:justify-end">
-        <div class="w-full max-w-sm overflow-hidden">
-        <!-- From Uiverse.io by Smit-Prajapati card -->
-        <div class="parent">
-            <div class="card">
-                <div class="logo">
-                    <span class="circle circle1"></span>
-                    <span class="circle circle2"></span>
-                    <span class="circle circle3"></span>
-                    <span class="circle circle4"></span>
-                    <span class="circle circle5">
-                        <object data="{{ asset('imagenes/logos/logoprueba3.svg') }}" type="image/svg+xml" class="w-24 h-24">
-                        </object>
-                    </span>
-
-                </div>
-                <div class="glass"></div>
-                <div class="content">
-                    <span class="title">MÍA RENTA</span>
-                    <span class="text">Siguenos en nuestras redes sociales y encuentra promociones</span>
-                </div>
-                <div class="bottom">
-
-                    <div class="social-buttons-container">
-                        <a class="social-button .social-button1" href="https://www.facebook.com/share/1DRiQTMcWF/">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
-                                <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
-                            </svg></a>
-                        <a class="social-button .social-button2" href="https://wa.me/message/2FM4OVMRRIMIB1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
-                                <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
                             </svg>
-                        </a>
-                        <a class="social-button .social-button3" href="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tiktok" viewBox="0 0 16 16">
-                                <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z"/>
+                            <span class="text-gray-700">Entrega Puntual</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
                             </svg>
-                        </a>
+                            <span class="text-gray-700">Equipos Sanitizados</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">Atención Personalizada</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-700">Precios Competitivos</span>
+                        </div>
                     </div>
-                    <div class="view-more">
-                        <button class="view-more-button">
-                        <object data="{{ asset('imagenes/logos/logoprueba3.svg') }}" type="image/svg+xml" class="w-20 h-20">
-                        </button>
-                        </object>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <div class="relative p-1 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-3xl shadow-2xl">
+                        <div class="bg-white p-8 rounded-[1.4rem]">
+                            <h3 class="mb-4 text-2xl font-bold text-gray-900">Aceptamos diversos métodos de pago</h3>
+                            <div class="grid grid-cols-5 gap-4 mb-6">
+                                <img src="{{ asset('imagenes/imagenes/visa.png') }}"
+                                    class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="Visa">
+                                <img src="{{ asset('imagenes/imagenes/mastercard.png') }}"
+                                    class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="Mastercard">
+                                <img src="{{ asset('imagenes/imagenes/amex.png') }}"
+                                    class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="AMEX">
+                                <img src="{{ asset('imagenes/imagenes/efectivo.png') }}"
+                                    class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="Efectivo">
+                                <img src="{{ asset('imagenes/imagenes/bitcoin.png') }}"
+                                    class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="Bitcoin">
+                            </div>
+                            <ul class="space-y-3 text-gray-600">
+                                <li>• Efectivo y Transferencia</li>
+                                <li>• Tarjetas de Crédito y Débito</li>
+                                <li>• Pagos Digitales</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-        </div>
-        </div>
-</section>
+    </section>
 
+    {{-- Galería --}}
+    <section class="py-24 bg-white">
+        <div class="container px-6 mx-auto">
+            <div class="mb-16 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Nuestros Eventos</h2>
+                <div class="w-20 h-1 mx-auto mt-4 bg-blue-600"></div>
+            </div>
 
-{{-- Galería de imágenes --}}
-<section class="mt-16 md:mt-16">
-    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div class="grid gap-4">
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/0.jpeg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/2.jpg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/3.jpg') }}" alt="" loading="lazy">
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+                @foreach ($images as $image)
+                    <div class="overflow-hidden bg-gray-100 rounded-xl group">
+                        <img class="object-cover w-full h-64 transition-transform duration-500 opacity-0 lazy-image group-hover:scale-110"
+                            data-src="{{ asset('imagenes/imagenes/' . $image['src']) }}" alt="{{ $image['alt'] }}">
+                    </div>
+                @endforeach
             </div>
         </div>
-        <div class="grid gap-4">
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/4.jpg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/6.jpg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/5.jpg') }}" alt="" loading="lazy">
-            </div>
-        </div>
-        <div class="grid gap-4">
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/7.jpeg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/8.jpg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/9.jpg') }}" alt="" loading="lazy">
-            </div>
-        </div>
-        <div class="grid gap-4">
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/12.jpg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/10.jpeg') }}" alt="" loading="lazy">
-            </div>
-            <div>
-                <img class="h-auto max-w-full rounded-lg lazy-image" data-src="{{ asset('imagenes/imagenes/11.jpeg') }}" alt="" loading="lazy">
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-<link href="{{ asset('css/card1.css') }}" rel="stylesheet">
+    {{-- Footer / Final CTA --}}
+    <section class="py-20 text-white bg-blue-900">
+        <div class="container px-6 mx-auto text-center">
+            <h2 class="mb-8 text-4xl font-bold">¿Listo para planear tu evento?</h2>
+            <p class="mb-10 text-xl text-blue-100">Contáctanos hoy mismo y solicita una cotización sin compromiso.</p>
+            <div class="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
+                <a href="https://wa.me/message/2FM4OVMRRIMIB1"
+                    class="flex items-center justify-center px-8 py-4 space-x-2 font-bold transition-all bg-green-500 rounded-full hover:bg-green-600">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.025 3.207l-.695 2.54 2.599-.682c.887.484 1.838.74 2.831.741h.005c3.182 0 5.768-2.586 5.769-5.766 0-3.18-2.586-5.766-5.766-5.766zm3.425 8.204c-.145.411-.848.791-1.164.845-.316.054-.606.079-1.39-.241-1.137-.464-2.103-1.423-2.657-2.179-.115-.157-.863-1.15-.863-2.193 0-1.043.545-1.556.738-1.769.193-.213.483-.341.677-.341.194 0 .387.001.554.009.176.008.411-.067.644.492.234.56.797 1.944.866 2.083.069.14.116.302.022.489-.094.187-.142.302-.284.468-.142.166-.299.37-.428.497-.145.142-.296.297-.128.585.168.287.747 1.233 1.602 1.993.708.629 1.303.824 1.59 1.002.287.178.455.152.624-.043.17-.194.721-.84.914-1.129.193-.289.387-.242.645-.145.258.096 1.639.773 1.921.916.282.142.469.213.539.333.071.12.071.696-.074 1.107z" />
+                    </svg>
+                    <span>WhatsApp</span>
+                </a>
+                <a href="https://www.facebook.com/share/1DRiQTMcWF/"
+                    class="flex items-center justify-center px-8 py-4 space-x-2 font-bold transition-all bg-blue-600 rounded-full hover:bg-blue-700">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                    <span>Facebook</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
 </div>
-

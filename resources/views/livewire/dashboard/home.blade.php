@@ -79,37 +79,82 @@
         </script>
     @endpush
 
-    {{-- Hero Section --}}
-    <section class="relative h-[80vh] flex items-center justify-center overflow-hidden bg-gray-900">
-        <div class="absolute inset-0 z-0">
-            <img src="{{ asset('imagenes/carrusel/FONDO1.webp') }}" class="object-cover w-full h-full opacity-60"
-                alt="Mia Renta Hero">
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80"></div>
-        </div>
+    {{-- Hero Section con Carrusel --}}
+    <section id="hero" class="relative h-[80vh] flex items-center justify-center overflow-hidden bg-gray-900"
+        x-data="{
+            activeSlide: 0,
+            slides: @js($slides),
+            next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },
+            prev() { this.activeSlide = (this.activeSlide - 1 + this.slides.length) % this.slides.length },
+            init() { setInterval(() => this.next(), 6000) }
+        }">
+
+        {{-- Slides --}}
+        <template x-for="(slide, index) in slides" :key="index">
+            <div x-show="activeSlide === index" x-transition:enter="transition ease-out duration-1000"
+                x-transition:enter-start="opacity-0 transform scale-105"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-1000" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" class="absolute inset-0 z-0">
+                <img :src="'/' + slide.image" class="object-cover w-full h-full opacity-60" :alt="slide.title">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80"></div>
+            </div>
+        </template>
 
         <div class="container relative z-10 px-6 mx-auto text-center">
-            <span
-                class="inline-block px-4 py-1 mb-4 text-sm font-semibold tracking-wider text-white uppercase bg-blue-600 rounded-full animate-fadeIn">
-                Tuxtla Gutiérrez, Chiapas
-            </span>
-            <h1 class="mb-6 text-5xl font-extrabold text-white md:text-7xl animate-fadeInUp">
-                Mía <span class="text-blue-500">Renta</span>
-            </h1>
-            <p class="max-w-2xl mx-auto mb-10 text-xl text-gray-200 animate-fadeInUp delay-200">
-                Mobiliario elegante y de calidad para que tus festejos sean inolvidables. Mesas, sillas, mantelería y
-                más.
-            </p>
-            <div
-                class="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 animate-fadeInUp delay-400">
-                <a href="#servicios"
-                    class="px-8 py-4 text-lg font-bold text-white transition-all bg-blue-700 rounded-full hover:bg-blue-800 hover:shadow-2xl">
-                    Ver Mobiliario
-                </a>
-                <a href="https://wa.me/message/2FM4OVMRRIMIB1"
-                    class="px-8 py-4 text-lg font-bold text-blue-900 transition-all bg-white rounded-full hover:bg-gray-100">
-                    Contactar Ahora
-                </a>
+            <div class="relative min-h-[400px] flex items-center justify-center">
+                <template x-for="(slide, index) in slides" :key="index">
+                    <div x-show="activeSlide === index" x-transition:enter="transition ease-out duration-700 delay-300"
+                        x-transition:enter-start="opacity-0 translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="absolute inset-0 flex flex-col items-center justify-center py-12">
+
+                        <span
+                            class="inline-block px-4 py-1 mb-6 text-xs font-semibold tracking-wider text-white uppercase bg-blue-600 rounded-full md:text-sm">
+                            Tuxtla Gutiérrez, Chiapas
+                        </span>
+
+                        <h1 class="mb-4 text-3xl font-extrabold text-white md:text-7xl" x-html="slide.title"></h1>
+                        <p class="max-w-2xl mx-auto mb-8 text-lg text-gray-200 md:text-xl" x-text="slide.subtitle"></p>
+
+                        <div
+                            class="flex flex-col justify-center w-full space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                            <a :href="slide.button_link"
+                                class="px-8 py-3 text-base font-bold text-white transition-all bg-blue-700 rounded-full md:py-4 md:text-lg hover:bg-blue-800 hover:shadow-2xl"
+                                x-text="slide.button_text">
+                            </a>
+                            <a href="https://wa.me/message/2FM4OVMRRIMIB1"
+                                class="px-8 py-3 text-base font-bold text-blue-900 transition-all bg-white rounded-full md:py-4 md:text-lg hover:bg-gray-100">
+                                Contactar Ahora
+                            </a>
+                        </div>
+                    </div>
+                </template>
             </div>
+        </div>
+
+        {{-- Controles --}}
+        <button @click="prev()"
+            class="absolute z-20 p-2 text-white transition-all -translate-y-1/2 left-4 top-1/2 hover:bg-white/10 rounded-full">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        <button @click="next()"
+            class="absolute z-20 p-2 text-white transition-all -translate-y-1/2 right-4 top-1/2 hover:bg-white/10 rounded-full">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+
+        {{-- Indicadores --}}
+        <div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 space-x-3">
+            <template x-for="(slide, index) in slides" :key="index">
+                <button @click="activeSlide = index" class="w-3 h-3 rounded-full transition-all"
+                    :class="activeSlide === index ? 'bg-blue-600 w-8' : 'bg-white/50'"></button>
+            </template>
         </div>
     </section>
 

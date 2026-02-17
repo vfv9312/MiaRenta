@@ -31,12 +31,12 @@
 
 <body class="flex flex-col min-h-screen antialiased">
 
-        @include('partials.navbar')
-        @include('partials.alerts')
-        <div class="flex-1 mt-20 md:mt-15">
+    @include('partials.navbar')
+    @include('partials.alerts')
+    <div class="flex-1 mt-20 md:mt-15">
         @yield('content')
-        </div>
-        @include('partials.footer')
+    </div>
+    @include('partials.footer')
 
     @livewireScripts
     @stack('js')

@@ -8,4 +8,12 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    // Configuración para desarrollo local
+    server: {
+        host: true,
+        port: 5173,
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });

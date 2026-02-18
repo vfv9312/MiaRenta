@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{ config('app.name') }}</title>
+    <link rel="icon" href="{{ asset('/storage/Login/new-logo.png') }}" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.6.5/dist/flowbite.min.js"></script>
 
     {{-- test --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,9 +31,9 @@
     @livewireStyles
 </head>
 
-<body class="antialiased dark:bg-slate-950">
+<body class="antialiased dark:bg-dark">
     @include('partials.alerts')
-    @include('partials.sidebar')
+    @yield('content')
     @livewireScripts
 </body>
 

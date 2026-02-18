@@ -6,7 +6,6 @@
         @break
 
         @case(2)
-            @livewire('auth.dashboard')
         @break
 
         @case(3)
@@ -14,7 +13,7 @@
         @break
 
         @case(4)
-            @livewire('auth.forget-password-link',['token' => $token])
+            @livewire('auth.forget-password-link', ['token' => $token])
         @break
 
         @default

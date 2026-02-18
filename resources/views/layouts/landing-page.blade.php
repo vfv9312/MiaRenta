@@ -33,7 +33,7 @@
 
     @include('partials.navbar')
     @include('partials.alerts')
-    <div class="flex-1 mt-20 md:mt-15">
+    <div class="">
         @yield('content')
     </div>
     @include('partials.footer')

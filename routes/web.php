@@ -12,15 +12,16 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', 'DashBoardController@home')->name('home');
-Route::get('ubicanos','DashBoardController@ubicanos')->name('ubicanos');
-Route::get('lista-productos','DashBoardController@lista')->name('lista');
-Route::get('nosotros','DashBoardController@nosotros')->name('nosotros');
-Route::get('politica','DashBoardController@politica')->name('politica');
-Route::get('reclamacion','DashBoardController@reclamacion')->name('reclamacion');
-Route::get('acerca','DashBoardController@acerca')->name('acerca');
-Route::get('orden','DashBoardController@orden')->name('orden');
-Route::get('no-encontrado','DashBoardController@noencontrado')->name('noencontrado');
+Route::get('ubicanos', 'DashBoardController@ubicanos')->name('ubicanos');
+Route::get('lista-productos', 'DashBoardController@lista')->name('lista');
+Route::get('nosotros', 'DashBoardController@nosotros')->name('nosotros');
+Route::get('politica', 'DashBoardController@politica')->name('politica');
+Route::get('reclamacion', 'DashBoardController@reclamacion')->name('reclamacion');
+Route::get('factura', 'DashBoardController@factura')->name('factura');
+Route::get('orden', 'DashBoardController@orden')->name('orden');
+Route::get('no-encontrado', 'DashBoardController@noencontrado')->name('noencontrado');
 
 // Ruta comodín para manejar rutas no encontradas
 Route::fallback(function () {
@@ -35,11 +36,11 @@ Route::get('reset-password/{token}', 'AuthController@showResetPasswordForm')->na
 //     return view('welcome');
 // });
 
-Route::middleware(['auth','status'])->group(function () {
+Route::middleware(['auth', 'status'])->group(function () {
     Route::get('dashboard', 'AuthController@dashboard')->name('dashboard');
-    Route::post('logout','AuthController@logout')->name('logout');
+    Route::post('logout', 'AuthController@logout')->name('logout');
 
     Route::middleware(['role:1'])->group(function () {
-        Route::resource('users','Admin\UserController')->except(['destroy', 'update','store']);
+        Route::resource('users', 'Admin\UserController')->except(['destroy', 'update', 'store']);
     });
 });

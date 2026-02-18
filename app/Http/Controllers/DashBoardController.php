@@ -43,7 +43,7 @@ class DashBoardController extends Controller
         $section = 7;
         return view('pages.dashboard', compact('section'));
     }
-    public function acerca()
+    public function factura()
     {
         $section = 8;
         return view('pages.dashboard', compact('section'));

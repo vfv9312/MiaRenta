@@ -48,9 +48,14 @@
             }
 
             .glass-effect {
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .dark .glass-effect {
+                background: rgba(0, 0, 0, 0.6);
+                border-color: rgba(255, 255, 255, 0.1);
             }
         </style>
     @endpush
@@ -112,7 +117,7 @@
                         class="absolute inset-0 flex flex-col items-center justify-center py-12">
 
                         <span
-                            class="inline-block px-4 py-1 mb-6 text-xs font-semibold tracking-wider text-white uppercase bg-blue-600 rounded-full md:text-sm">
+                            class="inline-block px-4 py-1 mb-6 text-xs font-bold tracking-wider text-white uppercase bg-red-600 rounded-full md:text-sm animate-fadeIn">
                             Tuxtla Gutiérrez, Chiapas
                         </span>
 
@@ -122,11 +127,11 @@
                         <div
                             class="flex flex-col justify-center w-full space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
                             <a :href="slide.button_link"
-                                class="px-8 py-3 text-base font-bold text-white transition-all bg-blue-700 rounded-full md:py-4 md:text-lg hover:bg-blue-800 hover:shadow-2xl"
+                                class="px-8 py-3 text-base font-black text-white transition-all bg-red-600 rounded-full md:py-4 md:text-lg hover:bg-red-700 hover:shadow-2xl hover:shadow-red-500/50"
                                 x-text="slide.button_text">
                             </a>
                             <a href="https://wa.me/message/2FM4OVMRRIMIB1"
-                                class="px-8 py-3 text-base font-bold text-blue-900 transition-all bg-white rounded-full md:py-4 md:text-lg hover:bg-gray-100">
+                                class="px-8 py-3 text-base font-black text-gray-900 transition-all bg-white rounded-full md:py-4 md:text-lg hover:bg-gray-100 hover:scale-105">
                                 Contactar Ahora
                             </a>
                         </div>
@@ -152,132 +157,137 @@
         {{-- Indicadores --}}
         <div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 space-x-3">
             <template x-for="(slide, index) in slides" :key="index">
-                <button @click="activeSlide = index" class="w-3 h-3 rounded-full transition-all"
-                    :class="activeSlide === index ? 'bg-blue-600 w-8' : 'bg-white/50'"></button>
+                <button @click="activeSlide = index" class="w-3 h-3 rounded-full transition-all duration-300"
+                    :class="activeSlide === index ? 'bg-red-600 w-10' : 'bg-white/40'"></button>
             </template>
         </div>
     </section>
 
     {{-- Servicios --}}
-    <section id="servicios" class="py-24 bg-white">
+    <section id="servicios" class="py-24 bg-white dark:bg-black transition-colors duration-300">
         <div class="container px-6 mx-auto">
             <div class="mb-16 text-center">
-                <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Nuestro Catálogo</h2>
-                <div class="w-20 h-1 mx-auto mt-4 bg-blue-600"></div>
-                <p class="mt-4 text-gray-600">Todo lo que necesitas para tu evento en un solo lugar.</p>
+                <h2 class="text-3xl font-black text-gray-900 dark:text-white md:text-5xl">Nuestro Catálogo</h2>
+                <div class="w-24 h-1.5 mx-auto mt-6 bg-red-600 rounded-full"></div>
+                <p class="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Todo lo que necesitas para
+                    que tu evento sea inolvidable, con el respaldo de Mía Renta.</p>
             </div>
 
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 <!-- Servicio 1: Sillas -->
-                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                <div
+                    class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
                     <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
                             </path>
                         </svg>
                     </div>
-                    <h3 class="mb-2 text-xl font-bold text-gray-900">Sillas</h3>
-                    <p class="text-gray-600">Tiffany, madera, plástico y acojinadas. Modelos para cada estilo.</p>
+                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Sillas</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Modelos Tiffany, madera y acojinadas. Confort y
+                        elegancia.</p>
                 </div>
 
                 <!-- Servicio 2: Mesas -->
-                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                <div
+                    class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
                     <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16m-7 6h7"></path>
                         </svg>
                     </div>
-                    <h3 class="mb-2 text-xl font-bold text-gray-900">Mesas</h3>
-                    <p class="text-gray-600">Redondas, cuadradas y tablones para 4, 10 o más invitados.</p>
+                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Mesas</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Variedad en tamaños y formas para cualquier cantidad de
+                        invitados.</p>
                 </div>
 
                 <!-- Servicio 3: Mantelería -->
-                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                <div
+                    class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
                     <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
                             </path>
                         </svg>
                     </div>
-                    <h3 class="mb-2 text-xl font-bold text-gray-900">Mantelería</h3>
-                    <p class="text-gray-600">Manteles, fundas y moños en una amplia gama de colores.</p>
+                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Mantelería</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Colores y texturas que realzan la estética de tu
+                        celebración.</p>
                 </div>
 
                 <!-- Servicio 4: Cristalería -->
-                <div class="p-8 transition-all service-card glass-effect rounded-2xl hover:shadow-xl group">
+                <div
+                    class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
                     <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-transform bg-blue-100 rounded-xl service-icon">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
                             </path>
                         </svg>
                     </div>
-                    <h3 class="mb-2 text-xl font-bold text-gray-900">Cristalería</h3>
-                    <p class="text-gray-600">Vasos, copas y accesorios premium para tu mesa.</p>
+                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Cristalería</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Detalles premium en vasos y copas para un brindis
+                        perfecto.</p>
                 </div>
             </div>
         </div>
     </section>
 
     {{-- Info Section --}}
-    <section class="py-24 bg-gray-50">
+    <section class="py-24 bg-gray-50 dark:bg-zinc-900 overflow-hidden transition-colors duration-300">
         <div class="container px-6 mx-auto">
-            <div class="flex flex-col items-center gap-12 lg:flex-row">
-                <div class="w-full lg:w-1/2">
-                    <img src="{{ asset('imagenes/logos/logoprueba2.png') }}" class="w-auto h-32 mb-8"
-                        alt="Mia Renta Logo">
-                    <h2 class="mb-6 text-3xl font-bold text-gray-900">Calidad y Servicio en cada Detalle</h2>
-                    <p class="mb-8 text-lg text-gray-600">
+            <div class="flex flex-col items-center gap-16 lg:flex-row">
+                <div class="w-full lg:w-1/2 animate-fadeIn">
+                    <img src="{{ asset('imagenes/logos/logoprueba2.png') }}"
+                        class="w-auto h-32 mb-10 dark:invert transition-all duration-500" alt="Mia Renta Logo">
+                    <h2 class="mb-8 text-4xl font-black text-gray-900 dark:text-white leading-tight">Calidad y Servicio
+                        en <span class="text-red-600">cada Detalle</span></h2>
+                    <p class="mb-10 text-xl text-gray-600 dark:text-gray-400">
                         En **Mía Renta**, nos especializamos en brindar soluciones de mobiliario para eventos sociales y
                         corporativos en Tuxtla Gutiérrez. Nuestra prioridad es que tu evento sea perfecto, por eso
                         ofrecemos equipos mantenidos en excelentes condiciones.
                     </p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="flex items-center space-x-3">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span class="text-gray-700">Entrega Puntual</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div
+                            class="flex items-center space-x-4 p-4 bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                            <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300 font-bold">Entrega Puntual</span>
                         </div>
-                        <div class="flex items-center space-x-3">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span class="text-gray-700">Equipos Sanitizados</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span class="text-gray-700">Atención Personalizada</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span class="text-gray-700">Precios Competitivos</span>
+                        <div
+                            class="flex items-center space-x-4 p-4 bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                            <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300 font-bold">Equipos Sanitizados</span>
                         </div>
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2">
-                    <div class="relative p-1 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-3xl shadow-2xl">
-                        <div class="bg-white p-8 rounded-[1.4rem]">
-                            <h3 class="mb-4 text-2xl font-bold text-gray-900">Aceptamos diversos métodos de pago</h3>
+                    <div
+                        class="relative p-1 bg-gradient-to-tr from-red-600 to-black rounded-3xl shadow-2xl overflow-hidden group">
+                        <div class="bg-white dark:bg-black p-10 rounded-[1.4rem] transition-colors duration-300">
+                            <h3 class="mb-6 text-2xl font-black text-gray-900 dark:text-white">Pagos Seguros</h3>
                             <div class="grid grid-cols-5 gap-4 mb-6">
                                 <img src="{{ asset('imagenes/imagenes/visa.png') }}"
                                     class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="Visa">
@@ -290,10 +300,19 @@
                                 <img src="{{ asset('imagenes/imagenes/bitcoin.png') }}"
                                     class="w-auto h-12 grayscale hover:grayscale-0 transition-all" alt="Bitcoin">
                             </div>
-                            <ul class="space-y-3 text-gray-600">
-                                <li>• Efectivo y Transferencia</li>
-                                <li>• Tarjetas de Crédito y Débito</li>
-                                <li>• Pagos Digitales</li>
+                            <ul class="space-y-4 text-gray-600 dark:text-gray-400 font-medium">
+                                <li class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 bg-red-600 rounded-full"></span>
+                                    <span>Efectivo y Transferencia</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 bg-red-600 rounded-full"></span>
+                                    <span>Tarjetas de Crédito y Débito</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 bg-red-600 rounded-full"></span>
+                                    <span>Pagos Digitales</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -303,11 +322,11 @@
     </section>
 
     {{-- Galería --}}
-    <section class="py-24 bg-white">
+    <section class="py-24 bg-white dark:bg-black transition-colors duration-300">
         <div class="container px-6 mx-auto">
             <div class="mb-16 text-center">
-                <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Nuestros Eventos</h2>
-                <div class="w-20 h-1 mx-auto mt-4 bg-blue-600"></div>
+                <h2 class="text-3xl font-black text-gray-900 dark:text-white md:text-5xl">Nuestra Galería</h2>
+                <div class="w-24 h-1.5 mx-auto mt-6 bg-red-600 rounded-full"></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -322,13 +341,18 @@
     </section>
 
     {{-- Footer / Final CTA --}}
-    <section class="py-20 text-white bg-blue-900">
-        <div class="container px-6 mx-auto text-center">
-            <h2 class="mb-8 text-4xl font-bold">¿Listo para planear tu evento?</h2>
-            <p class="mb-10 text-xl text-blue-100">Contáctanos hoy mismo y solicita una cotización sin compromiso.</p>
+    <section class="py-24 text-white bg-black relative overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/40 via-transparent to-transparent opacity-50">
+        </div>
+        <div class="container relative z-10 px-6 mx-auto text-center">
+            <h2 class="mb-8 text-4xl md:text-6xl font-black">¿Listo para tu <span class="text-red-600">próximo
+                    evento?</span></h2>
+            <p class="mb-12 text-xl text-gray-400 max-w-2xl mx-auto">Contáctanos hoy mismo y descubre por qué somos la
+                mejor opción en mobiliario.</p>
             <div class="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
                 <a href="https://wa.me/message/2FM4OVMRRIMIB1"
-                    class="flex items-center justify-center px-8 py-4 space-x-2 font-bold transition-all bg-green-500 rounded-full hover:bg-green-600">
+                    class="flex items-center justify-center px-10 py-5 space-x-3 font-black transition-all bg-[#25D366] rounded-full hover:scale-105 active:scale-95 shadow-xl shadow-green-500/20">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.025 3.207l-.695 2.54 2.599-.682c.887.484 1.838.74 2.831.741h.005c3.182 0 5.768-2.586 5.769-5.766 0-3.18-2.586-5.766-5.766-5.766zm3.425 8.204c-.145.411-.848.791-1.164.845-.316.054-.606.079-1.39-.241-1.137-.464-2.103-1.423-2.657-2.179-.115-.157-.863-1.15-.863-2.193 0-1.043.545-1.556.738-1.769.193-.213.483-.341.677-.341.194 0 .387.001.554.009.176.008.411-.067.644.492.234.56.797 1.944.866 2.083.069.14.116.302.022.489-.094.187-.142.302-.284.468-.142.166-.299.37-.428.497-.145.142-.296.297-.128.585.168.287.747 1.233 1.602 1.993.708.629 1.303.824 1.59 1.002.287.178.455.152.624-.043.17-.194.721-.84.914-1.129.193-.289.387-.242.645-.145.258.096 1.639.773 1.921.916.282.142.469.213.539.333.071.12.071.696-.074 1.107z" />
@@ -336,7 +360,7 @@
                     <span>WhatsApp</span>
                 </a>
                 <a href="https://www.facebook.com/share/1DRiQTMcWF/"
-                    class="flex items-center justify-center px-8 py-4 space-x-2 font-bold transition-all bg-blue-600 rounded-full hover:bg-blue-700">
+                    class="flex items-center justify-center px-10 py-5 space-x-3 font-black transition-all bg-[#1877F2] rounded-full hover:scale-105 active:scale-95 shadow-xl shadow-blue-500/20">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />

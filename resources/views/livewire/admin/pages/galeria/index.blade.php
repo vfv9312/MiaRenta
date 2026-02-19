@@ -1,0 +1,3 @@
+<div>
+    Galeria Index
+</div>

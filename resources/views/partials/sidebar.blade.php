@@ -85,7 +85,7 @@
 
                     <ul class="space-y-2">
                         <li>
-                            <a href="#"
+                            <a href="{{ route('dashboard') }}"
                                 class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <svg aria-hidden="true"
                                     class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -93,7 +93,7 @@
                                     <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                                     <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
                                 </svg>
-                                <span class="ml-3">{{ request()->routeIs('forget-password') }}</span>
+                                <span class="ml-3">Inicio</span>
                             </a>
                         </li>
                         <li>
@@ -117,12 +117,17 @@
                             </button>
                             <ul id="dropdown-pages" class="hidden py-2 space-y-2">
                                 <li>
-                                    <a href="#"
+                                    <a href="{{ route('inicio.index') }}"
                                         class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Inicio</a>
                                 </li>
 
                                 <li>
-                                    <a href="#"
+                                    <a href="{{ route('nosotros.index') }}"
+                                        class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Nosotros</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('factura.index') }}"
                                         class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Facturación</a>
                                 </li>
 
@@ -133,8 +138,9 @@
                                 </li>
 
                                 <li>
-                                    <a href="#"
-                                        class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Ubicanos</a>
+                                    <a href="{{ route('contacto.index') }}"
+                                        class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Redes
+                                        y Contacto</a>
                                 </li>
                             </ul>
                         </li>

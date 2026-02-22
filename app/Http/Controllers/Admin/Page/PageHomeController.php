@@ -13,13 +13,13 @@ class PageHomeController extends Controller
         return view('pages.admin.pages.home', compact('section'));
     }
 
-    public function create(Request $request)
+    public function show()
     {
         $section = 2;
         return view('pages.admin.pages.home', compact('section'));
     }
 
-    public function edit(Request $request, $id)
+    public function catalog()
     {
         $section = 3;
         return view('pages.admin.pages.home', compact('section'));

@@ -30,4 +30,10 @@ class PageHomeController extends Controller
         $section = 4;
         return view('pages.admin.pages.home', compact('section'));
     }
+
+    public function footer()
+    {
+        $section = 5;
+        return view('pages.admin.pages.home', compact('section'));
+    }
 }

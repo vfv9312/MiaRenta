@@ -45,6 +45,7 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::get('admin/inicio/banner', 'Admin\Page\PageHomeController@show')->name('inicio.banner');
         Route::get('admin/inicio/catalogo', 'Admin\Page\PageHomeController@catalog')->name('inicio.catalog');
         Route::get('admin/inicio/galeria', 'Admin\Page\PageHomeController@galery')->name('inicio.galery');
+        Route::get('admin/inicio/footer', 'Admin\Page\PageHomeController@footer')->name('inicio.footer');
         Route::resource('admin/nosotros', 'Admin\Page\PageUsController')->except(['destroy', 'update', 'store']);
         Route::resource('admin/contacto', 'Admin\Page\PageContacController')->except(['destroy', 'update', 'store']);
         Route::resource('admin/factura', 'Admin\Page\PageFacturaController')->except(['destroy', 'update', 'store']);

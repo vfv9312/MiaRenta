@@ -22,7 +22,7 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Banner de Home</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Administra las imágenes y
                         mensajes del carrusel principal que ven tus clientes al entrar.</p>
-                    <a href="{{ route('inicio.banner') }}" wire:navigate
+                    <a href="{{ route('inicio.banner') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-indigo-200 dark:shadow-none">
                         <span>Gestionar Banner</span>
                         <i class="fas fa-arrow-right text-xs"></i>
@@ -44,7 +44,7 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Categorías</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Modifica los textos,
                         títulos y descripciones de las secciones de categorías en el inicio.</p>
-                    <a href="{{ route('inicio.catalog') }}" wire:navigate
+                    <a href="{{ route('inicio.catalog') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-emerald-200 dark:shadow-none">
                         <span>Editar Categorías</span>
                         <i class="fas fa-pen text-xs"></i>
@@ -66,7 +66,7 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Footer del Index</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona la información,
                         enlaces y avisos legales que aparecen en el pie de página.</p>
-                    <a href="#"
+                    <a href="{{ route('inicio.footer') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-amber-200 dark:shadow-none">
                         <span>Gestionar Footer</span>
                         <i class="fas fa-external-link-alt text-xs"></i>
@@ -88,7 +88,7 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Galeria</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona las imagenes de la
                         galeria que aparecen en el pie de página.</p>
-                    <a href="{{ route('inicio.galery') }}" wire:navigate
+                    <a href="{{ route('inicio.galery') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-lime-200 dark:shadow-none">
                         <span>Gestionar Galeria</span>
                         <i class="fas fa-images text-xs"></i>

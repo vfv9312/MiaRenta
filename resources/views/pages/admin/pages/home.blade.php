@@ -17,6 +17,10 @@
             @livewire('admin.pages.home.galery.index')
         @break
 
+        @case(5)
+            @livewire('admin.pages.home.footer.index')
+        @break
+
         @default
     @endswitch
 @endsection

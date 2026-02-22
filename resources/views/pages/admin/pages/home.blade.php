@@ -13,6 +13,10 @@
             @livewire('admin.pages.home.catalog.index')
         @break
 
+        @case(4)
+            @livewire('admin.pages.home.galery.index')
+        @break
+
         @default
     @endswitch
 @endsection

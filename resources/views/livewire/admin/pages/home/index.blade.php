@@ -74,6 +74,28 @@
                 </div>
             </div>
 
+            <!-- Galeria -->
+            <div
+                class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                </div>
+                <div class="p-8">
+                    <div
+                        class="w-14 h-14 bg-lime-100 dark:bg-lime-900/50 rounded-xl flex items-center justify-center mb-6 border border-lime-200 dark:border-lime-800">
+                        <i class="fas fa-camera-retro text-2xl text-lime-600 dark:text-lime-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Galeria</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona las imagenes de la
+                        galeria que aparecen en el pie de página.</p>
+                    <a href="{{ route('inicio.galery') }}" wire:navigate
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-lime-200 dark:shadow-none">
+                        <span>Gestionar Galeria</span>
+                        <i class="fas fa-images text-xs"></i>
+                    </a>
+                </div>
+            </div>
+
             <!-- Otros Apartados (Placeholder) -->
             <div
                 class="group relative bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600 overflow-hidden transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 flex flex-col items-center justify-center p-8 text-center">

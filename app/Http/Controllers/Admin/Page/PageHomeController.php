@@ -24,4 +24,10 @@ class PageHomeController extends Controller
         $section = 3;
         return view('pages.admin.pages.home', compact('section'));
     }
+
+    public function galery()
+    {
+        $section = 4;
+        return view('pages.admin.pages.home', compact('section'));
+    }
 }

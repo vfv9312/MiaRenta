@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Pages\Home\Banner;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\carousel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
@@ -77,9 +78,18 @@ class Index extends Component
             $imagePath = $this->new_imagen->store('carousel', 'public');
             $data['imagen'] = $imagePath;
         }
+        DB::beginTransaction();
+        try {
 
-        carousel::updateOrCreate(['id' => $this->carousel_id], $data);
-        session()->flash('message', $this->carousel_id ? 'Slide actualizado.' : 'Slide creado.');
+            carousel::updateOrCreate(['id' => $this->carousel_id], $data);
+            session()->flash('message', $this->carousel_id ? 'Slide actualizado.' : 'Slide creado.');
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            info($th->getMessage());
+            session()->flash('error', 'Error al actualizar el slide.');
+        }
+
         $this->closeModal();
         $this->loadItems();
     }

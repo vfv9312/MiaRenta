@@ -41,11 +41,12 @@ Route::middleware(['auth', 'status'])->group(function () {
     Route::post('logout', 'AuthController@logout')->name('logout');
 
     Route::middleware(['role:1'])->group(function () {
-        Route::resource('admin/inicio', 'Admin\Page\PageHomeController')->except(['destroy', 'update', 'store']);
+        Route::resource('admin/inicio', 'Admin\Page\PageHomeController')->except(['destroy', 'update', 'store', 'show', 'create', 'edit']);
         Route::resource('admin/nosotros', 'Admin\Page\PageUsController')->except(['destroy', 'update', 'store']);
         Route::resource('admin/contacto', 'Admin\Page\PageContacController')->except(['destroy', 'update', 'store']);
         Route::resource('admin/factura', 'Admin\Page\PageFacturaController')->except(['destroy', 'update', 'store']);
         Route::resource('admin/galeria', 'Admin\Page\PageGaleriaController')->except(['destroy', 'update', 'store']);
+        Route::resource('admin/banner', 'Admin\Page\BannerHomeControlador')->except(['destroy', 'update', 'store']);
         Route::resource('users', 'Admin\UserController')->except(['destroy', 'update', 'store']);
     });
 });

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('contacto_tipo_id');
             $table->string('nombre');
-            $table->string('imagen');
-            $table->string('ruta');
+            $table->string('imagen')->nullable();
+            $table->string('ruta')->nullable();
             $table->timestamps();
             $table->foreign('contacto_tipo_id')->references('id')->on('tipos_contacto');
         });

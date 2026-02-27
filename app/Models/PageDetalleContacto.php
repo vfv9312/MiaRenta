@@ -11,18 +11,13 @@ class PageDetalleContacto extends Model
     protected $table = '_detalles_contacto';
     protected $guarded = [];
 
-    public function catalago()
+    public function catalagoTipo()
     {
-        return $this->belongsTo(PageCatalagoTipo::class);
+        return $this->belongsTo(PageCatalagoTipo::class, 'contacto_data_tipo_id', 'id');
     }
 
-    public function tipo()
+    public function status()
     {
-        return $this->belongsTo(TipoContacto::class);
-    }
-
-    public function categoria()
-    {
-        return $this->belongsTo(Categorias::class);
+        return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 }

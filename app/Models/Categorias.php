@@ -11,14 +11,4 @@ class Categorias extends Model
 
     protected $table = 'categorias';
     protected $guarded = [];
-
-    public function catalago()
-    {
-        return $this->hasMany(PageCatalagoTipo::class);
-    }
-
-    public function tipo()
-    {
-        return $this->hasMany(TipoContacto::class);
-    }
 }

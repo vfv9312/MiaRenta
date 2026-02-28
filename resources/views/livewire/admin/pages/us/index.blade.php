@@ -100,7 +100,7 @@
                                         <img src="{{ $new_history_image->temporaryUrl() }}"
                                             class="w-48 h-48 object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                                     @elseif($history_image)
-                                        <img src="{{ asset('storage/' . $history_image) }}"
+                                        <img src="{{ asset($history_image) }}"
                                             class="w-48 h-48 object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
                                     @else
                                         <div

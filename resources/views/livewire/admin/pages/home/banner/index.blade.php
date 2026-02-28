@@ -46,8 +46,8 @@
                     </div>
                     <div class="absolute top-3 right-3">
                         <span
-                            class="px-2 py-1 text-[10px] font-bold uppercase rounded-md tracking-wider {{ $item->activo ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                            {{ $item->activo ? 'Activo' : 'Inactivo' }}
+                            class="px-2 py-1 text-[10px] font-bold uppercase rounded-md tracking-wider {{ $item->activo == 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                            {{ $item->activo == 1 ? 'Activo' : 'Inactivo' }}
                         </span>
                     </div>
                 </div>

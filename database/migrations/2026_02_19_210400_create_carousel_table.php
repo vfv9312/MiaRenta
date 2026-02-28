@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('imagen');
             $table->string('boton_texto')->nullable();
             $table->string('boton_url')->nullable();
-            $table->boolean('activo')->default(true);
+            $table->unsignedBigInteger('activo')->default(1);
             $table->string('boton_texto_two')->nullable();
             $table->string('boton_url_two')->nullable();
             $table->timestamps();
+            $table->foreign('activo')->references('id')->on('status');;
         });
     }
 

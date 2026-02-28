@@ -33,7 +33,7 @@ class Index extends Component
     //cargar valor del carrusel
     public function loadItems()
     {
-        $this->items = carousel::all();
+        $this->items = carousel::whereIn('activo', [1, 2])->get();
     }
     //abrir modal
     public function create()
@@ -53,7 +53,7 @@ class Index extends Component
         $this->boton_url = $carousel->boton_url;
         $this->boton_texto_two = $carousel->boton_texto_two;
         $this->boton_url_two = $carousel->boton_url_two;
-        $this->activo = (bool)$carousel->activo;
+        $this->activo = $carousel->activo == 1  ? true : false;
         //abro el modal
         $this->isOpen = true;
     }
@@ -62,6 +62,11 @@ class Index extends Component
     {
         $this->validate([
             'titulo' => 'required',
+            'descripcion' => 'required',
+            'boton_texto' => 'nullable',
+            'boton_url' => 'nullable',
+            'boton_texto_two' => 'nullable',
+            'boton_url_two' => 'nullable',
             'new_imagen' => $this->carousel_id ? 'nullable|image|max:2048' : 'required|image|max:2048',
         ]);
 
@@ -72,7 +77,7 @@ class Index extends Component
             'boton_url' => $this->boton_url,
             'boton_texto_two' => $this->boton_texto_two,
             'boton_url_two' => $this->boton_url_two,
-            'activo' => (bool)$this->activo,
+            'activo' => $this->activo ? 1 : 2,
         ];
 
         if ($this->new_imagen) {
@@ -98,7 +103,7 @@ class Index extends Component
     //elimminar banner
     public function delete($id)
     {
-        carousel::find($id)->delete();
+        carousel::find($id)->update(['activo' => 3]);
         session()->flash('message', 'Slide eliminado.');
         $this->loadItems();
     }

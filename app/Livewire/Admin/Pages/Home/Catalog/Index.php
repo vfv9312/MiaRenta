@@ -55,25 +55,25 @@ class Index extends Component
             $this->title_button_one = $catalog->title_button_one;
             $this->text_button_one = $catalog->text_button_one;
             $this->button_url_one = $catalog->button_url_one;
-            $this->status_one = (bool)$catalog->status_one;
+            $this->status_one = $catalog->status_one == 1 ? true : false;
 
             $this->icon_two = $catalog->icon_two;
             $this->title_button_two = $catalog->title_button_two;
             $this->text_button_two = $catalog->text_button_two;
             $this->button_url_two = $catalog->button_url_two;
-            $this->status_two = (bool)$catalog->status_two;
+            $this->status_two = $catalog->status_two == 1 ? true : false;
 
             $this->icon_three = $catalog->icon_three;
             $this->title_button_three = $catalog->title_button_three;
             $this->text_button_three = $catalog->text_button_three;
             $this->button_url_three = $catalog->button_url_three;
-            $this->status_three = (bool)$catalog->status_three;
+            $this->status_three = $catalog->status_three == 1 ? true : false;
 
             $this->icon_four = $catalog->icon_four;
             $this->title_button_four = $catalog->title_button_four;
             $this->text_button_four = $catalog->text_button_four;
             $this->button_url_four = $catalog->button_url_four;
-            $this->status_four = (bool)$catalog->status_four;
+            $this->status_four = $catalog->status_four == 1 ? true : false;
         } else {
             // valores por defecto si no existe el registro
             $this->title = 'Nuestro Catálogo';
@@ -124,25 +124,25 @@ class Index extends Component
                     'title_button_one' => $this->title_button_one,
                     'text_button_one' => $this->text_button_one,
                     'button_url_one' => $this->button_url_one,
-                    'status_one' => $this->status_one,
+                    'status_one' => $this->status_one ? 1 : 2,
 
                     'icon_two' => $this->icon_two,
                     'title_button_two' => $this->title_button_two,
                     'text_button_two' => $this->text_button_two,
                     'button_url_two' => $this->button_url_two,
-                    'status_two' => $this->status_two,
+                    'status_two' => $this->status_two ? 1 : 2,
 
                     'icon_three' => $this->icon_three,
                     'title_button_three' => $this->title_button_three,
                     'text_button_three' => $this->text_button_three,
                     'button_url_three' => $this->button_url_three,
-                    'status_three' => $this->status_three,
+                    'status_three' => $this->status_three ? 1 : 2,
 
                     'icon_four' => $this->icon_four,
                     'title_button_four' => $this->title_button_four,
                     'text_button_four' => $this->text_button_four,
                     'button_url_four' => $this->button_url_four,
-                    'status_four' => $this->status_four,
+                    'status_four' => $this->status_four ? 1 : 2,
                 ]
             );
 

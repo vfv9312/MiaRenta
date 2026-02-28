@@ -45,10 +45,10 @@
         <div class="absolute inset-0 bg-gradient-to-b from-red-900/10 to-transparent"></div>
         <div class="container relative z-10 px-6 mx-auto text-center">
             <h1 class="text-4xl font-black text-white md:text-7xl animate-fadeInUp">
-                Nuestra <span class="text-red-600">Historia</span>
+                {{ $page_nosotros->banner_title }} </span>
             </h1>
             <p class="mt-6 text-xl text-gray-400 max-w-2xl mx-auto animate-fadeInUp delay-200">
-                Más de una década llevando elegancia y compromiso a cada rincón de Tuxtla Gutiérrez.
+                {{ $page_nosotros->banner_subtitle }}
             </p>
         </div>
     </section>
@@ -61,39 +61,29 @@
                     <div class="relative inline-block lg:block">
                         <div class="absolute -top-6 -left-6 w-24 h-24 bg-red-600/10 rounded-full z-0"></div>
                         <h2
-                            class="relative z-10 mb-8 text-4xl font-black text-gray-900 dark:text-white md:text-5xl leading-tight">
-                            Mía Renta: Una Tradición en <span class="text-red-600">Excelencia</span>
+                            class="text-red-600 relative z-10 mb-8 text-4xl font-black  dark:text-red-600 md:text-5xl leading-tight">
+                            {{ $page_nosotros->history_title }} </span>
                         </h2>
                     </div>
                     <div class="space-y-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
                         <p>
-                            Nacimos hace más de una década en el corazón de **Tuxtla Gutiérrez**, impulsados por la
-                            visión de transformar cualquier espacio en un escenario de celebración inolvidable. Lo que
-                            inició como un pequeño negocio familiar con apenas unas cuantas sillas, hoy es un referente
-                            de calidad en todo el estado de **Chiapas**.
+                            {{ $page_nosotros->history_text }}
                         </p>
-                        <p>
-                            En **Mía Renta**, entendemos que detrás de cada mesa y cada mantel, hay un sueño, una unión
-                            o un logro que celebrar. Por eso, nos dedicamos a ofrecer no solo mobiliario, sino la base
-                            perfecta para que tus momentos brillen con luz propia.
-                        </p>
-                        <p>
-                            Nuestra trayectoria está marcada por el compromiso con la puntualidad, la limpieza impecable
-                            de nuestros equipos y una atención cálida que solo los tuxtlecos sabemos brindar.
-                        </p>
+
                     </div>
                 </div>
                 <div class="w-full lg:w-1/2 animate-slideInRight">
                     <div
                         class="relative p-2 bg-gradient-to-tr from-red-600 to-black rounded-3xl shadow-2xl overflow-hidden group">
-                        <img src="{{ asset('imagenes/imagenes/4.jpg') }}"
+                        <img src="{{ asset($page_nosotros->history_image) }}"
                             class="rounded-2xl w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
                             alt="Mía Renta Historia">
                         <div
                             class="absolute bottom-8 right-8 bg-white/90 dark:bg-black/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl max-w-xs transition-all hover:scale-105 border border-white/20">
-                            <span class="text-5xl font-black text-red-600 block mb-2">+10</span>
-                            <p class="text-gray-900 dark:text-white font-bold text-lg leading-tight">Años creando
-                                memorias inolvidables en Tuxtla.</p>
+                            <span
+                                class="text-5xl font-black text-red-600 block mb-2">{{ $page_nosotros->history_stat_number }}</span>
+                            <p class="text-gray-900 dark:text-white font-bold text-lg leading-tight">
+                                {{ $page_nosotros->history_stat_text }}</p>
                         </div>
                     </div>
                 </div>
@@ -118,8 +108,7 @@
                     </div>
                     <h3 class="mb-5 text-3xl font-black text-gray-900 dark:text-white">Misión</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        Proveer mobiliario de alta gama y servicios excepcionales que faciliten la realización de
-                        eventos espectaculares, superando siempre las expectativas de nuestros clientes.
+                        {{ $page_nosotros->mission_text }}
                     </p>
                 </div>
 
@@ -139,8 +128,7 @@
                     </div>
                     <h3 class="mb-5 text-3xl font-black text-gray-900 dark:text-white">Visión</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        Ser la empresa líder en renta de mobiliario en Chiapas, reconocida por nuestra innovación
-                        constante, elegancia en diseños y compromiso inquebrantable con la excelencia.
+                        {{ $page_nosotros->vision_text }}
                     </p>
                 </div>
 
@@ -157,15 +145,15 @@
                     </div>
                     <h3 class="mb-5 text-3xl font-black text-gray-900 dark:text-white">Valores</h3>
                     <ul class="text-gray-600 dark:text-gray-400 space-y-4 text-lg">
-                        <li class="flex items-center space-x-3"><span class="w-2 h-2 bg-red-600 rounded-full"></span>
-                            <span><strong>Integridad</strong>: Trato honesto.</span>
-                        </li>
-                        <li class="flex items-center space-x-3"><span class="w-2 h-2 bg-red-600 rounded-full"></span>
-                            <span><strong>Calidad</strong>: Equipo impecable.</span>
-                        </li>
-                        <li class="flex items-center space-x-3"><span class="w-2 h-2 bg-red-600 rounded-full"></span>
-                            <span><strong>Cercanía</strong>: De Tuxtla para Tuxtla.</span>
-                        </li>
+                        @if (is_array($page_nosotros->values_list) || is_object($page_nosotros->values_list))
+                            @foreach ($page_nosotros->values_list as $value)
+                                <li class="flex items-center space-x-3"><span
+                                        class="w-2 h-2 bg-red-600 rounded-full"></span>
+                                    <span><strong>{{ $value['title'] ?? '' }}</strong>:
+                                        {{ $value['desc'] ?? '' }}</span>
+                                </li>
+                            @endforeach
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -174,10 +162,10 @@
 
     {{-- Final CTA --}}
     <section class="py-24 text-center dark:bg-black transition-colors duration-300">
-        <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-10">Sé parte de nuestra historia</h2>
-        <a href="{{ route('dashboard') }}#servicios"
+        <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-10">{{ $page_nosotros->cta_title }}</h2>
+        <a href="{{ $page_nosotros->cta_button_url }}"
             class="inline-flex px-12 py-5 bg-red-600 text-white font-black rounded-full hover:bg-red-700 transition-all hover:shadow-2xl hover:shadow-red-500/30 text-lg">
-            Explora nuestro mobiliario
+            {{ $page_nosotros->cta_button_text }}
         </a>
     </section>
 </div>

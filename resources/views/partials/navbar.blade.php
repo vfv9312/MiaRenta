@@ -67,12 +67,7 @@
                             Productos
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ route('reclamacion') }}"
-                            class="block px-3 py-2 rounded-lg transition-all duration-200 {{ Route::is('reclamacion') ? 'text-red-600' : 'text-gray-900 dark:text-white hover:text-red-600' }}">
-                            Reclamaciones
-                        </a>
-                    </li>
+
                     <li>
                         <a href="{{ route('factura') }}"
                             class="block px-3 py-2 rounded-lg transition-all duration-200 {{ Route::is('factura') ? 'text-red-600' : 'text-gray-900 dark:text-white hover:text-red-600' }}">

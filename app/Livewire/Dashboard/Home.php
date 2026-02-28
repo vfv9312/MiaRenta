@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard;
 
 use App\Models\carousel;
 use App\Models\PageCatalag;
+use App\Models\PageFooter;
 use App\Models\PageNosotros;
 use App\Models\PublicGallery;
 use Livewire\Attributes\Lazy;
@@ -14,6 +15,7 @@ class Home extends Component
     public $images = [];
     public $slides = [];
     public $us = null;
+    public $cta = null;
 
     public function mount()
     {
@@ -42,7 +44,7 @@ class Home extends Component
             ],
         ];*/
 
-        $this->images = PublicGallery::latest()->take(12)->get();
+        $this->images = PublicGallery::latest()->get();
         /* $this->images = [
             ['src' => '0.jpeg', 'alt' => 'Evento 1'],
             ['src' => '2.jpg', 'alt' => 'Evento 2'],
@@ -59,6 +61,7 @@ class Home extends Component
         ];*/
 
         $this->us = PageCatalag::first();
+        $this->cta = PageFooter::first();
     }
 
     public function render()

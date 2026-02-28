@@ -10,4 +10,9 @@ class carousel extends Model
     use HasFactory;
     protected $table = 'carousel';
     protected $guarded = ['id'];
+
+    public function status()
+    {
+        return $this->belongsTo(status::class);
+    }
 }

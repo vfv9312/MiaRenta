@@ -57,11 +57,12 @@
                             @enderror
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Subtítulo</label>
-                            <input wire:model="subtitle" type="text"
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300">Titulo en
+                                rojo</label>
+                            <input wire:model="title_two" type="text"
                                 class="w-full bg-gray-50 dark:bg-gray-700 border-none rounded-xl focus:ring-2 focus:ring-indigo-500 dark:text-white"
                                 placeholder="Ej: Contáctanos hoy mismo">
-                            @error('subtitle')
+                            @error('title_two')
                                 <span class="text-xs text-red-500 font-medium">{{ $message }}</span>
                             @enderror
                         </div>
@@ -139,96 +140,6 @@
             </div>
         </div>
 
-        <!-- Images Sidebar -->
-        <div class="space-y-6">
-            <!-- Desktop Image -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                <div class="p-6 border-b dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/30">
-                    <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <i class="fas fa-desktop text-indigo-500"></i>
-                        Imagen Escritorio
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <div
-                        class="relative group aspect-video bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 dark:border-gray-600 flex flex-col items-center justify-center transition-all hover:border-indigo-400">
-                        @if ($new_image)
-                            <img src="{{ $new_image->temporaryUrl() }}"
-                                class="absolute inset-0 w-full h-full object-cover">
-                            <div
-                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="text-white font-bold text-sm bg-black/50 px-3 py-1 rounded-full">Cambiar</span>
-                            </div>
-                        @elseif($image)
-                            <img src="{{ asset('storage/' . $image) }}"
-                                class="absolute inset-0 w-full h-full object-cover">
-                            <div
-                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="text-white font-bold text-sm bg-black/50 px-3 py-1 rounded-full">Cambiar</span>
-                            </div>
-                        @else
-                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-300"></i>
-                            <span class="text-xs text-gray-400 mt-2">1920x1080 recomendado</span>
-                        @endif
-                        <input type="file" wire:model="new_image" class="absolute inset-0 opacity-0 cursor-pointer">
-                        <div wire:loading wire:target="new_image"
-                            class="absolute inset-0 bg-white/80 dark:bg-gray-800/80 flex items-center justify-center">
-                            <i class="fas fa-circle-notch fa-spin text-indigo-600"></i>
-                        </div>
-                    </div>
-                    @error('new_image')
-                        <span class="text-xs text-red-500 font-medium mt-2 block">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
 
-            <!-- Mobile Image -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                <div class="p-6 border-b dark:border-gray-700 bg-gray-50/50 dark:bg-gray-700/30">
-                    <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <i class="fas fa-mobile-alt text-indigo-500"></i>
-                        Imagen Móvil
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <div
-                        class="relative group aspect-[9/16] max-w-[200px] mx-auto bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden border-2 border-dashed border-gray-200 dark:border-gray-600 flex flex-col items-center justify-center transition-all hover:border-indigo-400">
-                        @if ($new_image_mobile)
-                            <img src="{{ $new_image_mobile->temporaryUrl() }}"
-                                class="absolute inset-0 w-full h-full object-cover">
-                            <div
-                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="text-white font-bold text-sm bg-black/50 px-3 py-1 rounded-full">Cambiar</span>
-                            </div>
-                        @elseif($image_mobile)
-                            <img src="{{ asset('storage/' . $image_mobile) }}"
-                                class="absolute inset-0 w-full h-full object-cover">
-                            <div
-                                class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span
-                                    class="text-white font-bold text-sm bg-black/50 px-3 py-1 rounded-full">Cambiar</span>
-                            </div>
-                        @else
-                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-300"></i>
-                            <span class="text-xs text-gray-400 mt-2">1080x1920 recomendado</span>
-                        @endif
-                        <input type="file" wire:model="new_image_mobile"
-                            class="absolute inset-0 opacity-0 cursor-pointer">
-                        <div wire:loading wire:target="new_image_mobile"
-                            class="absolute inset-0 bg-white/80 dark:bg-gray-800/80 flex items-center justify-center">
-                            <i class="fas fa-circle-notch fa-spin text-indigo-600"></i>
-                        </div>
-                    </div>
-                    @error('new_image_mobile')
-                        <span class="text-xs text-red-500 font-medium mt-2 block">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
     </div>
 </div>

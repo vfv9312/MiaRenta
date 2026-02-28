@@ -7,8 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class PageCatalag extends Model
 {
+    use HasFactory;
+
     protected $table = 'page_catalags';
     protected $guarded = [];
 
-    use HasFactory;
+    public function status_one()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function status_two()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function status_three()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function status_four()
+    {
+        return $this->belongsTo(Status::class);
+    }
 }

@@ -7,7 +7,10 @@
                     MÍA <span class="text-red-600">RENTA</span>
                 </span>
             </a>
-            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">© 2025 MÍA RENTA. Todos los derechos reservados.</p>
+            <a href="/" target="_blank">
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Desarrolldo por Vladimir Farrera. Todos los
+                    derechos reservados.</p>
+            </a>
         </div>
         <ul class="flex flex-wrap items-center text-sm font-medium text-gray-600 dark:text-gray-400">
             <li>

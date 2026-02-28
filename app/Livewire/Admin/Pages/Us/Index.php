@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Pages\Us;
 
+use App\Helpers\Utility;
 use App\Models\PageNosotros;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -131,9 +132,11 @@ class Index extends Component
         try {
             if ($this->new_history_image) {
                 if ($this->history_image) {
-                    Storage::disk('public')->delete($this->history_image);
+                    // Remove 'storage/' prefix to get the correct relative path for the public disk
+                    $pathToDelete = str_replace('storage/', '', $this->history_image);
+                    Storage::disk('public')->delete($pathToDelete);
                 }
-                $data['history_image'] = $this->new_history_image->store('nosotros', 'public');
+                $data['history_image'] = Utility::saveFile($this->new_history_image, 'nosotros');
             }
 
             PageNosotros::updateOrCreate(

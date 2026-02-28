@@ -14,17 +14,12 @@ class Index extends Component
 
     public $footer_id;
     public $title;
-    public $subtitle;
+    public $title_two;
     public $description;
-    public $image;
-    public $image_mobile;
     public $button_text;
     public $button_link;
     public $button_text_two;
     public $button_link_two;
-
-    public $new_image;
-    public $new_image_mobile;
 
     public function mount()
     {
@@ -32,10 +27,8 @@ class Index extends Component
         if ($footer) {
             $this->footer_id = $footer->id;
             $this->title = $footer->title;
-            $this->subtitle = $footer->subtitle;
+            $this->title_two = $footer->title_two;
             $this->description = $footer->description;
-            $this->image = $footer->image;
-            $this->image_mobile = $footer->image_mobile;
             $this->button_text = $footer->button_text;
             $this->button_link = $footer->button_link;
             $this->button_text_two = $footer->button_text_two;
@@ -47,10 +40,8 @@ class Index extends Component
     {
         $this->validate([
             'title' => 'required|string|max:255',
-            'subtitle' => 'required|string|max:255',
+            'title_two' => 'required|string|max:255',
             'description' => 'required|string',
-            'new_image' => 'nullable|image|max:2048',
-            'new_image_mobile' => 'nullable|image|max:2048',
             'button_text' => 'nullable|string|max:255',
             'button_link' => 'nullable|string|max:255',
             'button_text_two' => 'nullable|string|max:255',
@@ -59,7 +50,7 @@ class Index extends Component
 
         $data = [
             'title' => $this->title,
-            'subtitle' => $this->subtitle,
+            'title_two' => $this->title_two,
             'description' => $this->description,
             'button_text' => $this->button_text,
             'button_link' => $this->button_link,
@@ -67,27 +58,15 @@ class Index extends Component
             'button_link_two' => $this->button_link_two,
         ];
 
-        if ($this->new_image) {
-            if ($this->image) {
-                Storage::disk('public')->delete($this->image);
-            }
-            $data['image'] = $this->new_image->store('footer', 'public');
-            $this->image = $data['image'];
-            $this->new_image = null;
-        }
-
-        if ($this->new_image_mobile) {
-            if ($this->image_mobile) {
-                Storage::disk('public')->delete($this->image_mobile);
-            }
-            $data['image_mobile'] = $this->new_image_mobile->store('footer', 'public');
-            $this->image_mobile = $data['image_mobile'];
-            $this->new_image_mobile = null;
-        }
-
         DB::beginTransaction();
         try {
-            PageFooter::updateOrCreate(['id' => $this->footer_id], $data);
+            // Buscamos si ya existe el registro para asegurarnos de no duplicar
+            $footer = PageFooter::first();
+            if ($footer) {
+                $footer->update($data);
+            } else {
+                PageFooter::create($data);
+            }
             session()->flash('message', 'Footer actualizado correctamente.');
             DB::commit();
         } catch (\Throwable $th) {

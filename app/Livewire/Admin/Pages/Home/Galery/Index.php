@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Pages\Home\Galery;
 
+use App\Helpers\Utility;
 use App\Models\PublicGallery;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -36,6 +37,8 @@ class Index extends Component
     {
         $this->reset(['public_gallery_id', 'title', 'subtitle', 'description', 'type', 'image', 'isEdit']);
     }
+
+
     //metodo para guardar la imagen
     public function store()
     {
@@ -49,7 +52,9 @@ class Index extends Component
         ];
 
         if ($this->image) {
-            $data['path'] = $this->image->store('gallery', 'public');
+            //$data['path'] = $this->image->store('gallery', 'public');
+            $data['path'] = Utility::saveFile($this->image, 'gallery');
+            //$this->reset('contract_doc');
         }
         DB::beginTransaction();
         try {
@@ -92,9 +97,11 @@ class Index extends Component
         if ($this->image) {
             // Eliminar imagen anterior si existe
             if ($gallery->path) {
-                Storage::disk('public')->delete($gallery->path);
+                // Le quitamos el 'storage/' para que Laravel lo encuentre en el disco public
+                $pathToDelete = str_replace('storage/', '', $gallery->path);
+                Storage::disk('public')->delete($pathToDelete);
             }
-            $data['path'] = $this->image->store('gallery', 'public');
+            $data['path'] = Utility::saveFile($this->image, 'gallery');
         }
         DB::beginTransaction();
         try {
@@ -115,7 +122,9 @@ class Index extends Component
     {
         $gallery = PublicGallery::findOrFail($id);
         if ($gallery->path) {
-            Storage::disk('public')->delete($gallery->path);
+            // Le quitamos el 'storage/' para borrar correctamente de disco
+            $pathToDelete = str_replace('storage/', '', $gallery->path);
+            Storage::disk('public')->delete($pathToDelete);
         }
         $gallery->delete();
         $this->showDeleteModal = false;

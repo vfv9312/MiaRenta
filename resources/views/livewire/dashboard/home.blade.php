@@ -101,7 +101,7 @@
                 x-transition:enter-end="opacity-100 transform scale-100"
                 x-transition:leave="transition ease-in duration-1000" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0" class="absolute inset-0 z-0">
-                <img :src="'/' + slide.image" class="object-cover w-full h-full opacity-60" :alt="slide.title">
+                <img :src="'/' + slide.imagen" class="object-cover w-full h-full opacity-60" :alt="slide.image">
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80"></div>
             </div>
         </template>
@@ -121,18 +121,19 @@
                             Tuxtla Gutiérrez, Chiapas
                         </span>
 
-                        <h1 class="mb-4 text-3xl font-extrabold text-white md:text-7xl" x-html="slide.title"></h1>
-                        <p class="max-w-2xl mx-auto mb-8 text-lg text-gray-200 md:text-xl" x-text="slide.subtitle"></p>
+                        <h1 class="mb-4 text-3xl font-extrabold text-white md:text-7xl" x-html="slide.titulo"></h1>
+                        <p class="max-w-2xl mx-auto mb-8 text-lg text-gray-200 md:text-xl" x-text="slide.descripcion">
+                        </p>
 
                         <div
                             class="flex flex-col justify-center w-full space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                            <a :href="slide.button_link"
+                            <a :href="slide.boton_url"
                                 class="px-8 py-3 text-base font-black text-white transition-all bg-red-600 rounded-full md:py-4 md:text-lg hover:bg-red-700 hover:shadow-2xl hover:shadow-red-500/50"
-                                x-text="slide.button_text">
+                                x-text="slide.boton_texto">
                             </a>
-                            <a href="https://wa.me/message/2FM4OVMRRIMIB1"
-                                class="px-8 py-3 text-base font-black text-gray-900 transition-all bg-white rounded-full md:py-4 md:text-lg hover:bg-gray-100 hover:scale-105">
-                                Contactar Ahora
+                            <a :href="slide.boton_url_two"
+                                class="px-8 py-3 text-base font-black text-gray-900 transition-all bg-white rounded-full md:py-4 md:text-lg hover:bg-gray-100 hover:scale-105"
+                                x-text="slide.boton_texto_two">
                             </a>
                         </div>
                     </div>
@@ -167,78 +168,69 @@
     <section id="servicios" class="py-24 bg-white dark:bg-black transition-colors duration-300">
         <div class="container px-6 mx-auto">
             <div class="mb-16 text-center">
-                <h2 class="text-3xl font-black text-gray-900 dark:text-white md:text-5xl">Nuestro Catálogo</h2>
+                <h2 class="text-3xl font-black text-gray-900 dark:text-white md:text-5xl">{{ $us->title }}</h2>
                 <div class="w-24 h-1.5 mx-auto mt-6 bg-red-600 rounded-full"></div>
-                <p class="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Todo lo que necesitas para
-                    que tu evento sea inolvidable, con el respaldo de Mía Renta.</p>
+                <p class="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{{ $us->subtitle }}</p>
             </div>
 
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 <!-- Servicio 1: Sillas -->
                 <div
                     class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
-                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Sillas</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Modelos Tiffany, madera y acojinadas. Confort y
-                        elegancia.</p>
+                    <a href="{{ $us->button_url_one }}">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                            <i class="{{ $us->icon }} text-red-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">{{ $us->title_button_one }}
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400">{{ $us->text_button_one }}</p>
+                    </a>
                 </div>
 
                 <!-- Servicio 2: Mesas -->
                 <div
                     class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
-                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                    </div>
-                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Mesas</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Variedad en tamaños y formas para cualquier cantidad de
-                        invitados.</p>
+                    <a href="{{ $us->button_url_two }}">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                            <i class="{{ $us->icon_two }} text-red-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">{{ $us->title_button_two }}
+                        </h3>
+
+                        <p class="text-gray-600 dark:text-gray-400">{{ $us->text_button_two }}</p>
+                    </a>
                 </div>
 
                 <!-- Servicio 3: Mantelería -->
                 <div
                     class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
-                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Mantelería</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Colores y texturas que realzan la estética de tu
-                        celebración.</p>
+                    <a href="{{ $us->button_url_three }}">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                            <i class="{{ $us->icon_three }} text-red-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">{{ $us->title_button_three }}
+                        </h3>
+
+                        <p class="text-gray-600 dark:text-gray-400">{{ $us->text_button_three }}</p>
+                    </a>
                 </div>
 
                 <!-- Servicio 4: Cristalería -->
                 <div
                     class="p-8 transition-all duration-300 service-card glass-effect rounded-3xl hover:shadow-2xl hover:-translate-y-2 group">
-                    <div
-                        class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
-                        <svg class="w-8 h-8 text-red-600 group-hover:text-white transition-colors" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">Cristalería</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Detalles premium en vasos y copas para un brindis
-                        perfecto.</p>
+                    <a href="{{ $us->button_url_four }}">
+                        <div
+                            class="flex items-center justify-center w-16 h-16 mb-6 transition-all duration-300 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-600 service-icon">
+                            <i class="{{ $us->icon_four }} text-red-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="mb-3 text-xl font-black text-gray-900 dark:text-white">{{ $us->title_button_four }}
+                        </h3>
+
+                        <p class="text-gray-600 dark:text-gray-400">{{ $us->text_button_four }}</p>
+                    </a>
                 </div>
             </div>
         </div>
@@ -333,7 +325,7 @@
                 @foreach ($images as $image)
                     <div class="overflow-hidden bg-gray-100 rounded-xl group">
                         <img class="object-cover w-full h-64 transition-transform duration-500 opacity-0 lazy-image group-hover:scale-110"
-                            data-src="{{ asset('imagenes/imagenes/' . $image['src']) }}" alt="{{ $image['alt'] }}">
+                            data-src="{{ asset($image->path) }}" alt="{{ $image->description }}">
                     </div>
                 @endforeach
             </div>

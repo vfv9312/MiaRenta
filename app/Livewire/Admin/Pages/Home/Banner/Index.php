@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Pages\Home\Banner;
 
+use App\Helpers\Utility;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\carousel;
@@ -75,8 +76,9 @@ class Index extends Component
         ];
 
         if ($this->new_imagen) {
-            $imagePath = $this->new_imagen->store('carousel', 'public');
-            $data['imagen'] = $imagePath;
+            //$imagePath = $this->new_imagen->store('carousel', 'public');
+            $data['imagen'] = Utility::saveFile($this->new_imagen, 'carousel');
+            // $data['imagen'] = $imagePath;
         }
         DB::beginTransaction();
         try {

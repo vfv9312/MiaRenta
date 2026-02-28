@@ -110,10 +110,12 @@ class Index extends Component
         $this->validate();
         DB::beginTransaction();
         try {
+            // Buscamos si ya existe el registro para asegurarnos de no duplicar
+            $catalog = PageCatalag::first();
 
             //actualizar o crear registro
-            PageCatalag::updateOrCreate(
-                ['id' => $this->catalog_id],
+            $savedCatalog = PageCatalag::updateOrCreate(
+                ['id' => $catalog ? $catalog->id : null],
                 [
                     'title' => $this->title,
                     'subtitle' => $this->subtitle,
@@ -143,6 +145,10 @@ class Index extends Component
                     'status_four' => $this->status_four,
                 ]
             );
+
+            // Actualizamos el catalog_id en caso de que sea un nuevo registro
+            $this->catalog_id = $savedCatalog->id;
+
             DB::commit();
             session()->flash('message', 'Catálogo actualizado correctamente');
         } catch (\Throwable $th) {

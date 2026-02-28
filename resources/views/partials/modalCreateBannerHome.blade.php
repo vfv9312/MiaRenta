@@ -57,7 +57,7 @@
                                     <img src="{{ $new_imagen->temporaryUrl() }}"
                                         class="absolute inset-0 w-full h-full object-cover">
                                 @elseif($imagen)
-                                    <img src="{{ asset('storage/' . $imagen) }}"
+                                    <img src="{{ asset($imagen) }}"
                                         class="absolute inset-0 w-full h-full object-cover">
                                 @else
                                     <i class="fas fa-cloud-upload-alt text-3xl text-gray-300"></i>

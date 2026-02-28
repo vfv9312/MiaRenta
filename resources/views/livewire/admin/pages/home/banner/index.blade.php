@@ -26,7 +26,7 @@
                 class="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden group">
                 <div class="relative h-48 bg-gray-100 dark:bg-gray-700">
                     @if ($item->imagen)
-                        <img src="{{ asset('storage/' . $item->imagen) }}" class="w-full h-full object-cover">
+                        <img src="{{ asset($item->imagen) }}" class="w-full h-full object-cover">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-gray-300">
                             <i class="fas fa-image text-3xl"></i>

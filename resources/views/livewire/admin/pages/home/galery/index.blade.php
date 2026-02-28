@@ -181,8 +181,8 @@
                                         <td class="px-6 py-4">
                                             <div
                                                 class="w-20 h-20 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm">
-                                                <img src="{{ asset('storage/' . $gallery->path) }}"
-                                                    alt="{{ $gallery->title }}" class="w-full h-full object-cover">
+                                                <img src="{{ asset($gallery->path) }}" alt="{{ $gallery->title }}"
+                                                    class="w-full h-full object-cover">
                                             </div>
                                         </td>
                                         <td class="px-6 py-4">

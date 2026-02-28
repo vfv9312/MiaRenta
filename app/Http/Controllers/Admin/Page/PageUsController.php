@@ -13,16 +13,4 @@ class PageUsController extends Controller
         $section = 1;
         return view('pages.admin.pages.us', compact('section'));
     }
-
-    public function create(Request $request)
-    {
-        $section = 2;
-        return view('pages.admin.pages.us', compact('section'));
-    }
-
-    public function edit(Request $request, $id)
-    {
-        $section = 3;
-        return view('pages.admin.pages.us', compact('section'));
-    }
 }

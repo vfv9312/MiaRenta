@@ -1,4 +1,4 @@
-<div class="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-black min-h-screen transition-colors duration-300">
+<div class="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-black min-h-screen transition-colors duration-300">
     <div class="max-w-4xl mx-auto">
         <!-- Header Section -->
         <div class="text-center mb-16">

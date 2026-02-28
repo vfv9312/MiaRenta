@@ -1,4 +1,4 @@
-<div class="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-black min-h-screen transition-colors duration-300">
+<div class="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-black min-h-screen transition-colors duration-300">
     <div class="max-w-4xl mx-auto">
         <!-- Header Section -->
         <div class="text-center mb-16">
@@ -38,7 +38,8 @@
                         <li class="flex items-start"><span
                                 class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
                             <span>Aceptamos pagos en <span class="font-black text-gray-900 dark:text-white">efectivo y
-                                    transferencia bancaria</span>.</span></li>
+                                    transferencia bancaria</span>.</span>
+                        </li>
                         <li class="flex items-start"><span
                                 class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span> <span><span
                                     class="font-black text-gray-900 dark:text-white">Pago con Tarjeta:</span> En caso de

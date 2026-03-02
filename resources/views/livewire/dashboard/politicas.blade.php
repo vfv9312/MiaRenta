@@ -26,30 +26,24 @@
                     <h2 class="text-3xl font-black text-gray-900 dark:text-white">Métodos y Políticas de Pago</h2>
                 </div>
                 <div class="space-y-6 text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                    <p>En <span class="font-black text-red-600 underline decoration-2 underline-offset-4">Mia
-                            Renta</span>, buscamos facilitar tu
-                        experiencia. Las condiciones de pago son las siguientes:</p>
+                    <p>{{ $pagos_intro }}</p>
                     <ul class="list-none space-y-4">
                         <li class="flex items-start"><span
-                                class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span> <span>El pago
-                                total del servicio debe realizarse <span
-                                    class="font-black text-gray-900 dark:text-white">antes o durante la entrega</span>
-                                del mobiliario.</span></li>
-                        <li class="flex items-start"><span
                                 class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
-                            <span>Aceptamos pagos en <span class="font-black text-gray-900 dark:text-white">efectivo y
-                                    transferencia bancaria</span>.</span>
+                            <span>{{ $pagos_item_1 }}</span>
                         </li>
                         <li class="flex items-start"><span
-                                class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span> <span><span
-                                    class="font-black text-gray-900 dark:text-white">Pago con Tarjeta:</span> En caso de
-                                requerir pago físico con terminal, es obligatorio <span
-                                    class="font-bold text-red-600">avisar con anticipación</span>.</span></li>
+                                class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
+                            <span>{{ $pagos_item_2 }}</span>
+                        </li>
                         <li class="flex items-start"><span
-                                class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span> <span><span
-                                    class="font-black text-gray-900 dark:text-white">Pagos en Línea:</span> Deberán
-                                efectuarse con <span class="font-black text-gray-900 dark:text-white">al menos 24
-                                    horas</span> de antelación.</span></li>
+                                class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
+                            <span>{{ $pagos_item_3 }}</span>
+                        </li>
+                        <li class="flex items-start"><span
+                                class="w-2 h-2 bg-red-600 rounded-full mr-3 mt-2.5 flex-shrink-0"></span>
+                            <span>{{ $pagos_item_4 }}</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -68,24 +62,23 @@
                     <h2 class="text-3xl font-black text-gray-900 dark:text-white">Horarios y Reservaciones</h2>
                 </div>
                 <div class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                    <p class="mb-8">Para garantizar la disponibilidad y puntualidad del servicio, solicitamos:</p>
+                    <p class="mb-8">{{ $reservaciones_intro }}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-gray-50 dark:bg-black/50 p-6 rounded-2xl border-l-8 border-red-600">
-                            <span class="block font-black text-gray-900 dark:text-white mb-2">Anticipación
-                                Estándar</span>
-                            Realizar su pedido con al menos <span class="font-black text-red-600">1 día de
-                                anticipación</span>.
+                            <span
+                                class="block font-black text-gray-900 dark:text-white mb-2">{{ $reservacion_estandar_titulo }}</span>
+                            {{ $reservacion_estandar_texto }}
                         </div>
                         <div class="bg-gray-50 dark:bg-black/50 p-6 rounded-2xl border-l-8 border-amber-500">
-                            <span class="block font-black text-gray-900 dark:text-white mb-2">Pedidos Urgentes</span>
-                            Sujeto a disponibilidad, mínimo <span class="font-black text-amber-600">6 horas</span> antes
-                            del evento.
+                            <span
+                                class="block font-black text-gray-900 dark:text-white mb-2">{{ $reservacion_urgente_titulo }}</span>
+                            {{ $reservacion_urgente_texto }}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Entregas y Retrasos -->
+            <!-- Entregas y Recolección -->
             <div
                 class="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-sm p-10 border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300">
                 <div class="flex items-center mb-8">
@@ -106,9 +99,7 @@
                                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                             </path>
                         </svg>
-                        <span>En caso de que el cliente entregue el mobiliario después del día asignado para su
-                            recolección, se cobrará automáticamente <span class="font-black text-red-600">un día
-                                adicional de renta</span> por cada día de retraso.</span>
+                        <span>{{ $entregas_texto }}</span>
                     </div>
                 </div>
             </div>
@@ -118,25 +109,19 @@
                 <div
                     class="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-sm p-10 border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300">
                     <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Cancelaciones</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        Es importante considerar que <span class="font-black text-red-600">no se realizan
-                            devoluciones</span> de dinero una vez confirmada la reservación o entregado el servicio.
-                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">{{ $cancelaciones_texto }}</p>
                 </div>
                 <div
                     class="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-sm p-10 border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300">
                     <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Cuidado del Mobiliario</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        El cliente es responsable del equipo. Cualquier daño, mancha irreparable o pérdida
-                        será cobrado al <span class="font-black text-red-600">valor de reposición actual</span>.
-                    </p>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">{{ $cuidado_texto }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Footer Note -->
         <div class="mt-16 text-center text-gray-500 text-sm">
-            <p>Al contratar nuestros servicios, el cliente acepta tácitamente los términos aquí descritos.</p>
+            <p>{{ $footer_nota }}</p>
             <p class="mt-1">© {{ date('Y') }} Mia Renta - Soluciones en Mobiliario</p>
         </div>
     </div>

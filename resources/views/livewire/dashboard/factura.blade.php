@@ -29,27 +29,22 @@
                         <li class="flex items-start">
                             <span
                                 class="bg-red-600 text-white rounded-lg w-6 h-6 flex items-center justify-center text-xs font-black mr-3 mt-0.5 flex-shrink-0">1</span>
-                            <span>Solo dentro del <span class="font-black text-red-600">mes fiscal</span> de la
-                                compra.</span>
+                            <span>{{ $instruccion_1 }}</span>
                         </li>
                         <li class="flex items-start">
                             <span
                                 class="bg-red-600 text-white rounded-lg w-6 h-6 flex items-center justify-center text-xs font-black mr-3 mt-0.5 flex-shrink-0">2</span>
-                            <span>Adjuntar <span class="font-bold text-gray-900 dark:text-white">Constancia
-                                    Fiscal</span> y <span class="font-bold text-gray-900 dark:text-white">Nota de
-                                    Renta</span>.</span>
+                            <span>{{ $instruccion_2 }}</span>
                         </li>
                         <li class="flex items-start">
                             <span
                                 class="bg-red-600 text-white rounded-lg w-6 h-6 flex items-center justify-center text-xs font-black mr-3 mt-0.5 flex-shrink-0">3</span>
-                            <span>Tiempo de entrega: <span class="font-black text-gray-900 dark:text-white">2 días
-                                    hábiles</span>.</span>
+                            <span>{{ $instruccion_3 }}</span>
                         </li>
                         <li class="flex items-start">
                             <span
                                 class="bg-red-600 text-white rounded-lg w-6 h-6 flex items-center justify-center text-xs font-black mr-3 mt-0.5 flex-shrink-0">4</span>
-                            <span>Lunes a Viernes de <span class="font-bold text-gray-900 dark:text-white">9:00 AM a
-                                    9:00 PM</span>.</span>
+                            <span>{{ $instruccion_4 }}</span>
                         </li>
                     </ul>
                 </div>
@@ -57,9 +52,9 @@
                 <!-- Simple FAQ/Alert -->
                 <div class="bg-black dark:bg-zinc-900 rounded-[2rem] p-8 border border-white/5 shadow-2xl">
                     <p class="text-white text-sm font-medium">
-                        <strong class="text-red-600 block mb-2 uppercase tracking-widest text-xs">¿Dónde recibo mi
-                            factura?</strong>
-                        Se enviará automáticamente a tu email una vez procesada por nuestro equipo contable.
+                        <strong
+                            class="text-red-600 block mb-2 uppercase tracking-widest text-xs">{{ $faq_title }}</strong>
+                        {{ $faq_body }}
                     </p>
                 </div>
             </div>
@@ -153,8 +148,7 @@
                                                 fill="none" stroke="currentColor" viewBox="0 0 48 48">
                                                 <path
                                                     d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                    stroke-width="2" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                             <div class="flex text-sm text-gray-600 dark:text-gray-400">
                                                 <span class="text-red-600 font-black">Haz clic para subir

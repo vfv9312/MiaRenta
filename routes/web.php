@@ -41,6 +41,7 @@ Route::middleware(['auth', 'status'])->group(function () {
     Route::post('logout', 'AuthController@logout')->name('logout');
 
     Route::middleware(['role:1'])->group(function () {
+        //rutas para administrar la pagina web
         Route::resource('admin/inicio', 'Admin\Page\PageHomeController')->except(['destroy', 'update', 'store', 'show', 'create', 'edit']);
         Route::get('admin/inicio/banner', 'Admin\Page\PageHomeController@show')->name('inicio.banner');
         Route::get('admin/inicio/catalogo', 'Admin\Page\PageHomeController@catalog')->name('inicio.catalog');
@@ -51,5 +52,12 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::resource('admin/factura', 'Admin\Page\PageFacturaController')->except(['destroy', 'update', 'store', 'show', 'create', 'edit']);
         Route::resource('admin/politica', 'Admin\Page\PagePoliticaController')->except(['destroy', 'update', 'store', 'show', 'create', 'edit']);
         Route::resource('users', 'Admin\UserController')->except(['destroy', 'update', 'store']);
+
+        //rutas para el sistema interno del control del mobiliario
+        Route::get('admin/colores', 'Admin\Inventary\FurnitureController@colors')->name('colores');
+        Route::get('admin/categorias', 'Admin\Inventary\FurnitureController@categories')->name('categorias');
+        Route::get('admin/tipos', 'Admin\Inventary\FurnitureController@types')->name('tipos');
+        Route::get('admin/catalago-tipos', 'Admin\Inventary\FurnitureController@catalog_types')->name('catalago.tipos');
+        // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
     });
 });

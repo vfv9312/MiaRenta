@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('categoria_id');
             $table->unsignedBigInteger('tipo_id');
+            $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->foreign('tipo_id')->references('id')->on('tipos');
+            $table->foreign('status_id')->references('id')->on('status');
         });
     }
 

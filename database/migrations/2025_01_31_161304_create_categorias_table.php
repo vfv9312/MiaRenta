@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->unsignedBigInteger('status_id')->default(1);
             $table->timestamps();
+            $table->foreign('status_id')->references('id')->on('status');
         });
     }
 

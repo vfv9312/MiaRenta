@@ -20,4 +20,19 @@ class Status extends Model
     {
         return $this->hasMany(carousel::class);
     }
+
+    public function categorias()
+    {
+        return $this->hasMany(Categorias::class);
+    }
+
+    public function colores()
+    {
+        return $this->hasMany(Color::class);
+    }
+
+    public function tipos()
+    {
+        return $this->hasMany(Tipo::class);
+    }
 }

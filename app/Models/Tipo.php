@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Categorias extends Model
+class Tipo extends Model
 {
     use HasFactory;
 
-    protected $table = 'categorias';
+    protected $table = 'tipos';
+
     protected $guarded = [];
 
-    public function status(): BelongsTo
+    public function status()
     {
         return $this->belongsTo(Status::class);
     }

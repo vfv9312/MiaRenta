@@ -10,11 +10,15 @@
         @break
 
         @case(3)
-            @livewire('admin.inventary.catalog-types')
+            @livewire('admin.inventary.products')
         @break
 
         @case(4)
             @livewire('admin.inventary.categorias')
+        @break
+
+        @case(5)
+            @livewire('admin.inventary.images')
         @break
 
         @default

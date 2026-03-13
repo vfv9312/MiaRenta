@@ -365,25 +365,25 @@
             class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/40 via-transparent to-transparent opacity-50">
         </div>
         <div class="container relative z-10 px-6 mx-auto text-center">
-            <h2 class="mb-8 text-4xl md:text-6xl font-black">{{ $cta->title }}<span
-                    class="text-red-600">{{ $cta->title_two }}</span></h2>
-            <p class="mb-12 text-xl text-gray-400 max-w-2xl mx-auto">{{ $cta->description }}</p>
+            <h2 class="mb-8 text-4xl md:text-6xl font-black">{{ $cta->title ?? '' }}<span
+                    class="text-red-600">{{ $cta->title_two ?? '' }}</span></h2>
+            <p class="mb-12 text-xl text-gray-400 max-w-2xl mx-auto">{{ $cta->description ?? '' }}</p>
             <div class="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
-                <a href="{{ $cta->button_link }}" target="_blank"
+                <a href="{{ $cta->button_link ?? '' }}" target="_blank"
                     class="flex items-center justify-center px-10 py-5 space-x-3 font-black transition-all bg-[#25D366] rounded-full hover:scale-105 active:scale-95 shadow-xl shadow-green-500/20">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.025 3.207l-.695 2.54 2.599-.682c.887.484 1.838.74 2.831.741h.005c3.182 0 5.768-2.586 5.769-5.766 0-3.18-2.586-5.766-5.766-5.766zm3.425 8.204c-.145.411-.848.791-1.164.845-.316.054-.606.079-1.39-.241-1.137-.464-2.103-1.423-2.657-2.179-.115-.157-.863-1.15-.863-2.193 0-1.043.545-1.556.738-1.769.193-.213.483-.341.677-.341.194 0 .387.001.554.009.176.008.411-.067.644.492.234.56.797 1.944.866 2.083.069.14.116.302.022.489-.094.187-.142.302-.284.468-.142.166-.299.37-.428.497-.145.142-.296.297-.128.585.168.287.747 1.233 1.602 1.993.708.629 1.303.824 1.59 1.002.287.178.455.152.624-.043.17-.194.721-.84.914-1.129.193-.289.387-.242.645-.145.258.096 1.639.773 1.921.916.282.142.469.213.539.333.071.12.071.696-.074 1.107z" />
                     </svg>
-                    <span>{{ $cta->button_text }}</span>
+                    <span>{{ $cta->button_text ?? '' }}</span>
                 </a>
-                <a href="{{ $cta->button_link_two }}" target="_blank"
+                <a href="{{ $cta->button_link_two ?? '' }}" target="_blank"
                     class="flex items-center justify-center px-10 py-5 space-x-3 font-black transition-all bg-[#1877F2] rounded-full hover:scale-105 active:scale-95 shadow-xl shadow-blue-500/20">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                     </svg>
-                    <span>{{ $cta->button_text_two }}</span>
+                    <span>{{ $cta->button_text_two ?? '' }}</span>
                 </a>
             </div>
         </div>

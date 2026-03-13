@@ -310,9 +310,12 @@
                                     class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tipo</a>
                             </li>
                             <li>
-                                <a href="{{ route('catalago.tipos') }}"
-                                    class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">catalago
-                                    de tipos</a>
+                                <a href="{{ route('productos') }}"
+                                    class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Productos</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('imagenes.inventary') }}"
+                                    class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Imagenes</a>
                             </li>
 
                         </ul>

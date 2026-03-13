@@ -23,9 +23,14 @@ class FurnitureController extends Controller
         $section = 2;
         return view('pages.admin.inventary.furniture', compact('section'));
     }
-    public function catalog_types()
+    public function products()
     {
         $section = 3;
+        return view('pages.admin.inventary.furniture', compact('section'));
+    }
+    public function images()
+    {
+        $section = 5;
         return view('pages.admin.inventary.furniture', compact('section'));
     }
 }

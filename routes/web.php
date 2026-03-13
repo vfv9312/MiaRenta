@@ -57,7 +57,8 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::get('admin/colores', 'Admin\Inventary\FurnitureController@colors')->name('colores');
         Route::get('admin/categorias', 'Admin\Inventary\FurnitureController@categories')->name('categorias');
         Route::get('admin/tipos', 'Admin\Inventary\FurnitureController@types')->name('tipos');
-        Route::get('admin/catalago-tipos', 'Admin\Inventary\FurnitureController@catalog_types')->name('catalago.tipos');
+        Route::get('admin/productos', 'Admin\Inventary\FurnitureController@products')->name('productos');
+        Route::get('admin/imagenes', 'Admin\Inventary\FurnitureController@images')->name('imagenes.inventary');
         // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
     });
 });

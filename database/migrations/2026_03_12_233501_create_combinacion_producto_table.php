@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('catalogo_imagines', function (Blueprint $table) {
+        Schema::create('combinacion_producto', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('combinacion_id');
             $table->unsignedBigInteger('producto_id');
-            $table->string('imagen');
             $table->timestamps();
-            $table->foreign('status_id')->references('id')->on('status');
-            $table->foreign('producto_id')->references('id')->on('productos');
+            $table->foreign('combinacion_id')->references('id')->on('combinaciones')->onDelete('cascade');
+            $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('catalogo_imagines');
+        Schema::dropIfExists('combinacion_producto');
     }
 };

@@ -45,10 +45,10 @@
         <div class="absolute inset-0 bg-gradient-to-b from-red-900/10 to-transparent"></div>
         <div class="container relative z-10 px-6 mx-auto text-center">
             <h1 class="text-4xl font-black text-white md:text-7xl animate-fadeInUp">
-                {{ $page_nosotros->banner_title }} </span>
+                {{ $page_nosotros->banner_title ?? '' }} </span>
             </h1>
             <p class="mt-6 text-xl text-gray-400 max-w-2xl mx-auto animate-fadeInUp delay-200">
-                {{ $page_nosotros->banner_subtitle }}
+                {{ $page_nosotros->banner_subtitle ?? '' }}
             </p>
         </div>
     </section>
@@ -62,12 +62,12 @@
                         <div class="absolute -top-6 -left-6 w-24 h-24 bg-red-600/10 rounded-full z-0"></div>
                         <h2
                             class="text-red-600 relative z-10 mb-8 text-4xl font-black  dark:text-red-600 md:text-5xl leading-tight">
-                            {{ $page_nosotros->history_title }} </span>
+                            {{ $page_nosotros->history_title ?? '' }} </span>
                         </h2>
                     </div>
                     <div class="space-y-6 text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
                         <p>
-                            {{ $page_nosotros->history_text }}
+                            {{ $page_nosotros->history_text ?? '' }}
                         </p>
 
                     </div>
@@ -75,15 +75,15 @@
                 <div class="w-full lg:w-1/2 animate-slideInRight">
                     <div
                         class="relative p-2 bg-gradient-to-tr from-red-600 to-black rounded-3xl shadow-2xl overflow-hidden group">
-                        <img src="{{ asset($page_nosotros->history_image) }}"
+                        <img src="{{ asset($page_nosotros->history_image ?? '') }}"
                             class="rounded-2xl w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
                             alt="Mía Renta Historia">
                         <div
                             class="absolute bottom-8 right-8 bg-white/90 dark:bg-black/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl max-w-xs transition-all hover:scale-105 border border-white/20">
                             <span
-                                class="text-5xl font-black text-red-600 block mb-2">{{ $page_nosotros->history_stat_number }}</span>
+                                class="text-5xl font-black text-red-600 block mb-2">{{ $page_nosotros->history_stat_number ?? '' }}</span>
                             <p class="text-gray-900 dark:text-white font-bold text-lg leading-tight">
-                                {{ $page_nosotros->history_stat_text }}</p>
+                                {{ $page_nosotros->history_stat_text ?? '' }}</p>
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                     </div>
                     <h3 class="mb-5 text-3xl font-black text-gray-900 dark:text-white">Misión</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        {{ $page_nosotros->mission_text }}
+                        {{ $page_nosotros->mission_text ?? '' }}
                     </p>
                 </div>
 
@@ -128,7 +128,7 @@
                     </div>
                     <h3 class="mb-5 text-3xl font-black text-gray-900 dark:text-white">Visión</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                        {{ $page_nosotros->vision_text }}
+                        {{ $page_nosotros->vision_text ?? '' }}
                     </p>
                 </div>
 

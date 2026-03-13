@@ -18,5 +18,7 @@ class StatusTableSeeder extends Seeder
         Status::create(['order' => 1, 'status_type_id' => 1, 'name' => mb_convert_case('Activo', MB_CASE_TITLE)]);
         Status::create(['order' => 2, 'status_type_id' => 1, 'name' => mb_convert_case('Inactivo', MB_CASE_TITLE)]);
         Status::create(['order' => 3, 'status_type_id' => 1, 'name' => mb_convert_case('Eliminado', MB_CASE_TITLE)]);
+        Status::create(['order' => 4, 'status_type_id' => 2, 'name' => mb_convert_case('Reparado', MB_CASE_TITLE)]);
+        Status::create(['order' => 5, 'status_type_id' => 2, 'name' => mb_convert_case('En Reparación', MB_CASE_TITLE)]);
     }
 }

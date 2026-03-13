@@ -59,6 +59,8 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::get('admin/tipos', 'Admin\Inventary\FurnitureController@types')->name('tipos');
         Route::get('admin/productos', 'Admin\Inventary\FurnitureController@products')->name('productos');
         Route::get('admin/imagenes', 'Admin\Inventary\FurnitureController@images')->name('imagenes.inventary');
+        Route::get('admin/reparaciones', 'Admin\Inventary\FurnitureController@repairs')->name('reparaciones');
+        Route::get('admin/clientes', 'Admin\Client\ClientsController@index')->name('clientes');
         // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
     });
 });

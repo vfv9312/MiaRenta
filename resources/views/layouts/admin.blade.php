@@ -35,6 +35,7 @@
 <body class="antialiased font-sans text-gray-900 bg-gray-50 dark:bg-[#0f172a] dark:text-gray-100">
     @include('partials.alerts')
     @include('partials.sidebar')
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('google.maps_api_key') }}"></script>
     @livewireScripts
 
 </body>

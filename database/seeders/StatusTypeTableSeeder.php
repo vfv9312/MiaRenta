@@ -15,6 +15,7 @@ class StatusTypeTableSeeder extends Seeder
     {
         //
         mb_internal_encoding('UTF-8');
-        StatusType::create(['name' => mb_convert_case('Usuarios', MB_CASE_TITLE)]);//1
+        StatusType::create(['name' => mb_convert_case('General', MB_CASE_TITLE)]); //1
+        StatusType::create(['name' => mb_convert_case('Mobiliario', MB_CASE_TITLE)]); //2
     }
 }

@@ -33,4 +33,9 @@ class FurnitureController extends Controller
         $section = 5;
         return view('pages.admin.inventary.furniture', compact('section'));
     }
+    public function repairs()
+    {
+        $section = 6;
+        return view('pages.admin.inventary.furniture', compact('section'));
+    }
 }

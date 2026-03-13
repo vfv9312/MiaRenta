@@ -21,6 +21,10 @@
             @livewire('admin.inventary.images')
         @break
 
+        @case(6)
+            @livewire('admin.inventary.repairs')
+        @break
+
         @default
     @endswitch
 @endsection

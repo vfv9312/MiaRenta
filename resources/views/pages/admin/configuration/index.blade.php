@@ -9,6 +9,10 @@
             @livewire('admin.configuration.colonias')
         @break
 
+        @case(3)
+            @livewire('admin.configuration.metodospago')
+        @break
+
         @default
     @endswitch
 @endsection

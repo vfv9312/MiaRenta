@@ -18,4 +18,10 @@ class IndexController extends Controller
         $section = 2;
         return view('pages.admin.configuration.index', compact('section'));
     }
+
+    public function metodosPago()
+    {
+        $section = 3;
+        return view('pages.admin.configuration.index', compact('section'));
+    }
 }

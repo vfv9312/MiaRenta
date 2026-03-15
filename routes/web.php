@@ -64,6 +64,11 @@ Route::middleware(['auth', 'status'])->group(function () {
 
         Route::get('admin/configuracion', 'Admin\Configuration\IndexController@index')->name('configuracion');
         Route::get('admin/colonias', 'Admin\Configuration\IndexController@colonias')->name('colonias');
+        Route::get('admin/metodos-pago', 'Admin\Configuration\IndexController@metodosPago')->name('metodos-pago');
+        Route::get('admin/estadisticas', 'Admin\Configuration\IndexController@estadisticas')->name('estadisticas');
+        Route::get('admin/empleados', 'Admin\Employee\EmployeeController@index')->name('empleados');
+
+        Route::get('admin/generar-orden', 'Admin\Order\IndexController@index')->name('generar-orden');
         // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
     });
 });

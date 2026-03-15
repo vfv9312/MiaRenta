@@ -7,7 +7,7 @@
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Banner / Carrusel -->
+            <!-- Colonias -->
             <div
                 class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div
@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <!-- Categorías -->
+            <!-- Metodos de pago -->
             <div
                 class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div
@@ -38,20 +38,20 @@
                 <div class="p-8">
                     <div
                         class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl flex items-center justify-center mb-6 border border-emerald-200 dark:border-emerald-800">
-                        <i class="fas fa-th-large text-2xl text-emerald-600 dark:text-emerald-400"></i>
+                        <i class="fas fa-money-check text-2xl text-emerald-600 dark:text-emerald-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Categorías</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Modifica los textos,
-                        títulos y descripciones de las secciones de categorías en el inicio.</p>
-                    <a href="{{ route('inicio.catalog') }}"
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Metodos de pago</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Agrega, modifica, elimina y
+                        actualiza los metodos de pago de tu registro.</p>
+                    <a href="{{ route('metodos-pago') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-emerald-200 dark:shadow-none">
-                        <span>Editar Categorías</span>
-                        <i class="fas fa-pen text-xs"></i>
+                        <span>Gestionar Metodos de pago</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             </div>
 
-            <!-- Footer -->
+            <!-- Usuarios -->
             <div
                 class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div
@@ -60,15 +60,15 @@
                 <div class="p-8">
                     <div
                         class="w-14 h-14 bg-amber-100 dark:bg-amber-900/50 rounded-xl flex items-center justify-center mb-6 border border-amber-200 dark:border-amber-800">
-                        <i class="fas fa-shoe-prints text-2xl text-amber-600 dark:text-amber-400"></i>
+                        <i class="fas fa-user text-2xl text-amber-600 dark:text-amber-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Footer del Index</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona la información,
-                        enlaces y avisos legales que aparecen en el pie de página.</p>
-                    <a href="{{ route('inicio.footer') }}"
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Usuarios</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona la información de
+                        los usuarios del sistema.</p>
+                    <a href="#"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-amber-200 dark:shadow-none">
-                        <span>Gestionar Footer</span>
-                        <i class="fas fa-external-link-alt text-xs"></i>
+                        <span>Gestionar Usuarios</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             </div>

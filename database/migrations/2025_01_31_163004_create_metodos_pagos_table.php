@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('status_id');
             $table->string('nombre');
-            $table->string('evidencia');
             $table->timestamps();
             $table->foreign('status_id')->references('id')->on('status');
         });

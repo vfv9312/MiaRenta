@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('colonias', function (Blueprint $table) {
             $table->id();
             $table->integer('cp');
-            $table->integer('estado_id');
+            $table->integer('id_estado');
             $table->string('estado');
-            $table->integer('municipio_id');
+            $table->integer('id_municipio');
             $table->string('municipio');
-            $table->integer('localidad_id');
+            $table->integer('id_localidad');
             $table->string('localidad');
             $table->point('cordenadas')->nullable();
+            $table->dateTime('deleted_at')->nullable();
+            $table->unsignedBigInteger('estatus')->nullable();
+            $table->foreign('estatus')->references('id')->on('status')->onDelete('cascade');
             $table->timestamps();
         });
     }

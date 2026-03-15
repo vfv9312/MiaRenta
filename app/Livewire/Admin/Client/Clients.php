@@ -28,6 +28,9 @@ class Clients extends Component
     // Dynamic addresses
     public $direcciones = [];
 
+    // Colonia search results per address index
+    public $coloniaResults = [];
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -35,7 +38,7 @@ class Clients extends Component
 
     public function render()
     {
-        $clients = Cliente::with(['persona', 'telefonos', 'catalogoDirecciones.direccion'])
+        $clients = Cliente::with(['persona', 'telefonos', 'catalogoDirecciones.direccion.colonia'])
             ->whereIn('status_id', [1, 2])
             ->where(function ($q) {
                 $q->where('correo', 'like', '%' . $this->search . '%')
@@ -67,6 +70,7 @@ class Clients extends Component
     {
         $this->isOpen = false;
         $this->resetValidation();
+        $this->coloniaResults = [];
     }
 
     private function resetInputFields()
@@ -80,6 +84,7 @@ class Clients extends Component
         $this->RFC = '';
         $this->telefonos = [];
         $this->direcciones = [];
+        $this->coloniaResults = [];
     }
 
     // ===== PHONE MANAGEMENT =====
@@ -98,6 +103,8 @@ class Clients extends Component
     public function addAddress()
     {
         $this->direcciones[] = [
+            'colonias_id' => '',
+            'colonia_nombre' => '',
             'calle' => '',
             'entre_calles' => '',
             'referencia' => '',
@@ -112,6 +119,36 @@ class Clients extends Component
     {
         unset($this->direcciones[$index]);
         $this->direcciones = array_values($this->direcciones);
+        unset($this->coloniaResults[$index]);
+        $this->coloniaResults = array_values($this->coloniaResults);
+    }
+
+    public function search_colonia($index)
+    {
+        $searchTerm = $this->direcciones[$index]['colonia_nombre'];
+
+        if (strlen($searchTerm) < 3) {
+            $this->coloniaResults[$index] = [];
+            return;
+        }
+
+        $this->coloniaResults[$index] = \App\Models\Colonia::whereIn('estatus', [1, 2])
+            ->where(function ($q) use ($searchTerm) {
+                $q->where('localidad', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('municipio', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('cp', 'like', '%' . $searchTerm . '%');
+            })
+            ->limit(5)
+            ->get(['id', 'localidad', 'municipio', 'cp', 'estado'])
+            ->toArray();
+    }
+
+    public function select_colonia($index, $coloniaId, $localidad, $municipio, $cp)
+    {
+        $this->direcciones[$index]['colonias_id'] = $coloniaId;
+        $this->direcciones[$index]['colonia_nombre'] = "{$localidad}, {$municipio} (CP: {$cp})";
+        $this->direcciones[$index]['cp'] = $cp;
+        $this->coloniaResults[$index] = [];
     }
 
     public function store()
@@ -181,7 +218,7 @@ class Clients extends Component
                 }
 
                 $direccion = Direccion::create([
-                    'colonias_id' => 1, // Default, can be improved
+                    'colonias_id' => $dir['colonias_id'] ?: 1, // Use selected or default
                     'calle' => $dir['calle'],
                     'entre_calles' => $dir['entre_calles'],
                     'referencia' => $dir['referencia'],
@@ -231,7 +268,15 @@ class Clients extends Component
                     $lng = $point->lng;
                 }
             }
+
+            $colonia_nombre = '';
+            if ($dir && $dir->colonia) {
+                $colonia_nombre = "{$dir->colonia->localidad}, {$dir->colonia->municipio} (CP: {$dir->colonia->cp})";
+            }
+
             return [
+                'colonias_id' => $dir->colonias_id ?? '',
+                'colonia_nombre' => $colonia_nombre,
                 'calle' => $dir->calle ?? '',
                 'entre_calles' => $dir->entre_calles ?? '',
                 'referencia' => $dir->referencia ?? '',

@@ -93,21 +93,20 @@
                             <label
                                 class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Imagen</label>
                             <div class="relative group">
-                                <div
+                                <label
                                     class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-lime-500 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-900">
                                     <div class="space-y-1 text-center">
                                         <i
                                             class="fas fa-cloud-upload-alt text-3xl text-gray-400 group-hover:text-lime-500 transition-colors mb-2"></i>
                                         <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                            <label
-                                                class="relative cursor-pointer rounded-md font-medium text-lime-600 hover:text-lime-500">
-                                                <span>Subir archivo</span>
-                                                <input type="file" wire:model="image" class="sr-only">
-                                            </label>
+                                            <span class="relative rounded-md font-medium text-lime-600 hover:text-lime-500">
+                                                Subir archivo
+                                            </span>
+                                            <input type="file" wire:model="image" class="sr-only">
                                         </div>
                                         <p class="text-xs text-gray-500">PNG, JPG hasta 2MB</p>
                                     </div>
-                                </div>
+                                </label>
                                 <div wire:loading wire:target="image"
                                     class="mt-2 text-xs text-lime-600 flex items-center gap-2">
                                     <i class="fas fa-spinner fa-spin"></i> Subiendo...

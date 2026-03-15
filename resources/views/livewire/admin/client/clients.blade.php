@@ -282,24 +282,56 @@
                                         @error("direcciones.{$i}.referencia") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                                     </div>
 
-                                    <div class="grid grid-cols-3 gap-3">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pb-2">
+                                        <div class="relative">
+                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Buscar Colonia / Municipio</label>
+                                            <div class="relative">
+                                                <input wire:model.live="direcciones.{{ $i }}.colonia_nombre" 
+                                                    wire:input="search_colonia({{ $i }})"
+                                                    type="text"
+                                                    class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
+                                                    placeholder="Escribe municipio o CP...">
+                                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                    <i class="fas fa-search text-gray-400 text-xs"></i>
+                                                </div>
+                                            </div>
+
+                                            @if(!empty($coloniaResults[$i]))
+                                                <div class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl overflow-hidden">
+                                                    @foreach($coloniaResults[$i] as $res)
+                                                        <button type="button" 
+                                                            wire:click="select_colonia({{ $i }}, {{ $res['id'] }}, '{{ $res['localidad'] }}', '{{ $res['municipio'] }}', '{{ $res['cp'] }}')"
+                                                            class="w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/40 border-b border-gray-50 dark:border-gray-700 last:border-0 transition-colors">
+                                                            <div class="font-bold text-gray-900 dark:text-white">{{ $res['localidad'] }}</div>
+                                                            <div class="text-xs text-gray-500">{{ $res['municipio'] }}, {{ $res['estado'] }} - CP: {{ $res['cp'] }}</div>
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                            @error("direcciones.{$i}.colonias_id") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                                        </div>
+
                                         <div>
                                             <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">C.P.</label>
                                             <input wire:model="direcciones.{{ $i }}.cp" type="text"
-                                                class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
-                                                placeholder="31000">
+                                                class="w-full bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 p-2 text-sm"
+                                                placeholder="31000"
+                                                readonly>
                                         </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-3 pb-2">
                                         <div>
                                             <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Latitud</label>
                                             <input wire:model="direcciones.{{ $i }}.lat" type="text" id="lat-{{ $i }}"
-                                                class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
+                                                class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 p-2 text-sm"
                                                 placeholder="28.6353"
                                                 readonly>
                                         </div>
                                         <div>
                                             <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Longitud</label>
                                             <input wire:model="direcciones.{{ $i }}.lng" type="text" id="lng-{{ $i }}"
-                                                class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
+                                                class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 p-2 text-sm"
                                                 placeholder="-106.089"
                                                 readonly>
                                         </div>

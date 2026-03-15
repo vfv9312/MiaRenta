@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             PeopleTableSeeder::class,
             UsersTableSeeder::class,
             ContactSeeder::class,
+            Cologne::class,
         ]);
     }
 }

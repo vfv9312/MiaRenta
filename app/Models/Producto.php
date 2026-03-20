@@ -46,4 +46,9 @@ class Producto extends Model
     {
         return $this->belongsToMany(Combinacion::class, 'combinacion_producto');
     }
+
+    public function reparaciones()
+    {
+        return $this->hasMany(Reparacion::class, 'producto_id');
+    }
 }

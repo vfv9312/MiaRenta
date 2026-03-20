@@ -5,6 +5,10 @@
             @livewire('admin.order.index')
         @break
 
+        @case(2)
+            @livewire('admin.order.orders')
+        @break
+
         @default
     @endswitch
 @endsection

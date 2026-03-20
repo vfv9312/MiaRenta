@@ -69,6 +69,7 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::get('admin/empleados', 'Admin\Employee\EmployeeController@index')->name('empleados');
 
         Route::get('admin/generar-orden', 'Admin\Order\IndexController@index')->name('generar-orden');
+        Route::get('admin/ordenes', 'Admin\Order\IndexController@ordenes')->name('ordenes');
         // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
     });
 });

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('persona_id');
             $table->unsignedBigInteger('status_id');
-            $table->string('correo');
+            $table->string('correo')->nullable();
             $table->timestamps();
             $table->foreign('persona_id')->references('id')->on('people');
             $table->foreign('status_id')->references('id')->on('status');

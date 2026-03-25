@@ -5,9 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
+
     <title>{{ config('app.name') }}</title>
 
-    <link rel="icon" href="{{ asset('/storage/Login/new-logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('/storage/Login/logo.jpeg') }}" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -37,6 +39,7 @@
     @include('partials.sidebar')
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('google.maps_api_key') }}"></script>
     @livewireScripts
+    @stack('js')
 
 </body>
 

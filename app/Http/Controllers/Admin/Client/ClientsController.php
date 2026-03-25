@@ -12,4 +12,16 @@ class ClientsController extends Controller
         $section = 1;
         return view('pages.admin.client.index', compact('section'));
     }
+
+    public function create()
+    {
+        $section = 2;
+        return view('pages.admin.client.index', compact('section'));
+    }
+
+    public function edit($id)
+    {
+        $section = 3;
+        return view('pages.admin.client.index', compact('section', 'id'));
+    }
 }

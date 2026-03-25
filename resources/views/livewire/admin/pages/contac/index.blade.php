@@ -165,6 +165,33 @@
                             @enderror
                         </div>
 
+                        <!-- Icono (Imagen) -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Nueva imagen de
+                                Icono (Opcional)</label>
+                            <input wire:model="nueva_imagen" type="file"
+                                class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-400"
+                                accept="image/*,.svg">
+                            <div wire:loading wire:target="nueva_imagen" class="mt-2 text-xs text-gray-500">Subiendo...
+                            </div>
+                            @if ($nueva_imagen)
+                                <div class="mt-2">
+                                    <p class="text-xs text-gray-500 mb-2">Previsualización:</p>
+                                    <div
+                                        class="w-16 h-16 rounded-xl border border-gray-200 dark:border-gray-600 overflow-hidden bg-gray-50 dark:bg-gray-900/50 flex items-center justify-center p-2">
+                                        @if (in_array($nueva_imagen->getClientOriginalExtension(), ['svg']))
+                                            <img src="{{ $nueva_imagen->temporaryUrl() }}" class="w-full h-full object-contain">
+                                        @else
+                                            <img src="{{ $nueva_imagen->temporaryUrl() }}" class="w-full h-full object-cover">
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                            @error('nueva_imagen')
+                                <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <!-- Estado -->
                         <div>
                             <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Estado</label>

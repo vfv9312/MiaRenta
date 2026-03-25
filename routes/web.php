@@ -61,6 +61,8 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::get('admin/imagenes', 'Admin\Inventary\FurnitureController@images')->name('imagenes.inventary');
         Route::get('admin/reparaciones', 'Admin\Inventary\FurnitureController@repairs')->name('reparaciones');
         Route::get('admin/clientes', 'Admin\Client\ClientsController@index')->name('clientes');
+        Route::get('admin/clientes/crear', 'Admin\Client\ClientsController@create')->name('clientes.crear');
+        Route::get('admin/clientes/{id}/editar', 'Admin\Client\ClientsController@edit')->name('clientes.editar');
 
         Route::get('admin/configuracion', 'Admin\Configuration\IndexController@index')->name('configuracion');
         Route::get('admin/colonias', 'Admin\Configuration\IndexController@colonias')->name('colonias');

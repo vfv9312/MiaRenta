@@ -13,14 +13,16 @@
         </header>
 
         @if (session()->has('message'))
-            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl flex items-center gap-3 text-green-700 dark:text-green-400">
+            <div
+                class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl flex items-center gap-3 text-green-700 dark:text-green-400">
                 <i class="fas fa-check-circle"></i>
                 <span class="font-medium">{{ session('message') }}</span>
             </div>
         @endif
 
         <!-- Card Container -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <!-- Search -->
             <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
                 <div class="relative max-w-md">
@@ -38,11 +40,21 @@
                 <table class="w-full text-left">
                     <thead>
                         <tr class="bg-gray-50 dark:bg-gray-900/50">
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cliente</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Correo</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Teléfonos</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Direcciones</th>
-                            <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Acciones</th>
+                            <th
+                                class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Cliente</th>
+                            <th
+                                class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Correo</th>
+                            <th
+                                class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Teléfonos</th>
+                            <th
+                                class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                Direcciones</th>
+                            <th
+                                class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">
+                                Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
@@ -50,15 +62,19 @@
                             <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center">
                                             <span class="text-indigo-600 dark:text-indigo-400 font-bold text-sm">
                                                 {{ strtoupper(substr($client->persona->nombre ?? '', 0, 1)) }}{{ strtoupper(substr($client->persona->apellido ?? '', 0, 1)) }}
                                             </span>
                                         </div>
                                         <div>
-                                            <div class="font-bold text-gray-900 dark:text-white">{{ $client->persona->nombre ?? '' }} {{ $client->persona->apellido ?? '' }}</div>
-                                            @if($client->persona->RFC)
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">RFC: {{ $client->persona->RFC }}</div>
+                                            <div class="font-bold text-gray-900 dark:text-white">
+                                                {{ $client->persona->nombre ?? '' }}
+                                                {{ $client->persona->apellido ?? '' }}</div>
+                                            @if ($client->persona->RFC)
+                                                <div class="text-xs text-gray-500 dark:text-gray-400">RFC:
+                                                    {{ $client->persona->RFC }}</div>
                                             @endif
                                         </div>
                                     </div>
@@ -69,8 +85,9 @@
                                 <td class="px-6 py-4">
                                     <div class="flex flex-col gap-1">
                                         @foreach ($client->telefonos->take(2) as $tel)
-                                            <span class="inline-flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
-                                                @if($tel->tipo === 'whatsapp')
+                                            <span
+                                                class="inline-flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
+                                                @if ($tel->tipo === 'whatsapp')
                                                     <i class="fab fa-whatsapp text-green-500"></i>
                                                 @elseif($tel->tipo === 'telefono')
                                                     <i class="fas fa-phone text-blue-500"></i>
@@ -81,24 +98,29 @@
                                             </span>
                                         @endforeach
                                         @if ($client->telefonos->count() > 2)
-                                            <span class="text-xs text-gray-400">+{{ $client->telefonos->count() - 2 }} más</span>
+                                            <span class="text-xs text-gray-400">+{{ $client->telefonos->count() - 2 }}
+                                                más</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="inline-flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
                                         <i class="fas fa-map-marker-alt text-red-400"></i>
-                                        {{ $client->catalogoDirecciones->count() }} {{ $client->catalogoDirecciones->count() == 1 ? 'dirección' : 'direcciones' }}
+                                        {{ $client->catalogoDirecciones->count() }}
+                                        {{ $client->catalogoDirecciones->count() == 1 ? 'dirección' : 'direcciones' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <button wire:click="edit({{ $client->id }})"
-                                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors dark:hover:bg-blue-900/30" title="Editar">
+                                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors dark:hover:bg-blue-900/30"
+                                            title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button wire:click="confirmDelete({{ $client->id }})"
-                                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:hover:bg-red-900/30" title="Eliminar">
+                                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:hover:bg-red-900/30"
+                                            title="Eliminar">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
@@ -129,8 +151,10 @@
     @if ($isOpen)
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" wire:click="closeModal"></div>
-            <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-3xl w-full animate-in fade-in zoom-in duration-200 overflow-y-auto max-h-[90vh]">
-                <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
+            <div
+                class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-3xl w-full animate-in fade-in zoom-in duration-200 overflow-y-auto max-h-[90vh]">
+                <div
+                    class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">
                         {{ $item_id ? 'Editar Cliente' : 'Nuevo Cliente' }}
                     </h3>
@@ -148,40 +172,52 @@
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Nombre</label>
+                                <label
+                                    class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Nombre</label>
                                 <input wire:model="nombre" type="text"
                                     class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2.5"
                                     placeholder="Nombre">
-                                @error('nombre') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                                @error('nombre')
+                                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Apellido</label>
+                                <label
+                                    class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Apellido</label>
                                 <input wire:model="apellido" type="text"
                                     class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2.5"
                                     placeholder="Apellido">
-                                @error('apellido') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                                @error('apellido')
+                                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Correo Electrónico</label>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Correo
+                                    Electrónico</label>
                                 <input wire:model="correo" type="email"
                                     class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2.5"
                                     placeholder="correo@ejemplo.com">
-                                @error('correo') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                                @error('correo')
+                                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">INE <span class="text-gray-400 font-normal">(opcional)</span></label>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">INE <span
+                                        class="text-gray-400 font-normal">(opcional)</span></label>
                                 <input wire:model="INE" type="text"
                                     class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2.5"
                                     placeholder="Número de INE">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">CURP <span class="text-gray-400 font-normal">(opcional)</span></label>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">CURP <span
+                                        class="text-gray-400 font-normal">(opcional)</span></label>
                                 <input wire:model="CURP" type="text"
                                     class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2.5"
                                     placeholder="CURP">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">RFC <span class="text-gray-400 font-normal">(opcional)</span></label>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">RFC <span
+                                        class="text-gray-400 font-normal">(opcional)</span></label>
                                 <input wire:model="RFC" type="text"
                                     class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2.5"
                                     placeholder="RFC">
@@ -197,20 +233,24 @@
                             <h4 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 <i class="fas fa-phone mr-2"></i> Teléfonos
                             </h4>
-                            <button type="button" wire:click="addPhone" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-bold flex items-center gap-1">
+                            <button type="button" wire:click="addPhone"
+                                class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-bold flex items-center gap-1">
                                 <i class="fas fa-plus-circle"></i> Agregar
                             </button>
                         </div>
 
                         <div class="space-y-3">
                             @foreach ($telefonos as $i => $tel)
-                                <div class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600">
+                                <div
+                                    class="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600">
                                     <div class="flex-1 grid grid-cols-2 gap-3">
                                         <div>
                                             <input wire:model="telefonos.{{ $i }}.telefono" type="text"
                                                 class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
                                                 placeholder="Ej: 6141234567">
-                                            @error("telefonos.{$i}.telefono") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                                            @error("telefonos.{$i}.telefono")
+                                                <span class="text-xs text-red-500">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div>
                                             <select wire:model="telefonos.{{ $i }}.tipo"
@@ -222,14 +262,17 @@
                                         </div>
                                     </div>
                                     @if (count($telefonos) > 1)
-                                        <button type="button" wire:click="removePhone({{ $i }})" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg">
+                                        <button type="button" wire:click="removePhone({{ $i }})"
+                                            class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg">
                                             <i class="fas fa-trash-alt text-sm"></i>
                                         </button>
                                     @endif
                                 </div>
                             @endforeach
                         </div>
-                        @error('telefonos') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                        @error('telefonos')
+                            <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <hr class="border-gray-100 dark:border-gray-700">
@@ -240,18 +283,22 @@
                             <h4 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 <i class="fas fa-map-marker-alt mr-2"></i> Direcciones
                             </h4>
-                            <button type="button" wire:click="addAddress" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-bold flex items-center gap-1">
+                            <button type="button" wire:click="addAddress"
+                                class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-bold flex items-center gap-1">
                                 <i class="fas fa-plus-circle"></i> Agregar
                             </button>
                         </div>
 
                         <div class="space-y-4">
                             @foreach ($direcciones as $i => $dir)
-                                <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600 space-y-3">
+                                <div
+                                    class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600 space-y-3">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm font-bold text-gray-600 dark:text-gray-300">Dirección {{ $i + 1 }}</span>
+                                        <span class="text-sm font-bold text-gray-600 dark:text-gray-300">Dirección
+                                            {{ $i + 1 }}</span>
                                         @if (count($direcciones) > 1)
-                                            <button type="button" wire:click="removeAddress({{ $i }})" class="text-red-500 hover:text-red-700 text-sm font-bold">
+                                            <button type="button" wire:click="removeAddress({{ $i }})"
+                                                class="text-red-500 hover:text-red-700 text-sm font-bold">
                                                 <i class="fas fa-trash-alt mr-1"></i> Quitar
                                             </button>
                                         @endif
@@ -259,100 +306,129 @@
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div>
-                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Calle</label>
+                                            <label
+                                                class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Calle</label>
                                             <input wire:model="direcciones.{{ $i }}.calle" type="text"
                                                 class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
                                                 placeholder="Calle y número">
-                                            @error("direcciones.{$i}.calle") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                                            @error("direcciones.{$i}.calle")
+                                                <span class="text-xs text-red-500">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div>
-                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Entre calles</label>
-                                            <input wire:model="direcciones.{{ $i }}.entre_calles" type="text"
+                                            <label
+                                                class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Entre
+                                                calles</label>
+                                            <input wire:model="direcciones.{{ $i }}.entre_calles"
+                                                type="text"
                                                 class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
                                                 placeholder="Entre calle X y calle Y">
-                                            @error("direcciones.{$i}.entre_calles") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                                            @error("direcciones.{$i}.entre_calles")
+                                                <span class="text-xs text-red-500">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Referencia</label>
+                                        <label
+                                            class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Referencia</label>
                                         <input wire:model="direcciones.{{ $i }}.referencia" type="text"
                                             class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
                                             placeholder="Referencia para encontrar el lugar">
-                                        @error("direcciones.{$i}.referencia") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                                        @error("direcciones.{$i}.referencia")
+                                            <span class="text-xs text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pb-2">
                                         <div class="relative">
-                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Buscar Colonia / Municipio</label>
+                                            <label
+                                                class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Buscar
+                                                Colonia / Municipio</label>
                                             <div class="relative">
-                                                <input wire:model.live="direcciones.{{ $i }}.colonia_nombre" 
-                                                    wire:input="search_colonia({{ $i }})"
-                                                    type="text"
+                                                <input
+                                                    wire:model.live="direcciones.{{ $i }}.colonia_nombre"
+                                                    wire:input="search_colonia({{ $i }})" type="text"
                                                     class="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white p-2 text-sm"
                                                     placeholder="Escribe municipio o CP...">
-                                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                <div
+                                                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                                     <i class="fas fa-search text-gray-400 text-xs"></i>
                                                 </div>
                                             </div>
 
-                                            @if(!empty($coloniaResults[$i]))
-                                                <div class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl overflow-hidden">
-                                                    @foreach($coloniaResults[$i] as $res)
-                                                        <button type="button" 
+                                            @if (!empty($coloniaResults[$i]))
+                                                <div
+                                                    class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl overflow-hidden">
+                                                    @foreach ($coloniaResults[$i] as $res)
+                                                        <button type="button"
                                                             wire:click="select_colonia({{ $i }}, {{ $res['id'] }}, '{{ $res['localidad'] }}', '{{ $res['municipio'] }}', '{{ $res['cp'] }}')"
                                                             class="w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/40 border-b border-gray-50 dark:border-gray-700 last:border-0 transition-colors">
-                                                            <div class="font-bold text-gray-900 dark:text-white">{{ $res['localidad'] }}</div>
-                                                            <div class="text-xs text-gray-500">{{ $res['municipio'] }}, {{ $res['estado'] }} - CP: {{ $res['cp'] }}</div>
+                                                            <div class="font-bold text-gray-900 dark:text-white">
+                                                                {{ $res['localidad'] }}</div>
+                                                            <div class="text-xs text-gray-500">
+                                                                {{ $res['municipio'] }}, {{ $res['estado'] }} - CP:
+                                                                {{ $res['cp'] }}</div>
                                                         </button>
                                                     @endforeach
                                                 </div>
                                             @endif
-                                            @error("direcciones.{$i}.colonias_id") <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                                            @error("direcciones.{$i}.colonias_id")
+                                                <span class="text-xs text-red-500">{{ $message }}</span>
+                                            @enderror
                                         </div>
 
                                         <div>
-                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">C.P.</label>
+                                            <label
+                                                class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">C.P.</label>
                                             <input wire:model="direcciones.{{ $i }}.cp" type="text"
                                                 class="w-full bg-gray-100 dark:bg-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 p-2 text-sm"
-                                                placeholder="31000"
-                                                readonly>
+                                                placeholder="31000" readonly>
                                         </div>
                                     </div>
 
                                     <div class="grid grid-cols-2 gap-3 pb-2">
                                         <div>
-                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Latitud</label>
-                                            <input wire:model="direcciones.{{ $i }}.lat" type="text" id="lat-{{ $i }}"
+                                            <label
+                                                class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Latitud</label>
+                                            <input wire:model="direcciones.{{ $i }}.lat" type="text"
+                                                id="lat-{{ $i }}"
                                                 class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 p-2 text-sm"
-                                                placeholder="28.6353"
-                                                readonly>
+                                                placeholder="28.6353" readonly>
                                         </div>
                                         <div>
-                                            <label class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Longitud</label>
-                                            <input wire:model="direcciones.{{ $i }}.lng" type="text" id="lng-{{ $i }}"
+                                            <label
+                                                class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 block">Longitud</label>
+                                            <input wire:model="direcciones.{{ $i }}.lng" type="text"
+                                                id="lng-{{ $i }}"
                                                 class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 p-2 text-sm"
-                                                placeholder="-106.089"
-                                                readonly>
+                                                placeholder="-106.089" readonly>
                                         </div>
                                     </div>
 
                                     {{-- Google Maps --}}
                                     <div>
-                                        <div id="map-{{ $i }}" class="w-full h-48 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-900" wire:ignore></div>
-                                        <p class="text-xs text-gray-400 mt-1">Haz clic en el mapa para seleccionar la ubicación.</p>
+                                        <div id="map-{{ $i }}"
+                                            class="w-full h-48 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-900"
+                                            wire:ignore></div>
+                                        <p class="text-xs text-gray-400 mt-1">Haz clic en el mapa para seleccionar la
+                                            ubicación.</p>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        @error('direcciones') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                        @error('direcciones')
+                            <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="pt-6 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3">
-                        <button type="button" wire:click="closeModal" class="px-5 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-xl transition-colors">
+                        <button type="button" wire:click="closeModal"
+                            class="px-5 py-2.5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium rounded-xl transition-colors">
                             Cancelar
                         </button>
-                        <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2">
+                        <button type="submit"
+                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-indigo-200 dark:shadow-none flex items-center gap-2">
                             <i class="fas fa-save"></i> {{ $item_id ? 'Actualizar' : 'Guardar Cliente' }}
                         </button>
                     </div>
@@ -362,81 +438,120 @@
 
         {{-- Google Maps Script --}}
         <script>
-            document.addEventListener('livewire:navigated', initMaps);
-            document.addEventListener('livewire:init', initMaps);
+            // Almacenar instancias de mapa para poder re-renderizar
+            window._adminMaps = window._adminMaps || {};
 
-            function initMaps() {
-                setTimeout(() => {
-                    @foreach ($direcciones as $i => $dir)
-                        (function(index) {
-                            const mapEl = document.getElementById('map-' + index);
-                            if (!mapEl || mapEl.dataset.initialized) return;
-                            mapEl.dataset.initialized = 'true';
+            function initAdminMap(index, lat, lng) {
+                if (typeof google === 'undefined') return;
 
-                            const initialLat = {{ $dir['lat'] ?: '28.6353' }};
-                            const initialLng = {{ $dir['lng'] ?: '-106.089' }};
+                const mapEl = document.getElementById('map-' + index);
+                if (!mapEl) return;
 
-                            const map = new google.maps.Map(mapEl, {
-                                center: { lat: initialLat, lng: initialLng },
-                                zoom: 15,
-                                mapTypeControl: false,
-                                streetViewControl: false,
-                            });
+                // Si ya tiene mapa, solo hacer resize
+                if (window._adminMaps[index]) {
+                    google.maps.event.trigger(window._adminMaps[index].map, 'resize');
+                    window._adminMaps[index].map.setCenter({ lat: lat, lng: lng });
+                    return;
+                }
 
-                            let marker = new google.maps.Marker({
-                                position: { lat: initialLat, lng: initialLng },
-                                map: map,
-                                draggable: true,
-                            });
+                const map = new google.maps.Map(mapEl, {
+                    center: { lat: lat, lng: lng },
+                    zoom: 15,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                    fullscreenControl: false
+                });
 
-                            @if(!empty($dir['lat']) && !empty($dir['lng']))
-                                marker.setVisible(true);
-                            @else
-                                marker.setVisible(false);
-                            @endif
+                let marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    draggable: true,
+                    icon: {
+                        url: "{{ asset('imagenes/logos/Pin.png') }}",
+                        scaledSize: new google.maps.Size(60, 60),
+                    }
+                });
 
-                            map.addListener('click', function(e) {
-                                const lat = e.latLng.lat();
-                                const lng = e.latLng.lng();
-                                marker.setPosition(e.latLng);
-                                marker.setVisible(true);
+                @if (!empty($dir['lat']) && !empty($dir['lng']))
+                    marker.setVisible(true);
+                @else
+                    marker.setVisible(false);
+                @endif
 
-                                document.getElementById('lat-' + index).value = lat;
-                                document.getElementById('lng-' + index).value = lng;
-                                @this.set('direcciones.' + index + '.lat', lat.toString());
-                                @this.set('direcciones.' + index + '.lng', lng.toString());
-                            });
+                // Forzar resize para que el mapa se renderice completamente
+                google.maps.event.trigger(map, 'resize');
+                map.setCenter({ lat: lat, lng: lng });
 
-                            marker.addListener('dragend', function(e) {
-                                const lat = e.latLng.lat();
-                                const lng = e.latLng.lng();
-                                document.getElementById('lat-' + index).value = lat;
-                                document.getElementById('lng-' + index).value = lng;
-                                @this.set('direcciones.' + index + '.lat', lat.toString());
-                                @this.set('direcciones.' + index + '.lng', lng.toString());
-                            });
-                        })({{ $i }});
-                    @endforeach
-                }, 300);
+                map.addListener('click', function(e) {
+                    const clickLat = e.latLng.lat();
+                    const clickLng = e.latLng.lng();
+                    marker.setPosition(e.latLng);
+                    marker.setVisible(true);
+
+                    document.getElementById('lat-' + index).value = clickLat;
+                    document.getElementById('lng-' + index).value = clickLng;
+                    @this.set('direcciones.' + index + '.lat', clickLat.toString());
+                    @this.set('direcciones.' + index + '.lng', clickLng.toString());
+                });
+
+                marker.addListener('dragend', function(e) {
+                    const dragLat = e.latLng.lat();
+                    const dragLng = e.latLng.lng();
+                    document.getElementById('lat-' + index).value = dragLat;
+                    document.getElementById('lng-' + index).value = dragLng;
+                    @this.set('direcciones.' + index + '.lat', dragLat.toString());
+                    @this.set('direcciones.' + index + '.lng', dragLng.toString());
+                });
+
+                window._adminMaps[index] = { map, marker };
+                console.log('Mapa ' + index + ' listo.');
             }
+
+            function initAllMaps() {
+                if (typeof google === 'undefined') {
+                    setTimeout(initAllMaps, 400);
+                    return;
+                }
+                @foreach ($direcciones as $i => $dir)
+                    initAdminMap(
+                        {{ $i }},
+                        parseFloat("{{ $dir['lat'] ?: '28.6353' }}"),
+                        parseFloat("{{ $dir['lng'] ?: '-106.089' }}")
+                    );
+                @endforeach
+            }
+
+            // Escuchar el evento que dispara PHP al abrir/agregar dirección
+            document.addEventListener('livewire:init', function() {
+                Livewire.on('modal-opened', () => {
+                    // Esperar a que termine la animación del modal (200ms) + buffer
+                    setTimeout(initAllMaps, 400);
+                });
+            });
         </script>
     @endif
 
     {{-- ===================== DELETE MODAL ===================== --}}
     @if ($showDeleteModal)
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" wire:click="$set('showDeleteModal', false)"></div>
-            <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-in fade-in zoom-in duration-200">
-                <div class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
+            <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" wire:click="$set('showDeleteModal', false)">
+            </div>
+            <div
+                class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-in fade-in zoom-in duration-200">
+                <div
+                    class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-exclamation-triangle text-2xl text-red-600 dark:text-red-400"></i>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">¿Eliminar cliente?</h3>
-                <p class="text-gray-500 dark:text-gray-400 mb-6 font-medium">Se eliminarán también sus teléfonos y direcciones asociadas.</p>
+                <p class="text-gray-500 dark:text-gray-400 mb-6 font-medium">Se eliminarán también sus teléfonos y
+                    direcciones asociadas.</p>
                 <div class="flex gap-3">
-                    <button wire:click="$set('showDeleteModal', false)" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors w-full">
+                    <button wire:click="$set('showDeleteModal', false)"
+                        class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors w-full">
                         Cancelar
                     </button>
-                    <button wire:click="delete" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-200 dark:shadow-none w-full">
+                    <button wire:click="delete"
+                        class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-200 dark:shadow-none w-full">
                         Eliminar
                     </button>
                 </div>

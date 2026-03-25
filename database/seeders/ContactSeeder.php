@@ -42,26 +42,32 @@ class ContactSeeder extends Seeder
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 1,
             'nombre' => 'Facebook',
+            'imagen' => 'storage/contactos/x7qn3mfNikhYaz7Jo3tmSWOrCWRvZiYxqdavmIfc.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 1,
             'nombre' => 'Instagram',
+            'imagen' => 'storage/contactos/CqvnBspcc20HQq1E78eEUszml1PxaB8SywPKpQqC.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 1,
             'nombre' => 'Twitter',
+            'imagen' => 'storage/contactos/ujsF3cDD08KHO2MQhE3FfsEOYmBfoQIxtgtRw0v6.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 1,
             'nombre' => 'TikTok',
+            'imagen' => 'storage/contactos/GzdV2fBSuOEG6kc9yQdXkagh2np2nlWQD0UsTPHg.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 1,
             'nombre' => 'YouTube',
+            'imagen' => 'storage/contactos/2hLIdybBCkhNIS8qHrZ5J5gVlBV7MyMrjmag1S64.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 1,
             'nombre' => 'LinkedIn',
+            'imagen' => 'storage/contactos/iwiFwBHFCuf4uYV9wHdx8s3tqKrFdGyr6miYNdAV.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 2,
@@ -76,8 +82,9 @@ class ContactSeeder extends Seeder
             'nombre' => 'Correo Electronico General',
         ]);
         PageCatalagoTipo::create([
-            'contacto_tipo_id' => 3,
+            'contacto_tipo_id' => 1,
             'nombre' => 'WhatsApp',
+            'imagen' => 'storage/contactos/ZUfJQ1V3VOrGLeIDzTkqpTzSUpJPma9tMIUbT7bp.png'
         ]);
         PageCatalagoTipo::create([
             'contacto_tipo_id' => 3,

@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Person;
 use App\Models\Direccion;
 use App\Models\CatalagoCliente;
+use App\Models\Colonia;
 use App\Models\TelefonoCliente;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -42,10 +43,10 @@ class Clients extends Component
             ->whereIn('status_id', [1, 2])
             ->where(function ($q) {
                 $q->where('correo', 'like', '%' . $this->search . '%')
-                  ->orWhereHas('persona', function ($q2) {
-                      $q2->where('nombre', 'like', '%' . $this->search . '%')
-                         ->orWhere('apellido', 'like', '%' . $this->search . '%');
-                  });
+                    ->orWhereHas('persona', function ($q2) {
+                        $q2->where('nombre', 'like', '%' . $this->search . '%')
+                            ->orWhere('apellido', 'like', '%' . $this->search . '%');
+                    });
             })
             ->latest()
             ->paginate(10);
@@ -55,15 +56,14 @@ class Clients extends Component
 
     public function create()
     {
-        $this->resetInputFields();
-        $this->addPhone();
-        $this->addAddress();
-        $this->openModal();
+        return redirect()->route('clientes.crear');
     }
 
     public function openModal()
     {
         $this->isOpen = true;
+        // IMPORTANTE: Avisar a JS que el modal ya existe en el DOM
+        $this->dispatch('modal-opened');
     }
 
     public function closeModal()
@@ -113,6 +113,8 @@ class Clients extends Component
             'lng' => '',
             'prioridad' => count($this->direcciones) + 1,
         ];
+        // Re-inicializar mapas para que el nuevo mapa se dibuje
+        $this->dispatch('modal-opened');
     }
 
     public function removeAddress($index)
@@ -132,11 +134,11 @@ class Clients extends Component
             return;
         }
 
-        $this->coloniaResults[$index] = \App\Models\Colonia::whereIn('estatus', [1, 2])
+        $this->coloniaResults[$index] = Colonia::whereIn('estatus', [1, 2])
             ->where(function ($q) use ($searchTerm) {
                 $q->where('localidad', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('municipio', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('cp', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('municipio', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('cp', 'like', '%' . $searchTerm . '%');
             })
             ->limit(5)
             ->get(['id', 'localidad', 'municipio', 'cp', 'estado'])
@@ -214,6 +216,7 @@ class Clients extends Component
             foreach ($this->direcciones as $i => $dir) {
                 $coordenadas = null;
                 if (!empty($dir['lat']) && !empty($dir['lng'])) {
+                    // IMPORTANTE: Primero Longitud ($lng), luego Latitud ($lat)
                     $coordenadas = DB::raw("ST_GeomFromText('POINT({$dir['lng']} {$dir['lat']})')");
                 }
 
@@ -243,54 +246,30 @@ class Clients extends Component
 
     public function edit($id)
     {
-        $cliente = Cliente::with(['persona', 'telefonos', 'catalogoDirecciones.direccion'])->findOrFail($id);
-        $this->item_id = $id;
-        $this->nombre = $cliente->persona->nombre;
-        $this->apellido = $cliente->persona->apellido;
-        $this->correo = $cliente->correo;
-        $this->INE = $cliente->persona->INE;
-        $this->CURP = $cliente->persona->CURP;
-        $this->RFC = $cliente->persona->RFC;
+        return redirect()->route('clientes.editar', $id);
+    }
 
-        $this->telefonos = $cliente->telefonos->map(function ($t) {
-            return ['telefono' => $t->telefono, 'tipo' => $t->tipo, 'prioridad' => $t->prioridad];
-        })->toArray();
+    public function updatedDirecciones($value, $key)
+    {
+        // Buscamos si el cambio fue en el campo 'referencia' o 'calle'
+        if (str_contains($key, '.referencia') || str_contains($key, '.calle')) {
 
-        $this->direcciones = $cliente->catalogoDirecciones->map(function ($cd) {
-            $dir = $cd->direccion;
-            $lat = '';
-            $lng = '';
-            if ($dir && $dir->cordenadas) {
-                // Extract coordinates from database POINT
-                $point = DB::selectOne("SELECT ST_X(cordenadas) as lng, ST_Y(cordenadas) as lat FROM direcciones WHERE id = ?", [$dir->id]);
-                if ($point) {
-                    $lat = $point->lat;
-                    $lng = $point->lng;
-                }
+            // Expresión regular para detectar coordenadas en enlaces de Google Maps
+            // Ejemplo: https://www.google.com/maps?q=16.7527,-93.1167
+            if (preg_match('/@?(-?\d+\.\d+),(-?\d+\.\d+)/', $value, $matches)) {
+                $index = explode('.', $key)[0]; // Obtenemos el índice de la dirección (0, 1, 2...)
+
+                $this->direcciones[$index]['lat'] = $matches[1];
+                $this->direcciones[$index]['lng'] = $matches[2];
+
+                // Avisar al JS para que mueva el PIN del mapa a esta nueva posición
+                $this->dispatch('posicion-actualizada', [
+                    'index' => $index,
+                    'lat' => $matches[1],
+                    'lng' => $matches[2]
+                ]);
             }
-
-            $colonia_nombre = '';
-            if ($dir && $dir->colonia) {
-                $colonia_nombre = "{$dir->colonia->localidad}, {$dir->colonia->municipio} (CP: {$dir->colonia->cp})";
-            }
-
-            return [
-                'colonias_id' => $dir->colonias_id ?? '',
-                'colonia_nombre' => $colonia_nombre,
-                'calle' => $dir->calle ?? '',
-                'entre_calles' => $dir->entre_calles ?? '',
-                'referencia' => $dir->referencia ?? '',
-                'cp' => $dir->cp ?? '',
-                'lat' => $lat,
-                'lng' => $lng,
-                'prioridad' => $cd->prioridad,
-            ];
-        })->toArray();
-
-        if (empty($this->telefonos)) $this->addPhone();
-        if (empty($this->direcciones)) $this->addAddress();
-
-        $this->openModal();
+        }
     }
 
     public function confirmDelete($id)

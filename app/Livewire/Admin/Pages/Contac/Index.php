@@ -5,18 +5,20 @@ namespace App\Livewire\Admin\Pages\Contac;
 use App\Models\PageDetalleContacto;
 use App\Models\PageCatalagoTipo;
 use App\Models\Status;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public $search = '';
     public $isOpen = false;
     public $showDeleteModal = false;
 
-    public $item_id, $status_id, $contacto_data_tipo_id, $recurso;
+    public $item_id, $status_id, $contacto_data_tipo_id, $recurso, $nueva_imagen;
 
     protected $rules = [
         'status_id' => 'required',
@@ -65,6 +67,7 @@ class Index extends Component
         $this->status_id = '';
         $this->contacto_data_tipo_id = '';
         $this->recurso = '';
+        $this->nueva_imagen = null;
     }
 
     public function store()
@@ -79,6 +82,17 @@ class Index extends Component
                 'recurso' => $this->recurso,
             ]
         );
+        
+        if ($this->nueva_imagen) {
+            $tipo = PageCatalagoTipo::find($this->contacto_data_tipo_id);
+            if ($tipo) {
+                // If it's an SVG file, we might want to store the content, 
+                // but for simplicity and consistency with "imagen" field usage in other parts, 
+                // we'll store the path.
+                $path = $this->nueva_imagen->store('public/contactos');
+                $tipo->update(['imagen' => str_replace('public/', 'storage/', $path)]);
+            }
+        }
 
         session()->flash('message', $this->item_id ? 'Detalle actualizado correctamente.' : 'Detalle creado correctamente.');
         $this->closeModal();

@@ -100,9 +100,10 @@
                         <div id="map"
                             class="w-full h-full bg-gray-200 dark:bg-zinc-800 grayscale dark:invert transition-all duration-700 group-hover:grayscale-0 group-hover:invert-0">
                         </div>
-                        <a href="https://maps.google.com/?q=16.784052885104977,-93.09114388534609" target="_blank"
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=16.784052885104977,-93.09114388534609"
+                            target="_blank"
                             class="absolute bottom-8 right-8 px-10 py-5 bg-red-600 text-white font-black rounded-full shadow-2xl hover:bg-red-700 transition-all flex items-center space-x-3">
-                            <span>Ver en Google Maps</span>
+                            <span>Como llegar</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z">
@@ -127,62 +128,43 @@
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                @foreach ($socialNetworks as $social)
+                    @php
+                        $name = strtolower($social->catalagoTipo->nombre);
+                        $colors = [
+                            'facebook' => 'bg-red-50 group-hover:bg-[#1877F2] text-[#1877F2]',
+                            'instagram' =>
+                                'bg-pink-50 group-hover:bg-gradient-to-tr group-hover:from-[#f09433] group-hover:via-[#e6683c] group-hover:to-[#bc1888] text-[#E4405F]',
+                            'tiktok' => 'bg-gray-100 group-hover:bg-black text-black',
+                            'whatsapp' => 'bg-red-50 group-hover:bg-[#25D366] text-[#25D366]',
+                        ];
+                        $colorClass = $colors[$name] ?? 'bg-gray-50 group-hover:bg-red-600 text-red-600';
+                        $hoverTextColor =
+                            [
+                                'facebook' => 'group-hover:text-[#1877F2]',
+                                'instagram' => 'group-hover:text-[#E4405F]',
+                                'tiktok' => 'group-hover:text-black',
+                                'whatsapp' => 'group-hover:text-[#25D366]',
+                            ][$name] ?? 'group-hover:text-red-600';
+                    @endphp
 
-                <a href="https://www.facebook.com/share/1DRiQTMcWF/"
-                    class="social-card group p-10 bg-white dark:bg-black rounded-[2.5rem] shadow-sm hover:shadow-2xl border border-gray-100 dark:border-zinc-800 text-center">
-                    <div
-                        class="w-20 h-20 mx-auto mb-8 bg-red-50 rounded-3xl flex items-center justify-center group-hover:bg-[#1877F2] transition-all duration-300">
-                        <svg class="w-10 h-10 text-[#1877F2] group-hover:text-white" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                        </svg>
-                    </div>
-                    <span
-                        class="font-black text-xl text-gray-900 dark:text-white group-hover:text-[#1877F2]">Facebook</span>
-                </a>
-
-                <!-- Instagram -->
-                <a href="#"
-                    class="social-card group p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl text-center">
-                    <div
-                        class="w-16 h-16 mx-auto mb-6 bg-pink-50 rounded-2xl flex items-center justify-center group-hover:bg-gradient-to-tr group-hover:from-[#f09433] group-hover:via-[#e6683c] group-hover:to-[#bc1888] transition-colors duration-300">
-                        <svg class="w-8 h-8 text-[#E4405F] group-hover:text-white" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                    </div>
-                    <span class="font-bold text-gray-900 group-hover:text-[#E4405F]">Instagram</span>
-                </a>
-
-                <!-- TikTok -->
-                <a href="#"
-                    class="social-card group p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl text-center">
-                    <div
-                        class="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-2xl flex items-center justify-center group-hover:bg-black transition-colors duration-300">
-                        <svg class="w-8 h-8 text-black group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z" />
-                        </svg>
-                    </div>
-                    <span class="font-bold text-gray-900 group-hover:text-black">TikTok</span>
-                </a>
-
-                <!-- WhatsApp -->
-                <a href="https://wa.me/message/2FM4OVMRRIMIB1"
-                    class="social-card group p-10 bg-white dark:bg-black rounded-[2.5rem] shadow-sm hover:shadow-2xl border border-gray-100 dark:border-zinc-800 text-center">
-                    <div
-                        class="w-20 h-20 mx-auto mb-8 bg-red-50 rounded-3xl flex items-center justify-center group-hover:bg-[#25D366] transition-all duration-300">
-                        <svg class="w-10 h-10 text-[#25D366] group-hover:text-white" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path
-                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.675 1.439 5.662 1.439h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                        </svg>
-                    </div>
-                    <span
-                        class="font-black text-xl text-gray-900 dark:text-white group-hover:text-[#25D366]">WhatsApp</span>
-                </a>
+                    <a href="{{ $social->recurso }}" target="_blank"
+                        class="social-card group p-10 bg-white dark:bg-black rounded-[2.5rem] shadow-sm hover:shadow-2xl border border-gray-100 dark:border-zinc-800 text-center">
+                        <div
+                            class="w-20 h-20 mx-auto mb-8 rounded-3xl flex items-center justify-center transition-all duration-300 {{ explode(' ', $colorClass)[0] }} {{ explode(' ', $colorClass)[1] }}">
+                            <div class="w-10 h-10 {{ explode(' ', $colorClass)[2] }} group-hover:text-white flex items-center justify-center">
+                                @if (str_starts_with($social->catalagoTipo->imagen, 'storage/'))
+                                    <img src="{{ asset($social->catalagoTipo->imagen) }}" class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300">
+                                @else
+                                    {!! $social->catalagoTipo->imagen !!}
+                                @endif
+                            </div>
+                        </div>
+                        <span
+                            class="font-black text-xl text-gray-900 dark:text-white {{ $hoverTextColor }}">{{ $social->catalagoTipo->nombre }}</span>
+                    </a>
+                @endforeach
+            </div>
 
             </div>
         </div>
@@ -269,13 +251,19 @@
             var marker = new google.maps.Marker({
                 position: negocioUbicacion,
                 map: map,
+                icon: {
+                    url: "{{ asset('imagenes/logos/Pin.png') }}",
+                    // O cualquier imagen que prefieras
+                    scaledSize: new google.maps.Size(100, 100), // Ajustar tamaño
+                },
                 title: 'MÍA RENTA',
                 animation: google.maps.Animation.DROP
+
             });
             var infoContent = `
             <div style="padding: 10px; font-family: 'Inter', sans-serif;">
                 <h3 style="margin: 0 0 5px 0; color: #1e3a8a; font-weight: bold;">Mía Renta</h3>
-                <p style="margin: 0; color: #4b5563;">Mobiliario elegante en Tuxtla.</p>
+                <p style="margin: 0; color: #4b5563;">Nos encontramos aqui en Tuxtla Gutiérrez, Chiapas.</p>
             </div>
         `;
             var infoWindow = new google.maps.InfoWindow({

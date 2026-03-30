@@ -27,6 +27,10 @@ class DatabaseSeeder extends Seeder
             ContactSeeder::class,
             Cologne::class,
             Pay::class,
+            TypeSeeder::class,
+            CategoriSeeder::class,
+            ColorSeeder::class,
+            // ProductSeeder::class,
         ]);
     }
 }

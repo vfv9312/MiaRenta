@@ -82,15 +82,15 @@
                 <div class="p-8">
                     <div
                         class="w-14 h-14 bg-lime-100 dark:bg-lime-900/50 rounded-xl flex items-center justify-center mb-6 border border-lime-200 dark:border-lime-800">
-                        <i class="fas fa-camera-retro text-2xl text-lime-600 dark:text-lime-400"></i>
+                        <i class="fas fa-calendar text-2xl text-lime-600 dark:text-lime-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Galeria</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona las imagenes de la
-                        galeria que aparecen en el pie de página.</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Dias Inhabilitados</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona los dias que no se
+                        podra entregar sillas.</p>
                     <a href="{{ route('inicio.galery') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-lime-200 dark:shadow-none">
-                        <span>Gestionar Galeria</span>
-                        <i class="fas fa-images text-xs"></i>
+                        <span>Gestionar Dias</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             </div>

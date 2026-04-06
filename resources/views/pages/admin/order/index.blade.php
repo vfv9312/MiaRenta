@@ -9,6 +9,10 @@
             @livewire('admin.order.orders')
         @break
 
+        @case(3)
+            @livewire('admin.order.estadisticas')
+        @break
+
         @default
     @endswitch
 @endsection

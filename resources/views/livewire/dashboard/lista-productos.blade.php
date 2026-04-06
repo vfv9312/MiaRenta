@@ -56,10 +56,14 @@
 
             {{-- Categorías --}}
             <div class="flex items-center space-x-3 overflow-x-auto pb-2 w-full md:w-auto scrollbar-hide">
-                @foreach (['todos', 'sillas', 'mesas', 'manteleria', 'cristaleria'] as $cat)
-                    <button wire:click="$set('category', '{{ $cat }}')"
-                        class="px-8 py-3 rounded-full whitespace-nowrap font-black uppercase tracking-widest text-xs transition-all {{ $category === $cat ? 'bg-red-600 text-white shadow-xl shadow-red-500/20' : 'bg-white dark:bg-black text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 border border-gray-100 dark:border-zinc-800' }}">
-                        {{ $cat }}
+                <button wire:click="$set('category', 'todos')"
+                    class="px-8 py-3 rounded-full whitespace-nowrap font-black uppercase tracking-widest text-xs transition-all {{ $category === 'todos' ? 'bg-red-600 text-white shadow-xl shadow-red-500/20' : 'bg-white dark:bg-black text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 border border-gray-100 dark:border-zinc-800' }}">
+                    Todos
+                </button>
+                @foreach ($allCategories as $cat)
+                    <button wire:click="$set('category', '{{ $cat->id }}')"
+                        class="px-8 py-3 rounded-full whitespace-nowrap font-black uppercase tracking-widest text-xs transition-all {{ $category == $cat->id ? 'bg-red-600 text-white shadow-xl shadow-red-500/20' : 'bg-white dark:bg-black text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 border border-gray-100 dark:border-zinc-800' }}">
+                        {{ $cat->nombre }}
                     </button>
                 @endforeach
             </div>
@@ -73,7 +77,7 @@
                 <div
                     class="product-card bg-white dark:bg-zinc-900 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-zinc-800 shadow-sm animate-fadeInSlow">
                     <div class="relative h-72 overflow-hidden group">
-                        <img src="{{ asset($product['image']) }}"
+                        <img src="{{ $product['image'] ?? asset('imagenes/placeholder.jpg') }}"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             alt="{{ $product['name'] }}">
                         <div
@@ -155,14 +159,16 @@
                             {{-- Total y Acción --}}
                             <div
                                 class="flex items-center space-x-10 w-full lg:w-auto border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-10">
-                                <div class="text-right">
+                                <div class="text-right flex flex-col items-end">
+                                    <button wire:click="openImagePreview" class="text-xs text-gray-400 hover:text-white underline mb-3 transition-colors">
+                                        Ver imágenes del pedido
+                                    </button>
                                     <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mb-1">
                                         Inversión Total</p>
                                     <span
                                         class="text-4xl font-black text-white">${{ number_format($this->total, 2) }}</span>
                                 </div>
-                                <a href="https://wa.me/9614585559?text={{ urlencode('Hola, me interesa armar el siguiente paquete de mobiliario: ' . collect($cart)->map(fn($i) => "{$i['quantity']}x {$i['name']}")->implode(', ') . '. El total estimado es $' . number_format($this->total, 2)) }}"
-                                    target="_blank"
+                                <button wire:click="openCheckout"
                                     class="bg-red-600 text-white font-black px-12 py-6 rounded-[2rem] hover:bg-red-700 transition-all shadow-2xl shadow-red-600/30 text-xl flex items-center space-x-4 flex-1 lg:flex-none justify-center group active:scale-95">
                                     <span>¡Rentar Ahora!</span>
                                     <svg class="w-6 h-6 transition-transform group-hover:translate-x-2" fill="none"
@@ -170,7 +176,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                                             d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                                     </svg>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -178,4 +184,88 @@
             </div>
         </div>
     @endif
+
+    {{-- Checkout Modal --}}
+    @if ($showCheckout)
+        <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div class="bg-white dark:bg-zinc-900 rounded-[2rem] w-full max-w-lg shadow-2xl p-8 relative animate-fadeInUp border border-gray-100 dark:border-zinc-800">
+                <button wire:click="closeCheckout" class="absolute top-6 right-6 text-gray-400 hover:text-red-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Detalles de tu Evento</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">A nombre de quien queda el pedido *</label>
+                        <input type="text" wire:model="nombre" placeholder="Ej. Juan Pérez" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
+                        @error('nombre') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Dirección del evento *</label>
+                        <input type="text" wire:model="direccion" placeholder="Calle, Número, Colonia" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
+                        @error('direccion') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Fecha y Hora requerida *</label>
+                        <input type="datetime-local" wire:model="fecha_hora" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
+                        @error('fecha_hora') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Celular alternativo (opcional)</label>
+                        <input type="text" wire:model="celular" placeholder="10 dígitos" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
+                        @error('celular') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button wire:click="closeCheckout" class="flex-1 px-6 py-4 rounded-xl font-bold bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 transition">Cancelar</button>
+                    <button wire:click="processOrder" class="flex-1 px-6 py-4 rounded-xl font-bold bg-[#25D366] hover:bg-[#128C7E] text-white transition shadow-lg shadow-[#25D366]/30 flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.489-1.761-1.662-2.06-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg>
+                        Pedir en WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Image Preview Modal --}}
+    @if ($showImagePreview)
+        <div class="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeInUp">
+            <div class="bg-white dark:bg-zinc-900 rounded-[2rem] w-full max-w-4xl shadow-2xl p-8 relative border border-gray-100 dark:border-zinc-800">
+                <button wire:click="closeImagePreview" class="absolute top-6 right-6 text-gray-400 hover:text-red-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Imágenes de tu pedido</h2>
+                
+                @if(count($previewImages) > 0)
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                        @foreach($previewImages as $img)
+                            <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-zinc-800 shadow-sm group">
+                                <img src="{{ asset($img) }}" class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="py-16 text-center">
+                        <svg class="w-16 h-16 text-gray-300 dark:text-zinc-700 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-500 dark:text-gray-400">No hay imágenes disponibles</h3>
+                        <p class="text-sm text-gray-400 mt-2">No encontramos fotos para los artículos de este paquete.</p>
+                    </div>
+                @endif
+
+                <div class="mt-8 flex justify-end">
+                    <button wire:click="closeImagePreview" class="px-8 py-3 rounded-xl font-bold bg-red-600 hover:bg-red-700 text-white transition shadow-lg shadow-red-500/30">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    @endif
+    
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('openUrl', (eventData) => {
+                const data = Array.isArray(eventData) ? eventData[0] : eventData;
+                window.open(data.url, '_blank');
+            });
+        });
+    </script>
 </div>

@@ -18,4 +18,10 @@ class IndexController extends Controller
         $section = 2;
         return view('pages.admin.order.index', compact('section'));
     }
+
+    public function estadisticas(Request $request)
+    {
+        $section = 3;
+        return view('pages.admin.order.index', compact('section'));
+    }
 }

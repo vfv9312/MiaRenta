@@ -3,38 +3,45 @@
 namespace App\Livewire\Dashboard;
 
 use Livewire\Component;
+use App\Models\Producto;
+use App\Models\Categorias;
 
 class ListaProductos extends Component
 {
     public $search = '';
     public $category = 'todos';
     public $cart = [];
-    public $products = [];
+    public $allCategories = [];
+
+    public $showCheckout = false;
+    public $direccion = '';
+    public $fecha_hora = '';
+    public $nombre = '';
+    public $celular = '';
+
+    protected $rules = [
+        'direccion' => 'required|string',
+        'fecha_hora' => 'required|string',
+        'nombre' => 'required|string',
+        'celular' => 'nullable|string'
+    ];
 
     public function mount()
     {
-        $this->products = [
-            ['id' => 1, 'name' => 'Silla Acojinada Blanca', 'price' => 15, 'category' => 'sillas', 'image' => 'imagenes/imagenes/1.jpeg'],
-            ['id' => 2, 'name' => 'Silla Tiffany Dorada', 'price' => 25, 'category' => 'sillas', 'image' => 'imagenes/imagenes/2.jpeg'],
-            ['id' => 3, 'name' => 'Mesa Tablón 2.4m', 'price' => 120, 'category' => 'mesas', 'image' => 'imagenes/imagenes/3.jpeg'],
-            ['id' => 4, 'name' => 'Mesa Redonda 10 personas', 'price' => 150, 'category' => 'mesas', 'image' => 'imagenes/imagenes/4.jpg'],
-            ['id' => 5, 'name' => 'Mantel Rectangular Blanco', 'price' => 45, 'category' => 'manteleria', 'image' => 'imagenes/imagenes/5.jpeg'],
-            ['id' => 6, 'name' => 'Cubre Mantel de Color', 'price' => 25, 'category' => 'manteleria', 'image' => 'imagenes/imagenes/6.jpeg'],
-            ['id' => 7, 'name' => 'Copa de Cristal Agua/Vino', 'price' => 8, 'category' => 'cristaleria', 'image' => 'imagenes/imagenes/7.jpeg'],
-            ['id' => 8, 'name' => 'Plato Base Cuadrado', 'price' => 12, 'category' => 'cristaleria', 'image' => 'imagenes/imagenes/8.jpeg'],
-        ];
+        $this->allCategories = Categorias::where('status_id', 1)->get();
     }
 
     public function addToCart($productId)
     {
-        $product = collect($this->products)->firstWhere('id', $productId);
+        $product = Producto::with('precioActivo')->find($productId);
+        if (!$product || !$product->precioActivo) return;
 
         if (isset($this->cart[$productId])) {
             $this->cart[$productId]['quantity']++;
         } else {
             $this->cart[$productId] = [
-                'name' => $product['name'],
-                'price' => $product['price'],
+                'name' => $product->nombre,
+                'price' => $product->precioActivo->precio,
                 'quantity' => 1
             ];
         }
@@ -57,16 +64,141 @@ class ListaProductos extends Component
             return $total + ($item['price'] * $item['quantity']);
         }, 0);
     }
+    
+    public $showImagePreview = false;
+    public $previewImages = [];
+
+    public function openImagePreview()
+    {
+        $this->previewImages = [];
+        $productIds = collect($this->cart)->keys()->toArray();
+        if (empty($productIds)) return;
+
+        // Obtenemos todas las combinaciones que tienen alguno de estos productos
+        $combinacionesInCart = \Illuminate\Support\Facades\DB::table('combinacion_producto')
+            ->whereIn('producto_id', $productIds)
+            ->pluck('combinacion_id')
+            ->unique();
+                
+        // Filtramos solo aquellas combinaciones donde TODOS sus productos están el carrito
+        $validCombIds = [];
+        foreach($combinacionesInCart as $cId) {
+            $combProducts = \Illuminate\Support\Facades\DB::table('combinacion_producto')
+                ->where('combinacion_id', $cId)
+                ->pluck('producto_id')
+                ->toArray();
+                
+            $hasAll = true;
+            foreach($combProducts as $cp) {
+                if(!in_array($cp, $productIds)) { 
+                    $hasAll = false; 
+                    break; 
+                }
+            }
+            if($hasAll) {
+                $validCombIds[] = $cId;
+            }
+        }
+
+        $combImages = [];
+        if(count($validCombIds) > 0) {
+            $combImages = \Illuminate\Support\Facades\DB::table('catalogo_imagines')
+                ->whereIn('combinacion_id', $validCombIds)
+                ->whereNotNull('imagen')
+                ->orderBy('id', 'desc')
+                ->pluck('imagen')->toArray();
+        }
+
+        // También mostramos las imágenes individuales de los productos
+        $productImages = \Illuminate\Support\Facades\DB::table('catalogo_imagines')
+            ->whereIn('producto_id', $productIds)
+            ->whereNotNull('imagen')
+            ->orderBy('id', 'desc')
+            ->pluck('imagen')->toArray();
+
+        // Unimos y removemos duplicados
+        $todas = array_unique(array_merge($combImages, $productImages));
+        
+        $this->previewImages = array_filter($todas);
+        $this->showImagePreview = true;
+    }
+
+    public function closeImagePreview()
+    {
+        $this->showImagePreview = false;
+    }
+
+    public function openCheckout()
+    {
+        $this->showCheckout = true;
+    }
+    
+    public function closeCheckout()
+    {
+        $this->showCheckout = false;
+        $this->resetValidation();
+    }
+
+    public function processOrder()
+    {
+        $this->validate();
+
+        $items = collect($this->cart)->map(fn($item) => "{$item['quantity']}x {$item['name']}")->implode(', ');
+        $total = number_format($this->total, 2);
+        
+        $message = "Hola MiaRenta, me gustaría armar este pedido:\n\n";
+        $message .= "*Cliente:* {$this->nombre}\n";
+        $message .= "*Dirección:* {$this->direccion}\n";
+        $message .= "*Fecha y hora:* {$this->fecha_hora}\n";
+        if (!empty($this->celular)) {
+            $message .= "*Celular alternativo:* {$this->celular}\n";
+        }
+        $message .= "\n*Paquete:*\n{$items}\n\n";
+        $message .= "*Total estimado:* $" . $total;
+
+        $detalleWp = \Illuminate\Support\Facades\DB::table('_detalles_contacto')
+            ->join('contactos_data_tipos', '_detalles_contacto.contacto_data_tipo_id', '=', 'contactos_data_tipos.id')
+            ->where('contactos_data_tipos.nombre', 'like', '%WhatsApp%')
+            ->first();
+
+        // Limpiar el número y poner uno por defecto si no lo encuentra en DB
+        $numeroWhatsapp = $detalleWp ? preg_replace('/[^0-9]/', '', $detalleWp->recurso) : '9614585559';
+
+        $url = "https://wa.me/{$numeroWhatsapp}?text=" . urlencode($message);
+
+        $this->cart = [];
+        $this->showCheckout = false;
+        $this->reset(['direccion', 'fecha_hora', 'nombre', 'celular']);
+        
+        $this->dispatch('openUrl', ['url' => $url]);
+    }
 
     public function render()
     {
-        $filteredProducts = collect($this->products)
-            ->when($this->category !== 'todos', function ($collection) {
-                return $collection->where('category', $this->category);
-            })
-            ->filter(function ($product) {
-                return empty($this->search) || str_contains(strtolower($product['name']), strtolower($this->search));
+        $query = Producto::with(['precioActivo', 'imagenes', 'catalogoTipo.categoria'])
+            ->where('status_id', 1)
+            ->whereHas('precioActivo');
+
+        if ($this->category !== 'todos') {
+            $query->whereHas('catalogoTipo.categoria', function($q) {
+                $q->where('id', $this->category);
             });
+        }
+
+        if (!empty($this->search)) {
+            $query->where('nombre', 'like', '%'.$this->search.'%');
+        }
+
+        $filteredProducts = $query->get()->map(function($p) {
+            $imageUrl = $p->imagenes->first() ? asset($p->imagenes->first()->imagen) : null;
+            return [
+                'id' => $p->id,
+                'name' => $p->nombre,
+                'price' => $p->precioActivo->precio,
+                'category' => $p->catalogoTipo->categoria->nombre ?? 'Sin categoría',
+                'image' => $imageUrl,
+            ];
+        });
 
         return view('livewire.dashboard.lista-productos', [
             'filteredProducts' => $filteredProducts

@@ -60,8 +60,8 @@ class Index extends Component
                 $query->where('nombre', 'like', '%' . $this->search_cliente . '%')
                     ->orWhere('apellido', 'like', '%' . $this->search_cliente . '%');
             })
-            ->orWhereHas('telefonos', function($query) {
-                 $query->where('telefono', 'like', '%' . $this->search_cliente . '%');
+            ->orWhereHas('telefonos', function ($query) {
+                $query->where('telefono', 'like', '%' . $this->search_cliente . '%');
             })
             ->orWhere('correo', 'like', '%' . $this->search_cliente . '%')
             ->take(10)
@@ -78,28 +78,28 @@ class Index extends Component
         $catalog_products = [];
         if (strlen($this->search_producto) > 0) {
             $catalog_products = CatalagoPrecio::with(['producto.color', 'producto.reparaciones'])
-                ->whereHas('producto', function($q) {
-                    $q->where('nombre', 'like', '%'.$this->search_producto.'%');
+                ->whereHas('producto', function ($q) {
+                    $q->where('nombre', 'like', '%' . $this->search_producto . '%');
                 })
                 ->whereIn('status_id', [1, 2])
                 ->take(10)
                 ->get();
 
-            if ($this->fecha_entrega && $this->fecha_recepcion) {
+            if ($this->fecha_entrega) {
                 $f_inicio = date('Y-m-d', strtotime($this->fecha_entrega));
-                $f_fin = date('Y-m-d', strtotime($this->fecha_recepcion));
+                $f_fin = $this->fecha_recepcion ? date('Y-m-d', strtotime($this->fecha_recepcion)) : $f_inicio;
 
                 foreach ($catalog_products as $cp) {
                     $rentados = \Illuminate\Support\Facades\DB::table('alquileres_productos')
                         ->join('alquileres', 'alquileres_productos.alquiler_id', '=', 'alquileres.id')
                         ->where('alquileres_productos.Catalogo_precio_id', $cp->id)
                         ->whereIn('alquileres.status_id', [7, 9, 10, 11, 12])
-                        ->where(function($query) use ($f_inicio, $f_fin) {
+                        ->where(function ($query) use ($f_inicio, $f_fin) {
                             $query->whereDate('alquileres.fecha_entrega', '<=', $f_fin)
-                                  ->whereDate('alquileres.fecha_recepcion', '>=', $f_inicio);
+                                ->whereDate('alquileres.fecha_recepcion', '>=', $f_inicio);
                         })
                         ->sum('alquileres_productos.cantidad');
-                    
+
                     $cp->en_renta_calculado = $rentados;
                 }
             } else {
@@ -167,25 +167,25 @@ class Index extends Component
             'cantidad_producto' => 'required|integer|min:1'
         ]);
 
-        if (!$this->fecha_entrega || !$this->fecha_recepcion) {
-            $this->addError('cantidad_producto', 'Faltan fechas asignadas en el paso anterior.');
+        if (!$this->fecha_entrega) {
+            $this->addError('cantidad_producto', 'Falta Fecha de Entrega Física asignada en el paso anterior.');
             return;
         }
 
         $item = CatalagoPrecio::with(['producto.color', 'producto.reparaciones'])->findOrFail($this->selected_catalogo_precio_id);
 
         $en_reparacion = $item->producto->reparaciones->where('status_id', 5)->sum('cantidad');
-        
+
         $f_inicio = date('Y-m-d', strtotime($this->fecha_entrega));
-        $f_fin = date('Y-m-d', strtotime($this->fecha_recepcion));
+        $f_fin = $this->fecha_recepcion ? date('Y-m-d', strtotime($this->fecha_recepcion)) : $f_inicio;
 
         $en_renta = \Illuminate\Support\Facades\DB::table('alquileres_productos')
             ->join('alquileres', 'alquileres_productos.alquiler_id', '=', 'alquileres.id')
             ->where('alquileres_productos.Catalogo_precio_id', $item->id)
             ->whereIn('alquileres.status_id', [7, 9, 10, 11, 12])
-            ->where(function($query) use ($f_inicio, $f_fin) {
+            ->where(function ($query) use ($f_inicio, $f_fin) {
                 $query->whereDate('alquileres.fecha_entrega', '<=', $f_fin)
-                      ->whereDate('alquileres.fecha_recepcion', '>=', $f_inicio);
+                    ->whereDate('alquileres.fecha_recepcion', '>=', $f_inicio);
             })
             ->sum('alquileres_productos.cantidad');
 
@@ -325,7 +325,7 @@ class Index extends Component
 
             // Look up the status ID for 'Cotizacion'
             $status = Status::where('name', 'Cotizacion')
-                ->orWhere('name', 'Cotización') 
+                ->orWhere('name', 'Cotización')
                 ->first();
 
             if (!$status) {
@@ -374,7 +374,7 @@ class Index extends Component
 
             DB::commit();
 
-            session()->flash('message', 'Orden #'.$alquiler_id.' registrada exitosamente. Total a pagar: $'.number_format($total_orden, 2));
+            session()->flash('message', 'Orden #' . $alquiler_id . ' registrada exitosamente. Total a pagar: $' . number_format($total_orden, 2));
 
             // Reset form
             $this->reset(['is_new_client', 'is_new_address', 'cliente_id', 'catalogo_cliente_id', 'nombre', 'apellido', 'correo', 'calle', 'entre_calles', 'referencia', 'cp', 'colonia_id', 'search_colonia', 'selected_colonia_name', 'recibe', 'entrega', 'fecha_solicitada', 'fecha_entrega', 'fecha_recepcion', 'metodo_pago_id', 'search_cliente', 'search_producto', 'selected_catalogo_precio_id', 'cantidad_producto', 'carrito_productos']);
@@ -384,4 +384,3 @@ class Index extends Component
         }
     }
 }
-

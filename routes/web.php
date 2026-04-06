@@ -72,6 +72,7 @@ Route::middleware(['auth', 'status'])->group(function () {
 
         Route::get('admin/generar-orden', 'Admin\Order\IndexController@index')->name('generar-orden');
         Route::get('admin/ordenes', 'Admin\Order\IndexController@ordenes')->name('ordenes');
+        Route::get('admin/ordenes/estadisticas', 'Admin\Order\IndexController@estadisticas')->name('ordenes.estadisticas');
         // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
     });
 });

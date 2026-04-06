@@ -12,10 +12,7 @@ class Orden extends Component
     public $visibleItems = 6;
     public $data;
 
-    public function mount()
-    {
-
-    }
+    public function mount() {}
     public function render()
     {
         return view('livewire.dashboard.orden');

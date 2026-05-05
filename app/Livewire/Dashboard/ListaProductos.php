@@ -18,12 +18,17 @@ class ListaProductos extends Component
     public $fecha_hora = '';
     public $nombre = '';
     public $celular = '';
+    public $metodo_pago = '';
+    public $dias_renta = 1;
+    public $isCartExpanded = false;
 
     protected $rules = [
-        'direccion' => 'required|string',
-        'fecha_hora' => 'required|string',
-        'nombre' => 'required|string',
-        'celular' => 'nullable|string'
+        'direccion'    => 'required|string',
+        'fecha_hora'   => 'required|string',
+        'nombre'       => 'required|string',
+        'celular'      => 'nullable|string',
+        'metodo_pago'  => 'required|string|in:efectivo,transferencia,terminal',
+        'dias_renta'   => 'required|integer|min:1',
     ];
 
     public function mount()
@@ -60,8 +65,9 @@ class ListaProductos extends Component
 
     public function getTotalProperty()
     {
-        return collect($this->cart)->reduce(function ($total, $item) {
-            return $total + ($item['price'] * $item['quantity']);
+        $dias = max(1, (int) $this->dias_renta);
+        return collect($this->cart)->reduce(function ($total, $item) use ($dias) {
+            return $total + ($item['price'] * $item['quantity'] * $dias);
         }, 0);
     }
     
@@ -139,22 +145,37 @@ class ListaProductos extends Component
         $this->resetValidation();
     }
 
+    public function incrementDias()
+    {
+        $this->dias_renta++;
+    }
+
+    public function decrementDias()
+    {
+        if ($this->dias_renta > 1) {
+            $this->dias_renta--;
+        }
+    }
+
     public function processOrder()
     {
         $this->validate();
 
-        $items = collect($this->cart)->map(fn($item) => "{$item['quantity']}x {$item['name']}")->implode(', ');
+        $dias  = max(1, (int) $this->dias_renta);
+        $items = collect($this->cart)->map(fn($item) => "{$item['quantity']}x {$item['name']} (c/u $" . number_format($item['price'], 2) . ")")->implode(', ');
         $total = number_format($this->total, 2);
         
         $message = "Hola MiaRenta, me gustaría armar este pedido:\n\n";
         $message .= "*Cliente:* {$this->nombre}\n";
         $message .= "*Dirección:* {$this->direccion}\n";
         $message .= "*Fecha y hora:* {$this->fecha_hora}\n";
+        $message .= "*Días de renta:* {$dias} " . ($dias === 1 ? 'día' : 'días') . "\n";
         if (!empty($this->celular)) {
             $message .= "*Celular alternativo:* {$this->celular}\n";
         }
+        $message .= "*Método de pago:* " . ucfirst($this->metodo_pago) . "\n";
         $message .= "\n*Paquete:*\n{$items}\n\n";
-        $message .= "*Total estimado:* $" . $total;
+        $message .= "*Total estimado ({$dias} " . ($dias === 1 ? 'día' : 'días') . ":* $" . $total;
 
         $detalleWp = \Illuminate\Support\Facades\DB::table('_detalles_contacto')
             ->join('contactos_data_tipos', '_detalles_contacto.contacto_data_tipo_id', '=', 'contactos_data_tipos.id')
@@ -168,7 +189,8 @@ class ListaProductos extends Component
 
         $this->cart = [];
         $this->showCheckout = false;
-        $this->reset(['direccion', 'fecha_hora', 'nombre', 'celular']);
+        $this->reset(['direccion', 'fecha_hora', 'nombre', 'celular', 'metodo_pago', 'dias_renta']);
+        $this->dias_renta = 1;
         
         $this->dispatch('openUrl', ['url' => $url]);
     }

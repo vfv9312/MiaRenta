@@ -122,63 +122,88 @@
 
     {{-- Carrito / Panel de Mi Paquete (Solo visible si hay items) --}}
     @if (count($cart) > 0)
-        <div class="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slideInUp">
-            <div class="container mx-auto">
-                <div class="fixed bottom-0 left-0 right-0 z-50 p-6 animate-slideInUp">
-                    <div class="container mx-auto">
-                        <div
-                            class="bg-black/90 dark:bg-zinc-900/90 backdrop-blur-2xl border border-white/10 rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-8 max-w-6xl mx-auto ring-1 ring-white/10">
-                            {{-- Resumen de Items (Scroll horizontal) --}}
-                            <div class="flex-1 w-full overflow-x-auto scrollbar-hide">
-                                <div class="flex items-center space-x-6">
-                                    @foreach ($cart as $id => $item)
-                                        <div
-                                            class="flex items-center space-x-4 whitespace-nowrap bg-white/5 p-3 rounded-2xl border border-white/5 pr-6">
-                                            <div class="flex flex-col">
-                                                <span
-                                                    class="font-black text-white text-sm tracking-wide leading-tight">{{ $item['name'] }}</span>
-                                                <div class="flex items-center space-x-4 mt-2">
-                                                    <div
-                                                        class="flex items-center bg-black rounded-lg border border-white/10">
-                                                        <button wire:click="removeFromCart({{ $id }})"
-                                                            class="w-8 h-8 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white transition-all font-black">-</button>
-                                                        <span
-                                                            class="mx-3 font-black text-white text-xs">{{ $item['quantity'] }}</span>
-                                                        <button wire:click="addToCart({{ $id }})"
-                                                            class="w-8 h-8 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white transition-all font-black">+</button>
-                                                    </div>
-                                                    <span
-                                                        class="text-xs font-black text-red-600">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
+        {{-- Botón Flotante (Solo Móvil - Se muestra cuando el carrito NO está expandido) --}}
+        <div class="fixed bottom-6 right-6 z-50 lg:hidden {{ $isCartExpanded ? 'hidden' : 'block' }}">
+            <button wire:click="$set('isCartExpanded', true)"
+                class="bg-red-600 text-white p-5 rounded-full shadow-2xl relative active:scale-95 transition-all transform hover:scale-110">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+                <span
+                    class="absolute -top-2 -right-2 bg-black text-white text-xs font-black w-7 h-7 flex items-center justify-center rounded-full border-2 border-red-600">
+                    {{ collect($cart)->sum('quantity') }}
+                </span>
+            </button>
+        </div>
 
-                            {{-- Total y Acción --}}
-                            <div
-                                class="flex items-center space-x-10 w-full lg:w-auto border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-10">
-                                <div class="text-right flex flex-col items-end">
-                                    <button wire:click="openImagePreview" class="text-xs text-gray-400 hover:text-white underline mb-3 transition-colors">
-                                        Ver imágenes del pedido
-                                    </button>
-                                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mb-1">
-                                        Inversión Total</p>
-                                    <span
-                                        class="text-4xl font-black text-white">${{ number_format($this->total, 2) }}</span>
+        {{-- Panel del Carrito --}}
+        <div class="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slideInUp {{ !$isCartExpanded ? 'hidden lg:block' : 'block' }}">
+            <div class="container mx-auto relative">
+                {{-- Botón Cerrar (Solo Móvil) --}}
+                <button wire:click="$set('isCartExpanded', false)" 
+                    class="lg:hidden absolute -top-4 right-4 bg-black text-white p-2 rounded-full border border-white/20 z-[60] shadow-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div
+                    class="bg-black/90 dark:bg-zinc-900/90 backdrop-blur-2xl border border-white/10 rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-8 max-w-6xl mx-auto ring-1 ring-white/10">
+                    {{-- Resumen de Items (Scroll horizontal) --}}
+                    <div class="flex-1 w-full overflow-x-auto scrollbar-hide">
+                        <div class="flex items-center space-x-6">
+                            @foreach ($cart as $id => $item)
+                                <div
+                                    class="flex items-center space-x-4 whitespace-nowrap bg-white/5 p-3 rounded-2xl border border-white/5 pr-6">
+                                    <div class="flex flex-col">
+                                        <span
+                                            class="font-black text-white text-sm tracking-wide leading-tight">{{ $item['name'] }}</span>
+                                        <div class="flex items-center space-x-4 mt-2">
+                                            <div
+                                                class="flex items-center bg-black rounded-lg border border-white/10">
+                                                <button wire:click="removeFromCart({{ $id }})"
+                                                    class="w-8 h-8 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white transition-all font-black">-</button>
+                                                <span
+                                                    class="mx-3 font-black text-white text-xs">{{ $item['quantity'] }}</span>
+                                                <button wire:click="addToCart({{ $id }})"
+                                                    class="w-8 h-8 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white transition-all font-black">+</button>
+                                            </div>
+                                            <span
+                                                class="text-xs font-black text-red-600">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button wire:click="openCheckout"
-                                    class="bg-red-600 text-white font-black px-12 py-6 rounded-[2rem] hover:bg-red-700 transition-all shadow-2xl shadow-red-600/30 text-xl flex items-center space-x-4 flex-1 lg:flex-none justify-center group active:scale-95">
-                                    <span>¡Rentar Ahora!</span>
-                                    <svg class="w-6 h-6 transition-transform group-hover:translate-x-2" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                    </svg>
-                                </button>
-                            </div>
+                            @endforeach
                         </div>
+                    </div>
+
+                    {{-- Total y Acción --}}
+                    <div
+                        class="flex items-center space-x-10 w-full lg:w-auto border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-10">
+                        <div class="text-right flex flex-col items-end">
+                            <button wire:click="openImagePreview"
+                                class="text-xs text-gray-400 hover:text-white underline mb-3 transition-colors">
+                                Ver imágenes del pedido
+                            </button>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mb-1">
+                                Inversión Total</p>
+                            <span class="text-4xl font-black text-white">${{ number_format($this->total, 2) }}</span>
+                            <span class="text-[10px] text-gray-500 mt-1 font-bold">
+                                {{ $dias_renta }} {{ $dias_renta == 1 ? 'día' : 'días' }} &bull; precio/día &times;
+                                días
+                            </span>
+                        </div>
+                        <button wire:click="openCheckout"
+                            class="bg-red-600 text-white font-black px-12 py-6 rounded-[2rem] hover:bg-red-700 transition-all shadow-2xl shadow-red-600/30 text-xl flex items-center space-x-4 flex-1 lg:flex-none justify-center group active:scale-95">
+                            <span>¡Rentar Ahora!</span>
+                            <svg class="w-6 h-6 transition-transform group-hover:translate-x-2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -210,10 +235,48 @@
                         <input type="datetime-local" wire:model="fecha_hora" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
                         @error('fecha_hora') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                     </div>
+
+                    {{-- Dias de Renta --}}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">¿Cuántos días lo necesitas? *</label>
+                        <div class="flex items-center gap-4">
+                            <button type="button" wire:click="decrementDias"
+                                class="w-12 h-12 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-xl flex items-center justify-center shadow-md shadow-red-500/20 active:scale-95 transition">
+                                -
+                            </button>
+                            <div class="flex-1 text-center">
+                                <span class="text-3xl font-black text-gray-900 dark:text-white">{{ $dias_renta }}</span>
+                                <span class="text-sm text-gray-400 font-bold ml-2">{{ $dias_renta == 1 ? 'día' : 'días' }}</span>
+                            </div>
+                            <button type="button" wire:click="incrementDias"
+                                class="w-12 h-12 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-xl flex items-center justify-center shadow-md shadow-red-500/20 active:scale-95 transition">
+                                +
+                            </button>
+                        </div>
+                        <div class="mt-3 bg-red-50 dark:bg-red-950/30 rounded-xl p-3 border border-red-100 dark:border-red-900/50">
+                            <p class="text-xs font-bold text-red-600 dark:text-red-400 text-center">
+                                💰 Total estimado: <span class="text-base ml-1">${{ number_format($this->total, 2) }}</span>
+                                <span class="text-gray-500 dark:text-gray-400 font-normal ml-1">({{ $dias_renta }} {{ $dias_renta == 1 ? 'día' : 'días' }})</span>
+                            </p>
+                        </div>
+                        @error('dias_renta') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                    </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Celular alternativo (opcional)</label>
                         <input type="text" wire:model="celular" placeholder="10 dígitos" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
                         @error('celular') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Método de pago *</label>
+                        <select wire:model="metodo_pago" class="w-full bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 dark:text-white rounded-xl focus:ring-red-600 focus:border-red-600 px-4 py-3 transition">
+                            <option value="">Selecciona un método de pago</option>
+                            <option value="efectivo">Efectivo</option>
+                            <option value="transferencia">Transferencia</option>
+                            @if($this->total > 700)
+                                <option value="terminal">Llevar terminal</option>
+                            @endif
+                        </select>
+                        @error('metodo_pago') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
 

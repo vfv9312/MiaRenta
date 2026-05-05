@@ -45,6 +45,9 @@ class Index extends Component
     public $cantidad_producto = 1;
     public $carrito_productos = [];
 
+    // Additional Costs
+    public $costos_adicionales = [];
+
     // Rental data
     public $metodo_pago_id = '';
     public $recibe = '';
@@ -52,6 +55,27 @@ class Index extends Component
     public $fecha_solicitada = '';
     public $fecha_entrega = '';
     public $fecha_recepcion = '';
+
+    public function getDiasAlquilerProperty()
+    {
+        $dias = 1;
+        if ($this->fecha_entrega && $this->fecha_recepcion) {
+            try {
+                $f_inicio = \Carbon\Carbon::parse($this->fecha_entrega)->startOfDay();
+                $f_fin = \Carbon\Carbon::parse($this->fecha_recepcion)->startOfDay();
+                
+                if ($f_fin->lt($f_inicio)) {
+                    $dias = 1;
+                } else {
+                    $dias_diff = $f_inicio->diffInDays($f_fin);
+                    $dias = $dias_diff == 0 ? 1 : $dias_diff;
+                }
+            } catch (\Exception $e) {
+                $dias = 1;
+            }
+        }
+        return $dias;
+    }
 
     public function render()
     {
@@ -236,6 +260,22 @@ class Index extends Component
         }
     }
 
+    public function addCostoAdicional()
+    {
+        $this->costos_adicionales[] = [
+            'concepto' => '',
+            'monto' => 0
+        ];
+    }
+
+    public function removeCostoAdicional($index)
+    {
+        if (isset($this->costos_adicionales[$index])) {
+            unset($this->costos_adicionales[$index]);
+            $this->costos_adicionales = array_values($this->costos_adicionales);
+        }
+    }
+
     public function submitOrder()
     {
         $this->validate([
@@ -244,8 +284,13 @@ class Index extends Component
             'metodo_pago_id' => 'required|exists:metodos_pagos,id',
             'fecha_solicitada' => 'required|date',
             'carrito_productos' => 'required|array|min:1', // Needs at least one product
+            'costos_adicionales.*.concepto' => 'required|string|max:255',
+            'costos_adicionales.*.monto' => 'required|numeric|min:0',
         ], [
-            'carrito_productos.required' => 'Debe agregar al menos un producto a la orden.'
+            'carrito_productos.required' => 'Debe agregar al menos un producto a la orden.',
+            'costos_adicionales.*.concepto.required' => 'El concepto del costo adicional es requerido.',
+            'costos_adicionales.*.monto.required' => 'El monto del costo adicional es requerido.',
+            'costos_adicionales.*.monto.numeric' => 'El monto debe ser un número válido.'
         ]);
 
         if ($this->is_new_client) {
@@ -338,10 +383,16 @@ class Index extends Component
 
             $final_status_id = $status->id;
 
+            $dias = $this->dias_alquiler;
+
             // Calculate total before creating alquileres
             $total_orden = 0;
             foreach ($this->carrito_productos as $item) {
-                $total_orden += ($item['precio'] * $item['cantidad']);
+                $total_orden += ($item['precio'] * $item['cantidad'] * $dias);
+            }
+
+            foreach ($this->costos_adicionales as $costo) {
+                $total_orden += (float) $costo['monto'];
             }
 
             // Create Alquiler (Rental)
@@ -356,6 +407,7 @@ class Index extends Component
                 'fecha_entrega' => $this->fecha_entrega ?: null,
                 'fecha_recepcion' => $this->fecha_recepcion ?: null,
                 'total' => $total_orden,
+                'costos_adicionales' => json_encode($this->costos_adicionales),
                 'monto_pagado' => 0,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -377,7 +429,7 @@ class Index extends Component
             session()->flash('message', 'Orden #' . $alquiler_id . ' registrada exitosamente. Total a pagar: $' . number_format($total_orden, 2));
 
             // Reset form
-            $this->reset(['is_new_client', 'is_new_address', 'cliente_id', 'catalogo_cliente_id', 'nombre', 'apellido', 'correo', 'calle', 'entre_calles', 'referencia', 'cp', 'colonia_id', 'search_colonia', 'selected_colonia_name', 'recibe', 'entrega', 'fecha_solicitada', 'fecha_entrega', 'fecha_recepcion', 'metodo_pago_id', 'search_cliente', 'search_producto', 'selected_catalogo_precio_id', 'cantidad_producto', 'carrito_productos']);
+            $this->reset(['is_new_client', 'is_new_address', 'cliente_id', 'catalogo_cliente_id', 'nombre', 'apellido', 'correo', 'calle', 'entre_calles', 'referencia', 'cp', 'colonia_id', 'search_colonia', 'selected_colonia_name', 'recibe', 'entrega', 'fecha_solicitada', 'fecha_entrega', 'fecha_recepcion', 'metodo_pago_id', 'search_cliente', 'search_producto', 'selected_catalogo_precio_id', 'cantidad_producto', 'carrito_productos', 'costos_adicionales']);
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', 'Error al crear la orden: ' . $e->getMessage());

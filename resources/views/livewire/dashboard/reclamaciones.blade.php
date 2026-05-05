@@ -16,67 +16,79 @@
         <div
             class="bg-white dark:bg-zinc-900 rounded-[3rem] shadow-2xl overflow-hidden border border-gray-100 dark:border-zinc-800 transition-all duration-300">
             <div class="p-8 sm:p-14">
-                <form action="#" method="POST" class="space-y-8">
+                @if (session()->has('success'))
+                    <div class="mb-8 p-4 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-600 text-green-700 dark:text-green-400 rounded-r-xl font-medium">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form wire:submit.prevent="save" class="space-y-8">
                     @csrf
                     <div class="grid grid-cols-1 gap-y-8 gap-x-8 sm:grid-cols-2">
                         <!-- Full Name -->
                         <div class="sm:col-span-2">
-                            <label for="full-name"
+                            <label for="nombre"
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Nombre
                                 Completo</label>
-                            <input type="text" name="full-name" id="full-name" autocomplete="name"
+                            <input type="text" wire:model="nombre" id="nombre" autocomplete="name"
                                 class="block w-full px-6 py-4 rounded-2xl border-gray-200 dark:border-zinc-700 dark:bg-black dark:text-white shadow-sm focus:ring-red-600 focus:border-red-600 transition-all placeholder-gray-400"
                                 placeholder="Ej. Juan Pérez">
+                            @error('nombre') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Email -->
                         <div>
                             <label for="email"
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Email</label>
-                            <input type="email" name="email" id="email" autocomplete="email"
+                            <input type="email" wire:model="email" id="email" autocomplete="email"
                                 class="block w-full px-6 py-4 rounded-2xl border-gray-200 dark:border-zinc-700 dark:bg-black dark:text-white shadow-sm focus:ring-red-600 focus:border-red-600 transition-all placeholder-gray-400"
                                 placeholder="juan@ejemplo.com">
+                            @error('email') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Phone -->
                         <div>
-                            <label for="phone"
+                            <label for="telefono"
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Teléfono</label>
-                            <input type="tel" name="phone" id="phone" autocomplete="tel"
+                            <input type="tel" wire:model="telefono" id="telefono" autocomplete="tel"
                                 class="block w-full px-6 py-4 rounded-2xl border-gray-200 dark:border-zinc-700 dark:bg-black dark:text-white shadow-sm focus:ring-red-600 focus:border-red-600 transition-all placeholder-gray-400"
                                 placeholder="961 123 4567">
+                            @error('telefono') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Order Number -->
                         <div>
-                            <label for="order-id"
+                            <label for="pedido"
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Pedido
                                 (Opcional)</label>
-                            <input type="text" name="order-id" id="order-id"
+                            <input type="text" wire:model="pedido" id="pedido"
                                 class="block w-full px-6 py-4 rounded-2xl border-gray-200 dark:border-zinc-700 dark:bg-black dark:text-white shadow-sm focus:ring-red-600 focus:border-red-600 transition-all placeholder-gray-400"
                                 placeholder="#12345">
+                            @error('pedido') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Type of Claim -->
                         <div>
-                            <label for="claim-type"
+                            <label for="asunto"
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Asunto</label>
-                            <select id="claim-type" name="claim-type"
+                            <select id="asunto" wire:model="asunto"
                                 class="block w-full px-6 py-4 rounded-2xl border-gray-200 dark:border-zinc-700 dark:bg-black dark:text-white shadow-sm focus:ring-red-600 focus:border-red-600 transition-all">
-                                <option>Queja</option>
-                                <option>Reclamo</option>
-                                <option>Sugerencia</option>
-                                <option>Otro</option>
+                                <option value="Queja">Queja</option>
+                                <option value="Reclamo">Reclamo</option>
+                                <option value="Sugerencia">Sugerencia</option>
+                                <option value="Otro">Otro</option>
                             </select>
+                            @error('asunto') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Message -->
                         <div class="sm:col-span-2">
-                            <label for="message"
+                            <label for="mensaje"
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Detalle</label>
-                            <textarea id="message" name="message" rows="5"
+                            <textarea id="mensaje" wire:model="mensaje" rows="5"
                                 class="block w-full px-6 py-4 rounded-2xl border-gray-200 dark:border-zinc-700 dark:bg-black dark:text-white shadow-sm focus:ring-red-600 focus:border-red-600 transition-all placeholder-gray-400"
                                 placeholder="Cuéntanos más para poder ayudarte..."></textarea>
+                            @error('mensaje') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- File Upload -->
@@ -85,32 +97,48 @@
                                 class="block text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">Evidencia
                                 (Opcional)</label>
                             <div
-                                class="mt-2 flex justify-center px-8 pt-8 pb-8 border-2 border-dashed border-gray-200 dark:border-zinc-700 rounded-3xl hover:border-red-600 transition-all cursor-pointer bg-gray-50 dark:bg-black/50 group">
-                                <div class="space-y-4 text-center">
-                                    <svg class="mx-auto h-16 w-16 text-gray-400 group-hover:text-red-600 transition-colors"
-                                        stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                        <path
-                                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <div class="flex flex-col text-sm text-gray-600 dark:text-gray-400">
-                                        <label for="file-upload"
-                                            class="relative cursor-pointer bg-transparent rounded-md font-black text-red-600 hover:text-red-700 focus-within:outline-none transition-colors">
-                                            <span>Sube un archivo aquí</span>
-                                            <input id="file-upload" name="file-upload" type="file" class="sr-only">
-                                        </label>
-                                        <p class="mt-1">PNG, JPG, PDF hasta 10MB</p>
+                                class="relative mt-2 flex justify-center px-8 pt-8 pb-8 border-2 border-dashed border-gray-200 dark:border-zinc-700 rounded-3xl hover:border-red-600 transition-all cursor-pointer bg-gray-50 dark:bg-black/50 group overflow-hidden">
+                                <input id="evidencia" wire:model="evidencia" type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.jpg,.jpeg,.png">
+                                <div class="space-y-4 text-center z-0">
+                                    @if($evidencia)
+                                        <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <div class="flex flex-col text-sm text-gray-600 dark:text-gray-400">
+                                            <span class="relative bg-transparent rounded-md font-black text-green-600 transition-colors">
+                                                {{ $evidencia->getClientOriginalName() }}
+                                            </span>
+                                            <p class="mt-1">Archivo listo para enviar</p>
+                                        </div>
+                                    @else
+                                        <svg class="mx-auto h-16 w-16 text-gray-400 group-hover:text-red-600 transition-colors"
+                                            stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path
+                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex flex-col text-sm text-gray-600 dark:text-gray-400">
+                                            <span class="relative bg-transparent rounded-md font-black text-red-600 group-hover:text-red-700 transition-colors">
+                                                <span>Sube un archivo aquí</span>
+                                            </span>
+                                            <p class="mt-1">PNG, JPG, PDF hasta 10MB</p>
+                                        </div>
+                                    @endif
+                                    <div wire:loading wire:target="evidencia" class="text-xs text-red-600 mt-2 font-black">
+                                        Cargando archivo...
                                     </div>
                                 </div>
                             </div>
+                            @error('evidencia') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="pt-8">
-                        <button type="button"
+                        <button type="submit"
                             class="w-full flex justify-center py-5 px-10 border border-transparent shadow-2xl text-xl font-black rounded-[2rem] text-white bg-red-600 hover:bg-red-700 transition-all transform hover:scale-[1.02] active:scale-95 shadow-red-500/30">
-                            Enviar Reclamación
+                            <span wire:loading.remove wire:target="save">Enviar Reclamación</span>
+                            <span wire:loading wire:target="save">Enviando...</span>
                         </button>
                     </div>
 

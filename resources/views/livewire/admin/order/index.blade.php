@@ -371,29 +371,32 @@
             </div>
 
             <!-- Tabla de productos en carrito -->
-            <div class="mt-4 border rounded-md overflow-hidden bg-white shadow-sm">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="mt-4 border rounded-md overflow-x-auto bg-white shadow-sm">
+                <table class="min-w-[700px] w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-4 py-2 text-left text-xs text-gray-500 font-bold">Producto</th>
-                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold">Precio U.</th>
-                            <th class="px-4 py-2 text-center text-xs text-gray-500 font-bold">Cantidad</th>
-                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold">Subtotal</th>
+                            <th class="px-4 py-2 text-left text-xs text-gray-500 font-bold uppercase tracking-wider">Producto</th>
+                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold uppercase tracking-wider">Precio U.</th>
+                            <th class="px-4 py-2 text-center text-xs text-gray-500 font-bold uppercase tracking-wider">Cantidad</th>
+                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold uppercase tracking-wider">Subtotal</th>
                             <th class="px-4 py-2 text-center text-xs text-gray-500"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @php $sum_total = 0; @endphp
+                        @php 
+                            $sum_total = 0; 
+                            $dias = $this->dias_alquiler;
+                        @endphp
                         @forelse($carrito_productos as $index => $item)
                             @php
-                                $subtotal = $item['precio'] * $item['cantidad'];
+                                $subtotal = $item['precio'] * $item['cantidad'] * $dias;
                                 $sum_total += $subtotal;
                             @endphp
                             <tr>
                                 <td class="px-4 py-3 text-sm text-gray-800 font-medium">{{ $item['nombre'] }} <span
                                         class="text-xs text-gray-500">({{ $item['color'] }})</span></td>
                                 <td class="px-4 py-3 text-sm text-right text-gray-600">
-                                    ${{ number_format($item['precio'], 2) }}</td>
+                                    ${{ number_format($item['precio'], 2) }} <span class="text-xs text-gray-400">/día</span></td>
                                 <td class="px-4 py-3 text-sm text-center text-gray-800">{{ $item['cantidad'] }}</td>
                                 <td class="px-4 py-3 text-sm text-right font-semibold text-gray-800">
                                     ${{ number_format($subtotal, 2) }}</td>
@@ -415,13 +418,60 @@
                                     carrito de mobiliario está vacío. Busque y agregue productos a la orden.</td>
                             </tr>
                         @endforelse
-                        @if (count($carrito_productos) > 0)
+
+                        @foreach($costos_adicionales as $c_idx => $costo)
+                            @php
+                                $monto = (float)($costo['monto'] ?: 0);
+                                $sum_total += $monto;
+                            @endphp
+                            <tr class="bg-yellow-50">
+                                <td colspan="5" class="px-4 py-3">
+                                    <div class="flex flex-col md:flex-row items-center gap-3">
+                                        <div class="w-full md:w-1/2">
+                                            <label class="md:hidden block text-xs font-bold text-gray-500 uppercase mb-1">Concepto</label>
+                                            <input type="text" wire:model="costos_adicionales.{{ $c_idx }}.concepto" placeholder="Concepto (ej. Flete)" class="w-full text-sm rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            @error('costos_adicionales.'.$c_idx.'.concepto') <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="w-full md:w-1/3 flex flex-col md:flex-row md:items-center gap-2">
+                                            <label class="md:hidden block text-xs font-bold text-gray-500 uppercase">Monto ($)</label>
+                                            <span class="hidden md:block text-gray-500 font-bold uppercase text-xs whitespace-nowrap">Costo Extra:</span>
+                                            <div class="w-full flex items-center relative">
+                                                <span class="absolute left-3 text-gray-500 font-bold">$</span>
+                                                <input type="number" step="0.01" wire:model.live.debounce.300ms="costos_adicionales.{{ $c_idx }}.monto" placeholder="0.00" class="w-full pl-7 text-sm rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-right">
+                                            </div>
+                                            @error('costos_adicionales.'.$c_idx.'.monto') <span class="text-red-500 text-xs block md:hidden mt-1">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="w-full md:w-auto flex justify-end md:justify-center mt-2 md:mt-0">
+                                            <button type="button" wire:click="removeCostoAdicional({{ $c_idx }})" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 md:bg-transparent rounded px-3 py-2 md:p-2 border border-red-200 md:border-transparent flex items-center gap-1 transition-colors">
+                                                <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                                <span class="md:hidden text-sm font-semibold">Eliminar</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @error('costos_adicionales.'.$c_idx.'.monto') <span class="hidden md:block text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                                </td>
+                            </tr>
+                        @endforeach
+
+                        @if (count($carrito_productos) > 0 || count($costos_adicionales) > 0)
                             <tr class="bg-blue-50 border-t-2 border-blue-200">
-                                <td colspan="3" class="px-4 py-3 text-right font-bold text-gray-700 uppercase">
-                                    Total Estimado de Renta:</td>
-                                <td class="px-4 py-3 text-right font-black text-blue-700 text-lg">
-                                    ${{ number_format($sum_total, 2) }}</td>
-                                <td></td>
+                                <td colspan="5" class="px-4 py-4">
+                                    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                                        <button type="button" wire:click="addCostoAdicional" class="w-full md:w-auto text-sm bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md shadow-sm font-bold transition-colors">
+                                            + Agregar Costo Adicional
+                                        </button>
+                                        <div class="w-full md:w-auto bg-white md:bg-transparent p-3 md:p-0 rounded border md:border-0 border-blue-200 flex flex-col md:flex-row items-center md:justify-end gap-2 text-center md:text-right">
+                                            <span class="font-bold text-gray-700 uppercase text-xs md:text-sm">
+                                                Total Estimado ({{ $dias }} {{ $dias == 1 ? 'día' : 'días' }}):
+                                            </span>
+                                            <span class="font-black text-blue-700 text-2xl md:text-xl">
+                                                ${{ number_format($sum_total, 2) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endif
                     </tbody>

@@ -13,6 +13,10 @@
             @livewire('admin.configuration.metodospago')
         @break
 
+        @case(4)
+            @livewire('admin.configuration.usuarios')
+        @break
+
         @default
     @endswitch
 @endsection

@@ -23,15 +23,13 @@
                             </svg>
                             <span class="sr-only">Toggle sidebar</span>
                         </button>
-                        <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
-                            <img src="https://scontent.ftgz3-1.fna.fbcdn.net/v/t39.30808-6/471994538_928265629507552_4932590000560713296_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH7RvdJ0dSeXs_83x6cgb3n4kvebGX0HqfiS95sZfQep43soHhtXg2kxAxsOTqzYAsHutwFhrxYHBqlyG1IhFT9&_nc_ohc=V1PqoF6SIlIQ7kNvgH1tFRP&_nc_zt=23&_nc_ht=scontent.ftgz3-1.fna&_nc_gid=AVU-NxlVXD5fDeosQyTup0x&oh=00_AYAyrG65ah9N5vmkNaJNEwjYdnEErD79HdhXew5kdrft5w&oe=6797BE69"
-                                class="mr-3 h-14 dark:hidden" alt="Flowbite Logo" />
-
+                        <a href="{{ route('dashboard') }}" class="flex items-center justify-between mr-4">
+                            <img src="{{ asset('imagenes/logos/logoprueba2.png') }}"
+                                class="mr-3 h-10 md:h-14 w-auto object-contain dark:hidden" alt="MiaRenta Logo" />
                         </a>
-                        <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
-                            <img src="https://scontent.ftgz3-1.fna.fbcdn.net/v/t39.30808-6/471994538_928265629507552_4932590000560713296_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH7RvdJ0dSeXs_83x6cgb3n4kvebGX0HqfiS95sZfQep43soHhtXg2kxAxsOTqzYAsHutwFhrxYHBqlyG1IhFT9&_nc_ohc=V1PqoF6SIlIQ7kNvgH1tFRP&_nc_zt=23&_nc_ht=scontent.ftgz3-1.fna&_nc_gid=AVU-NxlVXD5fDeosQyTup0x&oh=00_AYAyrG65ah9N5vmkNaJNEwjYdnEErD79HdhXew5kdrft5w&oe=6797BE69"
-                                class="hidden mr-3 h-14 dark:block" alt="Flowbite Logo" />
-
+                        <a href="{{ route('dashboard') }}" class="flex items-center justify-between mr-4">
+                            <img src="{{ asset('imagenes/logos/logoprueba2.png') }}"
+                                class="hidden mr-3 h-10 md:h-14 w-auto object-contain dark:block" alt="MiaRenta Logo" />
                         </a>
 
 
@@ -39,24 +37,41 @@
                     <div class="flex items-center lg:order-2">
                         {{-- usuario --}}
                         <button type="button"
-                            class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            class="flex mx-3 text-sm bg-gray-100 rounded-full md:mr-0 ring-2 ring-indigo-500 focus:ring-4 focus:ring-indigo-300 dark:bg-gray-800 dark:ring-indigo-600 dark:focus:ring-indigo-800 relative"
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
                             <span class="sr-only">Open user menu</span>
-                            <img class="w-8 h-8 rounded-full"
-                                src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
-                                alt="user photo" />
+                            @if(Auth::user() && Auth::user()->profile_photo_path)
+                                <img class="w-8 h-8 rounded-full object-cover"
+                                    src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
+                                    alt="user photo" />
+                            @else
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold bg-indigo-100 dark:bg-indigo-900/50">
+                                    {{ substr(optional(Auth::user()->person)->nombre ?? 'U', 0, 1) }}
+                                </div>
+                            @endif
                         </button>
                         <!-- Dropdown menu -->
-                        <div class="z-50 hidden w-56 my-4 text-base list-none bg-white divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
+                        <div class="z-50 hidden w-64 my-4 text-base list-none bg-white divide-y divide-gray-100 shadow-xl dark:bg-gray-800 dark:divide-gray-700 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden"
                             id="dropdown">
-                            <div class="px-4 py-3">
-                                <span class="block text-sm font-semibold text-gray-900 dark:text-white">Neil Sims</span>
-                                <span class="block text-sm text-gray-900 truncate dark:text-white">name@cybac.com</span>
+                            <div class="px-5 py-4 bg-gray-50/50 dark:bg-gray-900/50">
+                                <span class="block text-sm font-bold text-gray-900 dark:text-white">
+                                    @if(Auth::user() && Auth::user()->person)
+                                        {{ Auth::user()->person->nombre }} {{ Auth::user()->person->apellido }}
+                                    @else
+                                        Administrador
+                                    @endif
+                                </span>
+                                <span class="block text-xs font-semibold text-indigo-600 dark:text-indigo-400 mt-0.5">
+                                    {{ optional(Auth::user()->role)->name ?? 'Rol no asignado' }}
+                                </span>
+                                <span class="block text-xs text-gray-500 truncate dark:text-gray-400 mt-1">{{ optional(Auth::user())->email }}</span>
                             </div>
-                            <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
+                            <ul class="py-2 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
                                 <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Perfil</a>
+                                    <a href="{{ route('perfil') }}"
+                                        class="block px-5 py-2.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-white font-medium transition-colors flex items-center gap-2">
+                                        <i class="fas fa-user-circle w-4 text-center"></i> Mi Perfil
+                                    </a>
                                 </li>
 
                             </ul>

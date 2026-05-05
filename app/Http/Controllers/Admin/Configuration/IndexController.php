@@ -24,4 +24,10 @@ class IndexController extends Controller
         $section = 3;
         return view('pages.admin.configuration.index', compact('section'));
     }
+
+    public function usuarios()
+    {
+        $section = 4;
+        return view('pages.admin.configuration.index', compact('section'));
+    }
 }

@@ -15,6 +15,8 @@ class RolesTableSeeder extends Seeder
     {
         //
         mb_internal_encoding('UTF-8');
-        Role::create(['name'=> mb_convert_case('Administrador', MB_CASE_TITLE)]);//1
+        Role::create(['name' => mb_convert_case('Administrador', MB_CASE_TITLE)]); //1
+        Role::create(['name' => mb_convert_case('Cliente', MB_CASE_TITLE)]); //2
+        Role::create(['name' => mb_convert_case('Empleado', MB_CASE_TITLE)]); //3
     }
 }

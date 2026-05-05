@@ -64,16 +64,33 @@
                 <div
                     class="bg-white dark:bg-zinc-900 rounded-[3rem] shadow-2xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-all duration-300">
                     <div class="p-8 sm:p-14">
-                        <form action="#" method="POST" class="space-y-8">
+                        @if (session()->has('success'))
+                            <div class="mb-8 p-4 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-600 text-green-700 dark:text-green-400 rounded-r-xl font-medium">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <form wire:submit.prevent="save" class="space-y-8">
                             @csrf
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <!-- Número de Ticket -->
+                                <div class="col-span-1">
+                                    <label for="numero_ticket"
+                                        class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">Número de Ticket</label>
+                                    <input type="text" wire:model="numero_ticket" id="numero_ticket"
+                                        class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600 placeholder-gray-400"
+                                        placeholder="Ej. TCK-12345">
+                                    @error('numero_ticket') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                                </div>
+
                                 <!-- RFC -->
                                 <div class="col-span-1">
                                     <label for="rfc"
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">RFC</label>
-                                    <input type="text" name="rfc" id="rfc"
+                                    <input type="text" wire:model="rfc" id="rfc"
                                         class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600 uppercase placeholder-gray-400"
                                         placeholder="XAXX010101000">
+                                    @error('rfc') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- Razón Social -->
@@ -81,9 +98,10 @@
                                     <label for="razon_social"
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">Razón
                                         Social</label>
-                                    <input type="text" name="razon_social" id="razon_social"
+                                    <input type="text" wire:model="razon_social" id="razon_social"
                                         class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600 placeholder-gray-400"
                                         placeholder="Como aparece en su constancia">
+                                    @error('razon_social') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- Régimen Fiscal -->
@@ -91,7 +109,7 @@
                                     <label for="regimen"
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">Régimen
                                         Fiscal</label>
-                                    <select name="regimen" id="regimen"
+                                    <select wire:model="regimen" id="regimen"
                                         class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600">
                                         <option value="">Seleccione una opción</option>
                                         <option value="601">General de Ley Personas Morales</option>
@@ -101,6 +119,7 @@
                                         <option value="612">Personas Físicas con Actividades Empresariales</option>
                                         <option value="626">Régimen Simplificado de Confianza (RESICO)</option>
                                     </select>
+                                    @error('regimen') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- Uso de CFDI -->
@@ -108,12 +127,14 @@
                                     <label for="uso_cfdi"
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">Uso
                                         de CFDI</label>
-                                    <select name="uso_cfdi" id="uso_cfdi"
+                                    <select wire:model="uso_cfdi" id="uso_cfdi"
                                         class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600">
+                                        <option value="">Seleccione una opción</option>
                                         <option value="G03">G03 - Gastos en general</option>
                                         <option value="S01">S01 - Sin efectos fiscales</option>
                                         <option value="CP01">CP01 - Pagos</option>
                                     </select>
+                                    @error('uso_cfdi') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- Código Postal -->
@@ -121,9 +142,10 @@
                                     <label for="cp"
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">CP
                                         Fiscal</label>
-                                    <input type="text" name="cp" id="cp"
+                                    <input type="text" wire:model="cp" id="cp"
                                         class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600 placeholder-gray-400"
                                         placeholder="12345">
+                                    @error('cp') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- Email para envío -->
@@ -131,9 +153,10 @@
                                     <label for="email"
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">Email
                                         de Envío</label>
-                                    <input type="email" name="email" id="email"
+                                    <input type="email" wire:model="email" id="email"
                                         class="block w-full px-6 py-4 rounded-2xl border-gray-100 dark:border-zinc-700 dark:bg-black dark:text-white focus:ring-red-600 placeholder-gray-400"
                                         placeholder="tu@email.com">
+                                    @error('email') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- File: Constancia -->
@@ -142,20 +165,33 @@
                                         class="block text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-3">Constancia
                                         de Situación Fiscal</label>
                                     <div
-                                        class="mt-2 flex justify-center px-8 pt-10 pb-10 border-2 border-gray-200 dark:border-zinc-700 border-dashed rounded-[2rem] hover:border-red-600 cursor-pointer bg-gray-50 dark:bg-black/50 transition-all group">
-                                        <div class="space-y-4 text-center">
-                                            <svg class="mx-auto h-12 w-12 text-gray-400 group-hover:text-red-600 transition-colors"
-                                                fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                                                <path
-                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                                <span class="text-red-600 font-black">Haz clic para subir
-                                                    archivo</span>
+                                        class="relative mt-2 flex justify-center px-8 pt-10 pb-10 border-2 border-gray-200 dark:border-zinc-700 border-dashed rounded-[2rem] hover:border-red-600 cursor-pointer bg-gray-50 dark:bg-black/50 transition-all group overflow-hidden">
+                                        <input type="file" wire:model="constancia" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.jpg,.jpeg,.png">
+                                        <div class="space-y-4 text-center z-0">
+                                            @if ($constancia)
+                                                <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <div class="flex text-sm text-gray-600 dark:text-gray-400 font-medium">
+                                                    <span class="text-green-600 font-black">{{ $constancia->getClientOriginalName() }}</span>
+                                                </div>
+                                            @else
+                                                <svg class="mx-auto h-12 w-12 text-gray-400 group-hover:text-red-600 transition-colors"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                                                    <path
+                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                                    <span class="text-red-600 font-black">Haz clic para subir archivo</span>
+                                                </div>
+                                            @endif
+                                            <div wire:loading wire:target="constancia" class="text-xs text-brand-600 mt-2 font-black">
+                                                Cargando archivo...
                                             </div>
                                         </div>
                                     </div>
+                                    @error('constancia') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
 
                                 <!-- File: Nota -->
@@ -163,26 +199,41 @@
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">Adjuntar Nota de
                                         Renta</label>
                                     <div
-                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-indigo-400 cursor-pointer bg-gray-50 transition-all">
-                                        <div class="space-y-1 text-center">
-                                            <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor"
-                                                fill="none" viewBox="0 0 48 48">
-                                                <path d="M9 12h6m-6 4h12m-12 4h12M9 8h24v32H9V8z" stroke-width="2"
-                                                    stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            <div class="flex text-sm text-gray-600">
-                                                <span class="text-indigo-600 font-medium">Sube tu nota o ticket</span>
+                                        class="relative mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-indigo-400 cursor-pointer bg-gray-50 transition-all overflow-hidden group">
+                                        <input type="file" wire:model="nota" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.jpg,.jpeg,.png">
+                                        <div class="space-y-1 text-center z-0">
+                                            @if ($nota)
+                                                <svg class="mx-auto h-10 w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <div class="flex text-sm text-gray-600">
+                                                    <span class="text-green-600 font-medium">{{ $nota->getClientOriginalName() }}</span>
+                                                </div>
+                                            @else
+                                                <svg class="mx-auto h-10 w-10 text-gray-400 group-hover:text-indigo-400 transition-colors" stroke="currentColor"
+                                                    fill="none" viewBox="0 0 48 48">
+                                                    <path d="M9 12h6m-6 4h12m-12 4h12M9 8h24v32H9V8z" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                                <div class="flex text-sm text-gray-600">
+                                                    <span class="text-indigo-600 font-medium">Sube tu nota o ticket</span>
+                                                </div>
+                                            @endif
+                                            <div wire:loading wire:target="nota" class="text-xs text-indigo-600 mt-2 font-black">
+                                                Cargando archivo...
                                             </div>
                                         </div>
                                     </div>
+                                    @error('nota') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
                             <!-- Submit Button -->
                             <div class="col-span-1 md:col-span-2 pt-10">
-                                <button type="button"
+                                <button type="submit"
                                     class="w-full bg-red-600 text-white py-6 rounded-2xl font-black text-xl shadow-2xl hover:bg-red-700 transition-all transform hover:scale-[1.02] active:scale-95 shadow-red-600/30">
-                                    Enviar Solicitud
+                                    <span wire:loading.remove wire:target="save">Enviar Solicitud</span>
+                                    <span wire:loading wire:target="save">Enviando...</span>
                                 </button>
                             </div>
                         </form>

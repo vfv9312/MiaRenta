@@ -57,7 +57,16 @@
                             Pagado: <span class="{{ ($alq->monto_pagado >= $alq->total && $alq->total > 0) ? 'text-green-600 font-bold' : 'text-orange-500' }}">${{ number_format($alq->monto_pagado ?? 0, 2) }}</span>
                         </td>
                         <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                            
+                            <!-- Details btn -->
+                            <button wire:click="openDetailsModal({{ $alq->id }})" class="text-blue-600 hover:text-blue-900 mr-1" title="Ver Detalles">
+                                <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+
+                            <!-- Edit btn -->
+                            <button wire:click="openEditModal({{ $alq->id }})" class="text-orange-500 hover:text-orange-700 mr-1" title="Editar Fechas / Dirección">
+                                <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
+
                             <!-- Mobiliario btn (Always available to view, maybe not edit if finished) -->
                             <button wire:click="openProductsModal({{ $alq->id }})" class="text-blue-600 hover:text-blue-900" title="Mobiliario">
                                 <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
@@ -117,6 +126,10 @@
 
     <!-- MODAL PRODUCTS -->
     @if($showProductsModal)
+        @php
+            // 8: Cancelado, 10: Pagado, 11: Rentado, 13: Devuelto, 14: Finalizado
+            $canEditProducts = !in_array($selected_order_status_id, [8, 10, 11, 13, 14]);
+        @endphp
         <div class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl overflow-hidden">
                 <div class="p-6 border-b flex justify-between items-center">
@@ -126,8 +139,15 @@
                     </button>
                 </div>
                 <div class="p-6">
-                    <!-- Buscador -->
-                    <div class="mb-6 bg-gray-50 p-4 border rounded-md">
+                    @if(!$canEditProducts)
+                        <div class="mb-4 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm p-3 rounded-md shadow-sm">
+                            ℹ️ Esta orden ya no puede ser editada porque se encuentra en un estatus avanzado (Pagado, Rentado, Finalizado, etc).
+                        </div>
+                    @endif
+
+                    @if($canEditProducts)
+                        <!-- Buscador -->
+                        <div class="mb-6 bg-gray-50 p-4 border rounded-md">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Buscar y agregar mobiliario</label>
                         <input type="text" wire:model.live.debounce.300ms="search_product" placeholder="Escriba el nombre del producto..." class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                         
@@ -152,6 +172,7 @@
                             </div>
                         @endif
                     </div>
+                    @endif
 
                     <!-- Lista actual -->
                     <h4 class="font-bold text-gray-700 mb-2">Mobiliario Agregado</h4>
@@ -161,47 +182,107 @@
                                 <tr>
                                     <th class="px-4 py-2 text-left text-xs text-gray-500">Producto</th>
                                     <th class="px-4 py-2 text-right text-xs text-gray-500">Precio U.</th>
+                                    <th class="px-4 py-2 text-center text-xs text-gray-500">Días Totales</th>
                                     <th class="px-4 py-2 text-center text-xs text-gray-500">Cantidad</th>
                                     <th class="px-4 py-2 text-right text-xs text-gray-500">Subtotal</th>
-                                    <th class="px-4 py-2 text-center text-xs text-gray-500"></th>
+                                    @if($canEditProducts)
+                                        <th class="px-4 py-2 text-center text-xs text-gray-500"></th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 @php $acumulado = 0; @endphp
-                                @forelse($order_products as $op)
+                                @forelse($cart_products as $idx => $op)
                                     @php 
-                                        $subtl = $op->cantidad * ($op->catalogoPrecio->precio ?? 0);
+                                        $precio = $op['precio'] ?? 0;
+                                        $cantidad = $op['cantidad'] ?? 1;
+                                        $subtl = $cantidad * $precio * $modal_dias_alquiler;
                                         $acumulado += $subtl;
                                     @endphp
                                     <tr>
-                                        <td class="px-4 py-2 text-sm text-gray-800">{{ $op->catalogoPrecio->producto->nombre ?? 'Desconocido' }}</td>
-                                        <td class="px-4 py-2 text-sm text-right text-gray-600">${{ number_format($op->catalogoPrecio->precio ?? 0, 2) }}</td>
-                                        <td class="px-4 py-2 text-sm text-center text-gray-800">{{ $op->cantidad }}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-800">{{ $op['nombre'] ?? 'Desconocido' }}</td>
+                                        <td class="px-4 py-2 text-sm text-right text-gray-600">${{ number_format($precio, 2) }} <span class="text-xs text-gray-400">/día</span></td>
+                                        <td class="px-4 py-2 text-sm text-center text-gray-800">{{ $modal_dias_alquiler }}</td>
+                                        <td class="px-4 py-2 text-sm text-center text-gray-800">{{ $cantidad }}</td>
                                         <td class="px-4 py-2 text-sm text-right font-semibold text-gray-800">${{ number_format($subtl, 2) }}</td>
-                                        <td class="px-4 py-2 text-center">
-                                            <button wire:click="removeProductFromOrder({{ $op->id }})" class="text-red-500 hover:text-red-700">
-                                                <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                            </button>
-                                        </td>
+                                        @if($canEditProducts)
+                                            <td class="px-4 py-2 text-center">
+                                                <button wire:click="removeProductFromOrder({{ $idx }})" class="text-red-500 hover:text-red-700">
+                                                    <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                </button>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-4 py-4 text-center text-gray-500 text-sm">Aún no hay mobiliario asignado a esta orden.</td>
+                                        <td colspan="6" class="px-4 py-4 text-center text-gray-500 text-sm">Aún no hay mobiliario asignado a esta orden.</td>
                                     </tr>
                                 @endforelse
+
+                                @if(is_array($order_costos_adicionales) && count($order_costos_adicionales) > 0)
+                                    <tr class="bg-yellow-100">
+                                        <td colspan="6" class="px-4 py-2 font-bold text-yellow-800 text-xs uppercase">Costos Adicionales</td>
+                                    </tr>
+                                    @foreach($order_costos_adicionales as $c_idx => $costo)
+                                        @php
+                                            $monto = (float)($costo['monto'] ?? 0);
+                                            $acumulado += $monto;
+                                        @endphp
+                                        <tr class="bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                                            <td colspan="3" class="px-4 py-2 text-sm text-gray-800">{{ $costo['concepto'] ?? 'Costo Extra' }}</td>
+                                            <td class="px-4 py-2 text-sm text-right text-gray-500 font-bold">Extra</td>
+                                            <td class="px-4 py-2 text-sm text-right font-semibold text-gray-800">${{ number_format($monto, 2) }}</td>
+                                            @if($canEditProducts)
+                                                <td class="px-4 py-2 text-center">
+                                                    <button wire:click="removeCostoAdicionalFromOrder({{ $c_idx }})" class="text-red-500 hover:text-red-700" title="Eliminar Costo Adicional">
+                                                        <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    </button>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                @endif
+
                                 @if($acumulado > 0)
-                                    <tr class="bg-gray-50">
-                                        <td colspan="3" class="px-4 py-3 text-right font-bold text-gray-700">TOTAL:</td>
+                                    <tr class="bg-gray-50 border-t-2 border-gray-200">
+                                        <td colspan="4" class="px-4 py-3 text-right font-bold text-gray-700">TOTAL ESTIMADO (INCLUYE EXTRAS):</td>
                                         <td class="px-4 py-3 text-right font-bold text-green-600 text-lg">${{ number_format($acumulado, 2) }}</td>
-                                        <td></td>
+                                        @if($canEditProducts)
+                                            <td></td>
+                                        @endif
                                     </tr>
                                 @endif
                             </tbody>
                         </table>
                     </div>
+
+                    @if($canEditProducts)
+                        <!-- Add Extra Cost Form -->
+                        <div class="mt-6 bg-yellow-50 p-4 border border-yellow-200 rounded-md">
+                            <h4 class="font-bold text-yellow-800 mb-2">Agregar Costo Adicional (Fletes, Maniobras, etc.)</h4>
+                            <div class="flex flex-col md:flex-row md:items-end gap-4">
+                                <div class="w-full md:w-1/2">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Concepto</label>
+                                    <input type="text" wire:model.defer="new_costo_concepto" placeholder="Ej. Flete redondo" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                    @error('new_costo_concepto') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="w-full md:w-1/3">
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Monto ($)</label>
+                                    <input type="number" step="0.01" wire:model.defer="new_costo_monto" placeholder="0.00" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm">
+                                    @error('new_costo_monto') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="w-full md:w-auto">
+                                    <button wire:click="addCostoAdicionalToOrder" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 text-sm rounded-md shadow-sm font-semibold transition-colors">Añadir Costo</button>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
-                <div class="bg-gray-50 border-t p-4 flex justify-end">
-                    <button wire:click="closeProductsModal" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded font-medium">Cerrar</button>
+                <div class="bg-gray-50 border-t p-4 flex justify-end space-x-3">
+                    <button wire:click="closeProductsModal" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded shadow-sm font-medium transition-colors">{{ $canEditProducts ? 'Cancelar' : 'Cerrar' }}</button>
+                    @if($canEditProducts)
+                        <button wire:click="saveProductsAndCosts" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm font-medium transition-colors">Confirmar Cambios</button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -261,6 +342,184 @@
                     <div class="bg-gray-50 border-t p-4 flex justify-end space-x-3">
                         <button type="button" wire:click="closeCancelModal" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded shadow-sm font-medium">Cerrar</button>
                         <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded shadow-sm font-medium">Confirmar Cancelación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
+
+    <!-- DETAILS MODAL -->
+    @if($showDetailsModal && $selected_order)
+        <div class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl overflow-hidden">
+                <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800">Detalles de la Orden #{{ $selected_order->id }}</h3>
+                    <button wire:click="closeDetailsModal" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="p-6 max-h-[80vh] overflow-y-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- Sección Cliente -->
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2 border-b pb-1">Datos del Cliente</h4>
+                            <p class="text-sm"><strong>Nombre:</strong> {{ $selected_order->cliente->persona->nombre ?? '' }} {{ $selected_order->cliente->persona->apellido ?? '' }}</p>
+                            <p class="text-sm"><strong>Correo:</strong> {{ $selected_order->cliente->correo ?? 'N/A' }}</p>
+                            <p class="text-sm"><strong>Teléfono:</strong> {{ $selected_order->cliente->telefonos->first()->numero ?? ($selected_order->cliente->telefonos->first()->telefono ?? 'N/A') }}</p>
+                        </div>
+                        <!-- Sección Fechas -->
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2 border-b pb-1">Fechas Relevantes</h4>
+                            <p class="text-sm"><strong>Solicitada:</strong> {{ $selected_order->fecha_solicitada ? \Carbon\Carbon::parse($selected_order->fecha_solicitada)->format('d/m/Y H:i') : 'N/A' }}</p>
+                            <p class="text-sm"><strong>Entrega Física:</strong> {{ $selected_order->fecha_entrega ? \Carbon\Carbon::parse($selected_order->fecha_entrega)->format('d/m/Y H:i') : 'N/A' }}</p>
+                            <p class="text-sm"><strong>Prevista de Recep.:</strong> {{ $selected_order->fecha_recepcion ? \Carbon\Carbon::parse($selected_order->fecha_recepcion)->format('d/m/Y H:i') : 'N/A' }}</p>
+                            <p class="text-sm"><strong>Status Actual:</strong> <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ $selected_order->status->name ?? 'N/A' }}</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- Datos Adicionales -->
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2 border-b pb-1">Datos de Entrega</h4>
+                            <p class="text-sm"><strong>Recibe:</strong> {{ $selected_order->recibe ?? 'N/A' }}</p>
+                            <p class="text-sm"><strong>Chofer/Entrega:</strong> {{ $selected_order->entrega ?? 'N/A' }}</p>
+                            @php
+                                $dir = \App\Models\CatalagoCliente::with('direccion.colonia')->find($selected_order->direcciónes_clientes_id);
+                            @endphp
+                            @if($dir && $dir->direccion)
+                                <p class="text-sm"><strong>Dirección:</strong> {{ $dir->direccion->calle ?? '' }} {{ $dir->direccion->entre_calles ? 'entre '.$dir->direccion->entre_calles : '' }}</p>
+                                <p class="text-sm"><strong>Colonia:</strong> {{ $dir->direccion->colonia->localidad ?? '' }}, CP: {{ $dir->direccion->cp ?? '' }}</p>
+                                <p class="text-sm"><strong>Ref:</strong> {{ $dir->direccion->referencia ?? 'N/A' }}</p>
+                            @endif
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-700 mb-2 border-b pb-1">Finanzas</h4>
+                            <p class="text-sm"><strong>Método de Pago:</strong> {{ $selected_order->metodoPago->nombre ?? 'N/A' }}</p>
+                            @php
+                                $costos_adicionales_detalle = $selected_order->costos_adicionales ? json_decode($selected_order->costos_adicionales, true) : [];
+                            @endphp
+                            @if(is_array($costos_adicionales_detalle) && count($costos_adicionales_detalle) > 0)
+                                <div class="my-2 p-2 bg-yellow-50 rounded border border-yellow-200">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">Costos Adicionales:</p>
+                                    @foreach($costos_adicionales_detalle as $costo)
+                                        <div class="flex justify-between text-xs">
+                                            <span>{{ $costo['concepto'] ?? 'Costo' }}</span>
+                                            <span class="font-medium">${{ number_format((float)($costo['monto'] ?? 0), 2) }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                            <p class="text-sm"><strong>Total:</strong> ${{ number_format($selected_order->total, 2) }}</p>
+                            <p class="text-sm"><strong>Monto Pagado:</strong> ${{ number_format($selected_order->monto_pagado, 2) }}</p>
+                            <p class="text-sm font-bold {{ max(0, $selected_order->total - $selected_order->monto_pagado) > 0 ? 'text-red-600' : 'text-green-600' }}"><strong>Saldo:</strong> ${{ number_format(max(0, $selected_order->total - $selected_order->monto_pagado), 2) }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Productos -->
+                    <h4 class="font-bold text-gray-700 mb-2 border-b pb-1">Productos Alquilados</h4>
+                    <div class="border rounded-md overflow-hidden bg-white mb-4">
+                        @php
+                            $dias_alquiler = 1;
+                            if ($selected_order && $selected_order->fecha_entrega && $selected_order->fecha_recepcion) {
+                                try {
+                                    $f_inicio = \Carbon\Carbon::parse($selected_order->fecha_entrega)->startOfDay();
+                                    $f_fin = \Carbon\Carbon::parse($selected_order->fecha_recepcion)->startOfDay();
+                                    if (!$f_fin->lt($f_inicio)) {
+                                        $dias_diff = $f_inicio->diffInDays($f_fin);
+                                        $dias_alquiler = $dias_diff == 0 ? 1 : $dias_diff;
+                                    }
+                                } catch (\Exception $e) {}
+                            }
+                        @endphp
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Producto</th>
+                                    <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Precio U.</th>
+                                    <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Días</th>
+                                    <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Cantidad</th>
+                                    <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @forelse($selected_order->productos as $p_item)
+                                    <tr>
+                                        <td class="px-4 py-2 text-sm text-gray-800 font-medium">{{ $p_item->catalogoPrecio->producto->nombre ?? 'N/A' }} <span class="text-gray-500 text-xs">({{ $p_item->catalogoPrecio->producto->color->nombre ?? '' }})</span></td>
+                                        <td class="px-4 py-2 text-sm text-right">${{ number_format($p_item->catalogoPrecio->precio ?? 0, 2) }}</td>
+                                        <td class="px-4 py-2 text-sm text-center">{{ $dias_alquiler }}</td>
+                                        <td class="px-4 py-2 text-sm text-center font-bold">{{ $p_item->cantidad }}</td>
+                                        <td class="px-4 py-2 text-sm text-right font-medium">${{ number_format($p_item->cantidad * ($p_item->catalogoPrecio->precio ?? 0) * $dias_alquiler, 2) }}</td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="5" class="px-4 py-3 text-center text-sm text-gray-500">No hay productos en esta orden.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if($selected_order->motivo_cancelacion)
+                        <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+                            <h4 class="font-bold text-red-800 mb-1 flex items-center">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Motivo de Cancelación / Devolución
+                            </h4>
+                            <p class="text-sm text-red-700">{{ $selected_order->motivo_cancelacion }}</p>
+                        </div>
+                    @endif
+                </div>
+                <div class="bg-gray-100 border-t p-4 flex justify-end">
+                    <button wire:click="closeDetailsModal" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded shadow-sm font-medium transition-colors">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- EDIT MODAL -->
+    @if($showEditModal)
+        <div class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
+                <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800">Editar Orden #{{ $selected_order_id }}</h3>
+                    <button wire:click="closeEditModal" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <form wire:submit.prevent="updateOrder">
+                    <div class="p-6 space-y-4">
+                        <div class="bg-blue-50 border border-blue-200 text-blue-800 text-sm p-3 rounded-md mb-4 shadow-sm">
+                            ℹ️ Si modificas las fechas de entrega o recolección, <strong>el total de la orden será recalculado automáticamente</strong> basándose en la cantidad de días de renta.
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Fecha de Entrega Física *</label>
+                                <input type="datetime-local" wire:model.defer="edit_fecha_entrega" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                @error('edit_fecha_entrega') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Fecha Prevista de Recolección *</label>
+                                <input type="datetime-local" wire:model.defer="edit_fecha_recepcion" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                @error('edit_fecha_recepcion') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700">Dirección de Entrega *</label>
+                            <select wire:model.defer="edit_catalogo_cliente_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <option value="">Seleccione una dirección...</option>
+                                @foreach($edit_direcciones as $dir)
+                                    <option value="{{ $dir->id }}">
+                                        {{ $dir->direccion->calle ?? '' }} 
+                                        {{ isset($dir->direccion->colonia->localidad) ? '- '.$dir->direccion->colonia->localidad : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('edit_catalogo_cliente_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 border-t p-4 flex justify-end space-x-3">
+                        <button type="button" wire:click="closeEditModal" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded shadow-sm font-medium transition-colors">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm font-medium transition-colors">Guardar Cambios</button>
                     </div>
                 </form>
             </div>

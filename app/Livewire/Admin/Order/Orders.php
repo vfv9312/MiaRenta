@@ -24,9 +24,20 @@ class Orders extends Component
     public $showCancelModal = false;
     public $showPaymentModal = false;
     public $showProductsModal = false;
+    public $showDetailsModal = false;
+    public $showEditModal = false;
 
     // Selected order
     public $selected_order_id = null;
+    public $selected_order = null;
+    public $selected_order_status_id = null;
+    public $modal_dias_alquiler = 1;
+    
+    // Edit Order Form
+    public $edit_fecha_entrega = '';
+    public $edit_fecha_recepcion = '';
+    public $edit_catalogo_cliente_id = '';
+    public $edit_direcciones = [];
     
     // Cancel Form
     public $motivo_cancelacion = '';
@@ -39,6 +50,12 @@ class Orders extends Component
     public $search_product = '';
     public $selected_catalogo_precio_id = '';
     public $cantidad_producto = 1;
+    public $cart_products = [];
+
+    // Extra Costs Form in Modal
+    public $new_costo_concepto = '';
+    public $new_costo_monto = '';
+    public $order_costos_adicionales = [];
 
     protected $rules = [
         'motivo_cancelacion' => 'required_if:showCancelModal,true|string',
@@ -78,15 +95,7 @@ class Orders extends Component
                 ->get();
         }
 
-        // Subitems list for the selected order in modal
-        $order_products = [];
-        if ($this->showProductsModal && $this->selected_order_id) {
-            $order_products = AlquileresProducto::with(['catalogoPrecio.producto'])
-                ->where('alquiler_id', $this->selected_order_id)
-                ->get();
-        }
-
-        return view('livewire.admin.order.orders', compact('alquileres', 'statuses', 'catalog_products', 'order_products'));
+        return view('livewire.admin.order.orders', compact('alquileres', 'statuses', 'catalog_products'));
     }
 
     // --- State Machine Actions ---
@@ -215,9 +224,45 @@ class Orders extends Component
     public function openProductsModal($id)
     {
         $this->selected_order_id = $id;
+        
+        $order = Alquiler::find($id);
+        $this->selected_order_status_id = $order->status_id;
+        $this->modal_dias_alquiler = 1;
+        if ($order && $order->fecha_entrega && $order->fecha_recepcion) {
+            try {
+                $f_inicio = \Carbon\Carbon::parse($order->fecha_entrega)->startOfDay();
+                $f_fin = \Carbon\Carbon::parse($order->fecha_recepcion)->startOfDay();
+                if ($f_fin->lt($f_inicio)) {
+                    $this->modal_dias_alquiler = 1;
+                } else {
+                    $dias_diff = $f_inicio->diffInDays($f_fin);
+                    $this->modal_dias_alquiler = $dias_diff == 0 ? 1 : $dias_diff;
+                }
+            } catch (\Exception $e) {}
+        }
+
         $this->search_product = '';
         $this->selected_catalogo_precio_id = '';
         $this->cantidad_producto = 1;
+        $this->new_costo_concepto = '';
+        $this->new_costo_monto = '';
+        
+        $this->order_costos_adicionales = $order->costos_adicionales ? json_decode($order->costos_adicionales, true) : [];
+        if (!is_array($this->order_costos_adicionales)) {
+            $this->order_costos_adicionales = [];
+        }
+
+        $this->cart_products = [];
+        $db_products = AlquileresProducto::with('catalogoPrecio.producto')->where('alquiler_id', $id)->get();
+        foreach($db_products as $op) {
+            $this->cart_products[] = [
+                'catalogo_precio_id' => $op->Catalogo_precio_id,
+                'nombre' => $op->catalogoPrecio->producto->nombre ?? 'Desconocido',
+                'precio' => $op->catalogoPrecio->precio ?? 0,
+                'cantidad' => $op->cantidad
+            ];
+        }
+
         $this->showProductsModal = true;
     }
 
@@ -225,6 +270,74 @@ class Orders extends Component
     {
         $this->showProductsModal = false;
         $this->resetValidation();
+    }
+
+    // --- DETAILS MODAL ---
+
+    public function openDetailsModal($id)
+    {
+        $this->selected_order = Alquiler::with([
+            'cliente.persona', 
+            'cliente.telefonos', 
+            'status', 
+            'productos.catalogoPrecio.producto.color', 
+            'metodoPago'
+        ])->findOrFail($id);
+        
+        $this->showDetailsModal = true;
+    }
+
+    public function closeDetailsModal()
+    {
+        $this->showDetailsModal = false;
+        $this->selected_order = null;
+    }
+
+    // --- EDIT MODAL ---
+
+    public function openEditModal($id)
+    {
+        $this->selected_order_id = $id;
+        $order = Alquiler::findOrFail($id);
+        
+        $this->edit_fecha_entrega = $order->fecha_entrega ? \Carbon\Carbon::parse($order->fecha_entrega)->format('Y-m-d\TH:i') : null;
+        $this->edit_fecha_recepcion = $order->fecha_recepcion ? \Carbon\Carbon::parse($order->fecha_recepcion)->format('Y-m-d\TH:i') : null;
+        $this->edit_catalogo_cliente_id = $order->direcciónes_clientes_id;
+
+        $this->edit_direcciones = \App\Models\CatalagoCliente::with('direccion.colonia')
+            ->where('cliente_id', $order->cliente_id)
+            ->whereIn('status_id', [1, 2])
+            ->get();
+
+        $this->showEditModal = true;
+    }
+
+    public function closeEditModal()
+    {
+        $this->showEditModal = false;
+        $this->resetValidation();
+    }
+
+    public function updateOrder()
+    {
+        $this->validate([
+            'edit_fecha_entrega' => 'required|date',
+            'edit_fecha_recepcion' => 'required|date',
+            'edit_catalogo_cliente_id' => 'required|exists:catalago_clientes,id'
+        ]);
+
+        $order = Alquiler::findOrFail($this->selected_order_id);
+
+        $order->update([
+            'fecha_entrega' => $this->edit_fecha_entrega,
+            'fecha_recepcion' => $this->edit_fecha_recepcion,
+            'direcciónes_clientes_id' => $this->edit_catalogo_cliente_id
+        ]);
+
+        $this->recalculateTotal();
+
+        $this->closeEditModal();
+        $this->dispatch('swal:success', ['message' => 'Orden actualizada exitosamente.']);
     }
 
     public function selectCatalogoPrecio($id)
@@ -239,47 +352,89 @@ class Orders extends Component
             'cantidad_producto' => 'required|integer|min:1'
         ]);
 
-        DB::beginTransaction();
-        try {
-            $precio_catalog = CatalagoPrecio::findOrFail($this->selected_catalogo_precio_id);
-            
-            // Check if already exist
-            $exist = AlquileresProducto::where('alquiler_id', $this->selected_order_id)
-                        ->where('Catalogo_precio_id', $this->selected_catalogo_precio_id)
-                        ->first();
-            
-            if ($exist) {
-                $exist->increment('cantidad', $this->cantidad_producto);
-            } else {
-                AlquileresProducto::create([
-                    'alquiler_id' => $this->selected_order_id,
-                    'Catalogo_precio_id' => $this->selected_catalogo_precio_id,
-                    'cantidad' => $this->cantidad_producto
-                ]);
+        $precio_catalog = CatalagoPrecio::with('producto')->findOrFail($this->selected_catalogo_precio_id);
+        
+        $exist = false;
+        foreach($this->cart_products as $key => $item) {
+            if($item['catalogo_precio_id'] == $this->selected_catalogo_precio_id) {
+                $this->cart_products[$key]['cantidad'] += $this->cantidad_producto;
+                $exist = true;
+                break;
             }
+        }
+        
+        if(!$exist) {
+            $this->cart_products[] = [
+                'catalogo_precio_id' => $this->selected_catalogo_precio_id,
+                'nombre' => $precio_catalog->producto->nombre ?? 'Desconocido',
+                'precio' => $precio_catalog->precio ?? 0,
+                'cantidad' => $this->cantidad_producto
+            ];
+        }
 
-            $this->recalculateTotal();
+        $this->search_product = '';
+        $this->selected_catalogo_precio_id = '';
+        $this->cantidad_producto = 1;
+    }
 
-            DB::commit();
-            
-            // Reset fields
-            $this->search_product = '';
-            $this->selected_catalogo_precio_id = '';
-            $this->cantidad_producto = 1;
-
-            $this->dispatch('swal:success', ['message' => 'Producto agregado.']);
-        } catch(\Exception $e) {
-            DB::rollBack();
-            session()->flash('error', 'Error al agregar producto: ' . $e->getMessage());
+    public function removeProductFromOrder($index)
+    {
+        if(isset($this->cart_products[$index])) {
+            unset($this->cart_products[$index]);
+            $this->cart_products = array_values($this->cart_products);
         }
     }
 
-    public function removeProductFromOrder($id)
+    public function addCostoAdicionalToOrder()
     {
-        $item = AlquileresProducto::findOrFail($id);
-        $item->delete();
-        $this->recalculateTotal();
-        $this->dispatch('swal:success', ['message' => 'Producto removido.']);
+        $this->validate([
+            'new_costo_concepto' => 'required|string|max:255',
+            'new_costo_monto' => 'required|numeric|min:0'
+        ]);
+
+        $this->order_costos_adicionales[] = [
+            'concepto' => $this->new_costo_concepto,
+            'monto' => $this->new_costo_monto
+        ];
+
+        $this->new_costo_concepto = '';
+        $this->new_costo_monto = '';
+    }
+
+    public function removeCostoAdicionalFromOrder($index)
+    {
+        if (isset($this->order_costos_adicionales[$index])) {
+            unset($this->order_costos_adicionales[$index]);
+            $this->order_costos_adicionales = array_values($this->order_costos_adicionales);
+        }
+    }
+
+    public function saveProductsAndCosts()
+    {
+        DB::beginTransaction();
+        try {
+            AlquileresProducto::where('alquiler_id', $this->selected_order_id)->delete();
+            
+            foreach($this->cart_products as $item) {
+                AlquileresProducto::create([
+                    'alquiler_id' => $this->selected_order_id,
+                    'Catalogo_precio_id' => $item['catalogo_precio_id'],
+                    'cantidad' => $item['cantidad']
+                ]);
+            }
+            
+            $order = Alquiler::findOrFail($this->selected_order_id);
+            $order->update(['costos_adicionales' => json_encode($this->order_costos_adicionales)]);
+            
+            $this->recalculateTotal();
+            
+            DB::commit();
+            $this->closeProductsModal();
+            $this->dispatch('swal:success', ['message' => 'Mobiliario y costos actualizados exitosamente.']);
+        } catch(\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', 'Error al guardar los cambios: ' . $e->getMessage());
+        }
     }
 
     public function downloadTicket($id)
@@ -303,8 +458,8 @@ class Orders extends Component
         $dompdf = new \Dompdf\Dompdf();
         $dompdf->loadHtml($html);
         
-        // 80mm = ~226.77 points. Long height for thermal roll.
-        $customPaper = array(0, 0, 226.77, 841.89);
+        // 58mm = ~164.41 points. Long height for thermal roll.
+        $customPaper = array(0, 0, 164.41, 841.89);
         $dompdf->setPaper($customPaper);
         
         $dompdf->render();
@@ -317,14 +472,42 @@ class Orders extends Component
     private function recalculateTotal()
     {
         if ($this->selected_order_id) {
+            $order = Alquiler::find($this->selected_order_id);
+            if (!$order) return;
+
+            $dias = 1;
+            if ($order->fecha_entrega && $order->fecha_recepcion) {
+                try {
+                    $f_inicio = \Carbon\Carbon::parse($order->fecha_entrega)->startOfDay();
+                    $f_fin = \Carbon\Carbon::parse($order->fecha_recepcion)->startOfDay();
+                    
+                    if ($f_fin->lt($f_inicio)) {
+                        $dias = 1;
+                    } else {
+                        $dias_diff = $f_inicio->diffInDays($f_fin);
+                        $dias = $dias_diff == 0 ? 1 : $dias_diff;
+                    }
+                } catch (\Exception $e) {
+                    $dias = 1;
+                }
+            }
+
             $items = AlquileresProducto::with('catalogoPrecio')->where('alquiler_id', $this->selected_order_id)->get();
             $total = 0;
             foreach ($items as $item) {
                 if ($item->catalogoPrecio) {
-                    $total += ($item->cantidad * $item->catalogoPrecio->precio);
+                    $total += ($item->cantidad * $item->catalogoPrecio->precio * $dias);
                 }
             }
-            Alquiler::where('id', $this->selected_order_id)->update(['total' => $total]);
+
+            $costos = $order->costos_adicionales ? json_decode($order->costos_adicionales, true) : [];
+            if (is_array($costos)) {
+                foreach ($costos as $costo) {
+                    $total += (float)($costo['monto'] ?? 0);
+                }
+            }
+
+            $order->update(['total' => $total]);
         }
     }
 }

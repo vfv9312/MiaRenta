@@ -65,7 +65,7 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Usuarios</h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">Gestiona la información de
                         los usuarios del sistema.</p>
-                    <a href="#"
+                    <a href="{{ route('usuarios') }}"
                         class="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-amber-200 dark:shadow-none">
                         <span>Gestionar Usuarios</span>
                         <i class="fas fa-arrow-right text-xs"></i>

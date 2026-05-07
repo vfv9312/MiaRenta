@@ -103,7 +103,7 @@ class Images extends Component
 
         $imagePath = null;
         if ($this->imagen) {
-            $imagePath = Utility::saveFile($this->imagen, 'productos/imagenes');
+            $imagePath = Utility::saveToPublic($this->imagen, 'productos/imagenes');
         }
 
         if ($this->tipo_imagen === 'producto') {

@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class Login extends Component
 {
-    public $email = "admin@test.com", $password;
+    public $email = "correo", $password;
 
     public function render()
     {
@@ -27,9 +27,9 @@ class Login extends Component
             if (Auth::attempt(['password' => $this->password, 'email' => $this->email])) {
                 return redirect()->route('dashboard');
             }
-            $this->addError('server', 'Error en el Servidor.');
+            $this->addError('email', 'El usuario o la contraseña son incorrectos.');
         } catch (\Throwable $th) {
-            $this->addError('server', 'Error en el Servidor.');
+            $this->addError('email', 'Ocurrió un error al intentar iniciar sesión.');
         }
     }
 }

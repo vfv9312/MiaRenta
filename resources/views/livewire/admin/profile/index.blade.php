@@ -24,7 +24,7 @@
                         @if ($photo)
                             <img src="{{ $photo->temporaryUrl() }}" class="w-24 h-24 rounded-full object-cover shadow-md border-2 border-indigo-100 dark:border-indigo-900">
                         @elseif(Auth::user()->profile_photo_path)
-                            <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}" class="w-24 h-24 rounded-full object-cover shadow-md border-2 border-indigo-100 dark:border-indigo-900">
+                            <img src="{{ asset(Auth::user()->profile_photo_path) }}" class="w-24 h-24 rounded-full object-cover shadow-md border-2 border-indigo-100 dark:border-indigo-900">
                         @else
                             <div class="w-24 h-24 rounded-full flex items-center justify-center text-4xl text-indigo-700 dark:text-indigo-400 font-bold bg-indigo-100 dark:bg-indigo-900/50 shadow-md">
                                 {{ substr(optional(Auth::user()->person)->nombre ?? 'U', 0, 1) }}

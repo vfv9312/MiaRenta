@@ -132,11 +132,16 @@ class Index extends Component
         try {
             if ($this->new_history_image) {
                 if ($this->history_image) {
-                    // Remove 'storage/' prefix to get the correct relative path for the public disk
-                    $pathToDelete = str_replace('storage/', '', $this->history_image);
-                    Storage::disk('public')->delete($pathToDelete);
+                    if (str_starts_with($this->history_image, 'storage/')) {
+                        $pathToDelete = str_replace('storage/', '', $this->history_image);
+                        Storage::disk('public')->delete($pathToDelete);
+                    } else {
+                        if (\Illuminate\Support\Facades\File::exists(public_path($this->history_image))) {
+                            \Illuminate\Support\Facades\File::delete(public_path($this->history_image));
+                        }
+                    }
                 }
-                $data['history_image'] = Utility::saveFile($this->new_history_image, 'nosotros');
+                $data['history_image'] = Utility::saveToPublic($this->new_history_image, 'nosotros');
             }
 
             PageNosotros::updateOrCreate(

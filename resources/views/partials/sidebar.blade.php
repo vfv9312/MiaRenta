@@ -42,7 +42,7 @@
                             <span class="sr-only">Open user menu</span>
                             @if(Auth::user() && Auth::user()->profile_photo_path)
                                 <img class="w-8 h-8 rounded-full object-cover"
-                                    src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
+                                    src="{{ asset(Auth::user()->profile_photo_path) }}"
                                     alt="user photo" />
                             @else
                                 <div class="w-8 h-8 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold bg-indigo-100 dark:bg-indigo-900/50">

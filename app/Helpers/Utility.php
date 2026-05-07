@@ -30,4 +30,25 @@ class Utility
         }
         return '';
     }
+
+    public static function saveToPublic($file, $path)
+    {
+        if ($file) {
+            $uuid = uniqid();
+            $extension = $file->getClientOriginalExtension();
+            $fileName = time() . '_' . $uuid . '.' . $extension;
+            
+            $relativePath = ltrim($path, '/');
+            $destinationPath = public_path($relativePath);
+            
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            
+            copy($file->getRealPath(), $destinationPath . '/' . $fileName);
+            
+            return $relativePath . '/' . $fileName;
+        }
+        return '';
+    }
 }

@@ -16,9 +16,8 @@ class PeopleTableSeeder extends Seeder
         //
         mb_internal_encoding('UTF-8');
         Person::create([
-            'nombre'             => mb_convert_case('FERNANDO DANIEL' , MB_CASE_TITLE),
-            'apellido'          => mb_convert_case('GARCIA ALVAREZ', MB_CASE_TITLE),
+            'nombre'             => mb_convert_case('Vladimir', MB_CASE_TITLE),
+            'apellido'          => mb_convert_case('Farrera', MB_CASE_TITLE),
         ]);
-
     }
 }

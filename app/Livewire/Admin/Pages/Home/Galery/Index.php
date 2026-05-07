@@ -52,9 +52,7 @@ class Index extends Component
         ];
 
         if ($this->image) {
-            //$data['path'] = $this->image->store('gallery', 'public');
-            $data['path'] = Utility::saveFile($this->image, 'gallery');
-            //$this->reset('contract_doc');
+            $data['path'] = Utility::saveToPublic($this->image, 'gallery');
         }
         DB::beginTransaction();
         try {
@@ -97,11 +95,16 @@ class Index extends Component
         if ($this->image) {
             // Eliminar imagen anterior si existe
             if ($gallery->path) {
-                // Le quitamos el 'storage/' para que Laravel lo encuentre en el disco public
-                $pathToDelete = str_replace('storage/', '', $gallery->path);
-                Storage::disk('public')->delete($pathToDelete);
+                if (str_starts_with($gallery->path, 'storage/')) {
+                    $pathToDelete = str_replace('storage/', '', $gallery->path);
+                    Storage::disk('public')->delete($pathToDelete);
+                } else {
+                    if (\Illuminate\Support\Facades\File::exists(public_path($gallery->path))) {
+                        \Illuminate\Support\Facades\File::delete(public_path($gallery->path));
+                    }
+                }
             }
-            $data['path'] = Utility::saveFile($this->image, 'gallery');
+            $data['path'] = Utility::saveToPublic($this->image, 'gallery');
         }
         DB::beginTransaction();
         try {
@@ -122,9 +125,14 @@ class Index extends Component
     {
         $gallery = PublicGallery::findOrFail($id);
         if ($gallery->path) {
-            // Le quitamos el 'storage/' para borrar correctamente de disco
-            $pathToDelete = str_replace('storage/', '', $gallery->path);
-            Storage::disk('public')->delete($pathToDelete);
+            if (str_starts_with($gallery->path, 'storage/')) {
+                $pathToDelete = str_replace('storage/', '', $gallery->path);
+                Storage::disk('public')->delete($pathToDelete);
+            } else {
+                if (\Illuminate\Support\Facades\File::exists(public_path($gallery->path))) {
+                    \Illuminate\Support\Facades\File::delete(public_path($gallery->path));
+                }
+            }
         }
         $gallery->delete();
         $this->showDeleteModal = false;

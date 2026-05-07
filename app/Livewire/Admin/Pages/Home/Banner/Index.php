@@ -81,9 +81,7 @@ class Index extends Component
         ];
 
         if ($this->new_imagen) {
-            //$imagePath = $this->new_imagen->store('carousel', 'public');
-            $data['imagen'] = Utility::saveFile($this->new_imagen, 'carousel');
-            // $data['imagen'] = $imagePath;
+            $data['imagen'] = Utility::saveToPublic($this->new_imagen, 'carousel');
         }
         DB::beginTransaction();
         try {

@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Helpers\Utility;
 
 class Index extends Component
 {
@@ -29,7 +30,7 @@ class Index extends Component
         ]);
 
         $user = User::find(Auth::id());
-        $path = $this->photo->store('profile-photos', 'public');
+        $path = Utility::saveToPublic($this->photo, 'profile-photos');
 
         $user->forceFill([
             'profile_photo_path' => $path,

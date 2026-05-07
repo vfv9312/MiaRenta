@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Ruta temporal para limpiar la caché. ELIMÍNALA DESPUÉS DE USARLA.
+Route::get('/limpiar-cache', function () {
+    Artisan::call('optimize:clear');
+    return '¡Caché de Larousel limpiada!';
+});
+
+// Ruta temporal para crear el storage:link
+Route::get('/crear-enlace-storage', function () {
+    Artisan::call('storage:link');
+    return '¡storage listo!';
+});
 
 Route::get('/', 'DashBoardController@home')->name('home');
 Route::get('ubicanos', 'DashBoardController@ubicanos')->name('ubicanos');
@@ -37,7 +50,7 @@ Route::get('reset-password/{token}', 'AuthController@showResetPasswordForm')->na
 // });
 
 Route::middleware(['auth', 'status'])->group(function () {
-    Route::get('dashboard', 'Admin\DashboardController@dashboard')->name('dashboard');
+    Route::get('dashboard', 'Admin\DashBoardController@dashboard')->name('dashboard');
     Route::get('perfil', 'Admin\ProfileController@index')->name('perfil');
     Route::post('logout', 'AuthController@logout')->name('logout');
 

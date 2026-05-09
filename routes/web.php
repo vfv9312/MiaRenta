@@ -14,16 +14,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Ruta temporal para limpiar la caché. ELIMÍNALA DESPUÉS DE USARLA.
-Route::get('/limpiar-cache', function () {
-    Artisan::call('optimize:clear');
-    return '¡Caché de Larousel limpiada!';
-});
-
 // Ruta temporal para crear el storage:link
 Route::get('/crear-enlace-storage', function () {
     Artisan::call('storage:link');
     return '¡storage listo!';
+});
+
+Route::get('/run-clear', function () {
+    Artisan::call('optimize:clear');
+    $output1 = Artisan::output();
+
+    Artisan::call('view:clear');
+    $output2 = Artisan::output();
+
+    Artisan::call('cache:clear');
+    $output3 = Artisan::output();
+
+    return "<pre>optimize:clear\n{$output1}\n\nview:clear\n{$output2}\n\ncache:clear\n{$output3}</pre>";
 });
 
 Route::get('/', 'DashBoardController@home')->name('home');
@@ -33,6 +40,7 @@ Route::get('nosotros', 'DashBoardController@nosotros')->name('nosotros');
 Route::get('politica', 'DashBoardController@politica')->name('politica');
 Route::get('reclamacion', 'DashBoardController@reclamacion')->name('reclamacion');
 Route::get('factura', 'DashBoardController@factura')->name('factura');
+Route::get('ticket/{id}', 'DashBoardController@ticket')->name('ticket');
 Route::get('orden', 'DashBoardController@orden')->name('orden');
 Route::get('no-encontrado', 'DashBoardController@noencontrado')->name('noencontrado');
 

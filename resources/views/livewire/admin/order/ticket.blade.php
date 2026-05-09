@@ -164,6 +164,8 @@
             <p>CHOFER: {{ $alquiler->entrega }}</p>
             <p>DIR: {{ $catalago_cliente->direccion->calle ?? '' }},
                 {{ $catalago_cliente->direccion->colonia->localidad ?? '' }}</p>
+            <p>ENTRE: {{ $catalago_cliente->direccion->entre_calles ?? '' }}</p>
+            <p>REF: {{ $catalago_cliente->direccion->referencia ?? '' }}</p>
         </div>
 
         <div class="divider"></div>

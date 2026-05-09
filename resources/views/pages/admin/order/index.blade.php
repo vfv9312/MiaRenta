@@ -2,15 +2,15 @@
 @section('content')
     @switch($section)
         @case(1)
-            @livewire('admin.order.index')
+            @livewire(\App\Livewire\Admin\Order\Index::class)
         @break
 
         @case(2)
-            @livewire('admin.order.orders')
+            @livewire(\App\Livewire\Admin\Order\Orders::class)
         @break
 
         @case(3)
-            @livewire('admin.order.estadisticas')
+            @livewire(\App\Livewire\Admin\Order\Estadisticas::class)
         @break
 
         @default

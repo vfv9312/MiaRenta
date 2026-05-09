@@ -71,7 +71,7 @@ class ClientForm extends Component
             }
             return [
                 'colonias_id'   => $dir->colonias_id ?? '',
-                'colonia_nombre'=> $colonia_nombre,
+                'colonia_nombre' => $colonia_nombre,
                 'calle'         => $dir->calle ?? '',
                 'entre_calles'  => $dir->entre_calles ?? '',
                 'referencia'    => $dir->referencia ?? '',
@@ -109,7 +109,7 @@ class ClientForm extends Component
     {
         $this->direcciones[] = [
             'colonias_id'   => '',
-            'colonia_nombre'=> '',
+            'colonia_nombre' => '',
             'calle'         => '',
             'entre_calles'  => '',
             'referencia'    => '',
@@ -177,8 +177,10 @@ class ClientForm extends Component
             }
 
             // Regex for @lat,lng or place/lat,lng
-            if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches) || 
-                preg_match('/place\/(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches)) {
+            if (
+                preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches) ||
+                preg_match('/place\/(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches)
+            ) {
                 $this->direcciones[$index]['lat'] = $matches[1];
                 $this->direcciones[$index]['lng'] = $matches[2];
             }
@@ -190,7 +192,7 @@ class ClientForm extends Component
         $this->validate([
             'nombre'                   => 'required|string|max:255',
             'apellido'                 => 'required|string|max:255',
-            'correo'                   => 'required|email|max:255',
+            'correo'                   => 'nullable|email|max:255',
             'telefonos'                => 'required|array|min:1',
             'telefonos.*.telefono'     => 'required|string|max:20',
             'telefonos.*.tipo'         => 'required|in:whatsapp,telefono,ambos',
@@ -256,7 +258,7 @@ class ClientForm extends Component
                 ]);
                 CatalagoCliente::create([
                     'cliente_id'  => $cliente->id,
-                    'direccion_id'=> $direccion->id,
+                    'direccion_id' => $direccion->id,
                     'prioridad'   => $i + 1,
                     'status_id'   => 1,
                 ]);

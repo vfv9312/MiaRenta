@@ -5,8 +5,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name') }}</title>
-    <link rel="icon" href="{{ asset('/storage/Login/new-logo.png') }}" type="image/x-icon">
+    <title>{{ config('app.name') }} - Acceso</title>
+    <link rel="icon" href="{{ asset('/storage/Login/logo.jpeg') }}" type="image/x-icon">
+
+    <!-- Meta Tags para SEO -->
+    <meta name="description" content="Accede a Mía Renta para gestionar tus eventos: renta de sillas, mesas, mantelería y cristalería.">
+    <meta name="author" content="Vladimir Farrera">
+
+    <!-- Open Graph / Facebook / Instagram -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ config('app.url') }}">
+    <meta property="og:title" content="Mía Renta - Todo para tu Evento">
+    <meta property="og:description" content="Gestiona tus eventos con Mía Renta: renta de sillas, mesas y más en Tuxtla.">
+    <meta property="og:image" content="{{ asset('/storage/Login/logo.jpeg') }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ config('app.url') }}">
+    <meta property="twitter:title" content="Mía Renta - Todo para tu Evento">
+    <meta property="twitter:description" content="Gestiona tus eventos con Mía Renta: renta de sillas, mesas y más en Tuxtla.">
+    <meta property="twitter:image" content="{{ asset('/storage/Login/logo.jpeg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

@@ -228,6 +228,37 @@
                                 </div>
                             </div>
 
+                            <!-- Cloudflare Turnstile -->
+                            <div class="col-span-1 md:col-span-2 flex flex-col items-center justify-center py-4">
+                                <input type="hidden" id="turnstile-token-factura" wire:model.defer="turnstileResponse">
+                                <div id="turnstile-container" wire:ignore 
+                                    x-data="{ 
+                                        init() { 
+                                            this.renderTurnstile('{{ config('services.turnstile.site_key') }}');
+                                        },
+                                        renderTurnstile(key) {
+                                            if (!window.turnstile) {
+                                                setTimeout(() => this.renderTurnstile(key), 500);
+                                                return;
+                                            }
+                                            turnstile.render('#turnstile-container', { 
+                                                sitekey: key, 
+                                                theme: 'auto',
+                                                callback: (token) => { 
+                                                    let input = document.getElementById('turnstile-token-factura');
+                                                    if(input) {
+                                                        input.value = token;
+                                                        input.dispatchEvent(new Event('input'));
+                                                    }
+                                                    @this.set('turnstileResponse', token);
+                                                } 
+                                            }); 
+                                        }
+                                    }">
+                                </div>
+                                @error('turnstileResponse') <span class="text-red-500 text-xs font-bold mt-2">{{ $message }}</span> @enderror
+                            </div>
+
                             <!-- Submit Button -->
                             <div class="col-span-1 md:col-span-2 pt-10">
                                 <button type="submit"
@@ -242,4 +273,6 @@
             </div>
         </div>
     </div>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </div>

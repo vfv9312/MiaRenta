@@ -19,6 +19,7 @@ class Reclamaciones extends Component
     public $asunto = 'Queja';
     public $mensaje;
     public $evidencia;
+    public $turnstileResponse;
 
     protected $rules = [
         'nombre'   => 'required|string|max:255',
@@ -27,12 +28,18 @@ class Reclamaciones extends Component
         'pedido'   => 'nullable|string|max:255',
         'asunto'   => 'required|string',
         'mensaje'  => 'required|string',
-        'evidencia'=> 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+        'evidencia' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
+        'turnstileResponse' => 'required',
     ];
 
     public function save()
     {
         $this->validate();
+
+        if (!$this->validateTurnstile()) {
+            $this->addError('turnstileResponse', 'La validación de seguridad falló. Por favor intente de nuevo.');
+            return;
+        }
 
         $evidenciaPath = null;
         $evidenciaName = null;
@@ -61,9 +68,25 @@ class Reclamaciones extends Component
         }
 
         $this->reset(['nombre', 'email', 'telefono', 'pedido', 'asunto', 'mensaje', 'evidencia']);
-        
+
         session()->flash('success', 'Tu solicitud ha sido enviada con éxito. Nuestro equipo la revisará y se pondrá en contacto pronto.');
     }
+
+    protected function validateTurnstile()
+    {
+        if (empty($this->turnstileResponse)) {
+            return false;
+        }
+
+        $response = \Illuminate\Support\Facades\Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+            'secret' => config('services.turnstile.secret_key'),
+            'response' => $this->turnstileResponse,
+            'remoteip' => request()->ip(),
+        ]);
+
+        return $response->json('success');
+    }
+
 
     public function render()
     {

@@ -30,6 +30,7 @@ class Factura extends Component
     public $email;
     public $constancia;
     public $nota;
+    public $turnstileResponse;
 
     protected $rules = [
         'numero_ticket' => 'required|string|max:255',
@@ -41,6 +42,7 @@ class Factura extends Component
         'email'         => 'required|email|max:255',
         'constancia'    => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         'nota'          => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        'turnstileResponse' => 'required',
     ];
 
     public function mount()
@@ -58,6 +60,11 @@ class Factura extends Component
     public function save()
     {
         $this->validate();
+
+        if (!$this->validateTurnstile()) {
+            $this->addError('turnstileResponse', 'La validación de seguridad falló. Por favor intente de nuevo.');
+            return;
+        }
 
         $constanciaPath = $this->constancia->store('facturas', 'public');
         $notaPath = $this->nota->store('facturas', 'public');
@@ -85,6 +92,21 @@ class Factura extends Component
         $this->reset(['numero_ticket', 'rfc', 'razon_social', 'regimen', 'uso_cfdi', 'cp', 'email', 'constancia', 'nota']);
         
         session()->flash('success', '¡Su solicitud de factura ha sido enviada con éxito!');
+    }
+
+    protected function validateTurnstile()
+    {
+        if (empty($this->turnstileResponse)) {
+            return false;
+        }
+
+        $response = \Illuminate\Support\Facades\Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+            'secret' => config('services.turnstile.secret_key'),
+            'response' => $this->turnstileResponse,
+            'remoteip' => request()->ip(),
+        ]);
+
+        return $response->json('success');
     }
 
     public function render()

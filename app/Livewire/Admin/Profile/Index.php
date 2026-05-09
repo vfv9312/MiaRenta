@@ -30,7 +30,7 @@ class Index extends Component
         ]);
 
         $user = User::find(Auth::id());
-        $path = Utility::saveToPublic($this->photo, 'profile-photos');
+        $path = Utility::saveFile($this->photo, 'profile-photos');
 
         $user->forceFill([
             'profile_photo_path' => $path,
@@ -42,7 +42,7 @@ class Index extends Component
     public function removePhoto()
     {
         $user = User::find(Auth::id());
-        
+
         $user->forceFill([
             'profile_photo_path' => null,
         ])->save();

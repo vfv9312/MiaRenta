@@ -154,11 +154,14 @@
 
         <div class="section">
             <p class="bold">DATOS DEL EVENTO</p>
-            <p>FECHA:
-                {{ $alquiler->fecha_solicitada ? \Carbon\Carbon::parse($alquiler->fecha_solicitada)->format('d/m/Y H:i') : 'N/A' }}
+            <p>ENTREGA:
+                {{ $alquiler->fecha_entrega ? \Carbon\Carbon::parse($alquiler->fecha_entrega)->format('d/m/Y H:i') : 'N/A' }}
+            </p>
+            <p>RECOLECCIÓN:
+                {{ $alquiler->fecha_recepcion ? \Carbon\Carbon::parse($alquiler->fecha_recepcion)->format('d/m/Y H:i') : 'N/A' }}
             </p>
             <p>RECIBE: {{ $alquiler->recibe }}</p>
-            <p>ENTREGA: {{ $alquiler->entrega }}</p>
+            <p>CHOFER: {{ $alquiler->entrega }}</p>
             <p>DIR: {{ $catalago_cliente->direccion->calle ?? '' }},
                 {{ $catalago_cliente->direccion->colonia->localidad ?? '' }}</p>
         </div>

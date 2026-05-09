@@ -18,6 +18,9 @@ class Index extends Component
     // Client selection
     public $cliente_id = '';
     public $search_cliente = '';
+    public $selected_cliente = null;
+    public $new_phone = '';
+    public $new_phone_type = 'whatsapp';
 
     // New Client form
     public $is_new_client = false;
@@ -52,7 +55,6 @@ class Index extends Component
     public $metodo_pago_id = '';
     public $recibe = '';
     public $entrega = '';
-    public $fecha_solicitada = '';
     public $fecha_entrega = '';
     public $fecha_recepcion = '';
 
@@ -63,7 +65,7 @@ class Index extends Component
             try {
                 $f_inicio = \Carbon\Carbon::parse($this->fecha_entrega)->startOfDay();
                 $f_fin = \Carbon\Carbon::parse($this->fecha_recepcion)->startOfDay();
-                
+
                 if ($f_fin->lt($f_inicio)) {
                     $dias = 1;
                 } else {
@@ -144,6 +146,10 @@ class Index extends Component
 
         $metodos_pago = MetodoPago::whereIn('status_id', [1, 2])->get();
 
+        if ($this->cliente_id && !$this->selected_cliente) {
+            $this->loadSelectedCliente();
+        }
+
         return view('livewire.admin.order.index', compact('clientes', 'direcciones_cliente', 'catalog_products', 'colonias', 'metodos_pago'));
     }
 
@@ -159,6 +165,40 @@ class Index extends Component
         $this->cliente_id = $id;
         $this->is_new_client = false;
         $this->catalogo_cliente_id = '';
+        $this->loadSelectedCliente();
+    }
+
+    public function loadSelectedCliente()
+    {
+        if ($this->cliente_id) {
+            $this->selected_cliente = Cliente::with(['persona', 'telefonos'])->find($this->cliente_id);
+        } else {
+            $this->selected_cliente = null;
+        }
+    }
+
+    public function addPhone()
+    {
+        $this->validate([
+            'new_phone' => 'required|string|max:20',
+            'new_phone_type' => 'required|in:celular,fijo,whatsapp'
+        ]);
+
+        if (!$this->cliente_id) return;
+
+        DB::table('telefonos_clientes')->insert([
+            'cliente_id' => $this->cliente_id,
+            'status_id' => 1,
+            'telefono' => $this->new_phone,
+            'tipo' => $this->new_phone_type,
+            'prioridad' => 2,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $this->new_phone = '';
+        $this->loadSelectedCliente();
+        $this->dispatch('swal:success', ['message' => 'Teléfono agregado correctamente.']);
     }
 
     public function toggleNewClient()
@@ -282,7 +322,6 @@ class Index extends Component
             'recibe' => 'required|string|max:255',
             'entrega' => 'required|string|max:255',
             'metodo_pago_id' => 'required|exists:metodos_pagos,id',
-            'fecha_solicitada' => 'required|date',
             'carrito_productos' => 'required|array|min:1', // Needs at least one product
             'costos_adicionales.*.concepto' => 'required|string|max:255',
             'costos_adicionales.*.monto' => 'required|numeric|min:0',
@@ -403,7 +442,7 @@ class Index extends Component
                 'metodo_pago_id' => $this->metodo_pago_id,
                 'recibe' => $this->recibe,
                 'entrega' => $this->entrega,
-                'fecha_solicitada' => $this->fecha_solicitada,
+                'fecha_solicitada' => now(),
                 'fecha_entrega' => $this->fecha_entrega ?: null,
                 'fecha_recepcion' => $this->fecha_recepcion ?: null,
                 'total' => $total_orden,
@@ -429,7 +468,7 @@ class Index extends Component
             session()->flash('message', 'Orden #' . $alquiler_id . ' registrada exitosamente. Total a pagar: $' . number_format($total_orden, 2));
 
             // Reset form
-            $this->reset(['is_new_client', 'is_new_address', 'cliente_id', 'catalogo_cliente_id', 'nombre', 'apellido', 'correo', 'calle', 'entre_calles', 'referencia', 'cp', 'colonia_id', 'search_colonia', 'selected_colonia_name', 'recibe', 'entrega', 'fecha_solicitada', 'fecha_entrega', 'fecha_recepcion', 'metodo_pago_id', 'search_cliente', 'search_producto', 'selected_catalogo_precio_id', 'cantidad_producto', 'carrito_productos', 'costos_adicionales']);
+            $this->reset(['is_new_client', 'is_new_address', 'cliente_id', 'catalogo_cliente_id', 'nombre', 'apellido', 'correo', 'calle', 'entre_calles', 'referencia', 'cp', 'colonia_id', 'search_colonia', 'selected_colonia_name', 'recibe', 'entrega', 'fecha_entrega', 'fecha_recepcion', 'metodo_pago_id', 'search_cliente', 'search_producto', 'selected_catalogo_precio_id', 'cantidad_producto', 'carrito_productos', 'costos_adicionales', 'selected_cliente', 'new_phone', 'new_phone_type']);
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('error', 'Error al crear la orden: ' . $e->getMessage());

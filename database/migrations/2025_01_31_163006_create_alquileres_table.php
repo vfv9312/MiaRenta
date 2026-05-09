@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('metodo_pago_id');
             $table->string('recibe');
             $table->string('entrega');
-            $table->dateTime('fecha_solicitada')->nullable();
+            $table->dateTime('fecha_solicitada')->useCurrent();
             $table->dateTime('fecha_entrega')->nullable();
             $table->dateTime('fecha_recepcion')->nullable();
             $table->dateTime('fecha_finalizada')->nullable();

@@ -141,7 +141,7 @@ class Index extends Component
                         }
                     }
                 }
-                $data['history_image'] = Utility::saveToPublic($this->new_history_image, 'nosotros');
+                $data['history_image'] = Utility::saveFile($this->new_history_image, 'nosotros_img');
             }
 
             PageNosotros::updateOrCreate(

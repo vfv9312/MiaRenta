@@ -89,5 +89,6 @@ Route::middleware(['auth', 'status'])->group(function () {
         Route::get('admin/ordenes', 'Admin\Order\IndexController@ordenes')->name('ordenes');
         Route::get('admin/ordenes/estadisticas', 'Admin\Order\IndexController@estadisticas')->name('ordenes.estadisticas');
         // Route::get('admin/mobiliario', 'Admin\Inventary\FurnitureController@catalago_tipos')->name('catalago.tipos');
+        Route::get('admin/facturas-solicitadas', 'Admin\Billing\FacturasSolicitadasController@index')->name('facturas-solicitadas');
     });
 });

@@ -93,12 +93,62 @@
                         @endif
                     </div>
 
-                    @if ($cliente_id)
-                        <div
-                            class="mt-4 p-3 bg-blue-100 border border-blue-200 text-blue-800 rounded-md flex justify-between items-center">
-                            <span>✅ Cliente seleccionado para la orden.</span>
-                            <button type="button" wire:click="$set('cliente_id', '')"
-                                class="text-sm text-blue-600 hover:text-blue-900 font-medium">Cambiar</button>
+                    @if ($cliente_id && $selected_cliente)
+                        <div class="mt-4 p-4 bg-white border border-blue-200 rounded-lg shadow-sm">
+                            <div class="flex justify-between items-start mb-3 border-b pb-2">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-lg">
+                                        {{ $selected_cliente->persona->nombre }}
+                                        {{ $selected_cliente->persona->apellido }}
+                                    </h4>
+                                    <p class="text-sm text-gray-600">
+                                        {{ $selected_cliente->correo ?: 'Sin correo registrado' }}</p>
+                                </div>
+                                <button type="button" wire:click="$set('cliente_id', '')"
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded border transition-colors">
+                                    Cambiar Cliente
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Teléfonos Registrados:</p>
+                                    <ul class="space-y-1">
+                                        @forelse($selected_cliente->telefonos as $tel)
+                                            <li class="text-sm flex items-center text-gray-700">
+                                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                                <span class="font-medium">{{ $tel->telefono }}</span>
+                                                <span
+                                                    class="ml-2 px-1.5 py-0.5 bg-gray-100 text-gray-500 text-[10px] rounded uppercase">{{ $tel->tipo }}</span>
+                                            </li>
+                                        @empty
+                                            <li class="text-xs text-gray-500 italic">Sin teléfonos registrados.</li>
+                                        @endforelse
+                                    </ul>
+                                </div>
+
+                                <div class="bg-gray-50 p-3 rounded border border-gray-100">
+                                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Agregar nuevo número:</p>
+                                    <div class="flex gap-2">
+                                        <select wire:model="new_phone_type"
+                                            class="text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 p-1">
+                                            <option value="whatsapp">WA</option>
+                                            <option value="celular">Cel</option>
+                                            <option value="fijo">Tel</option>
+                                        </select>
+                                        <input type="text" wire:model.defer="new_phone" placeholder="Nuevo número..."
+                                            class="flex-1 text-xs border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 p-1">
+                                        <button type="button" wire:click="addPhone"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded transition-colors font-bold">
+                                            Añadir
+                                        </button>
+                                    </div>
+                                    @error('new_phone')
+                                        <span
+                                            class="text-red-500 text-[10px] mt-1 block font-semibold">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -144,7 +194,8 @@
                                                 class="p-3 border-b hover:bg-gray-50 cursor-pointer text-sm transition-colors">
                                                 <p class="font-semibold text-gray-800">{{ $col->localidad }}</p>
                                                 <p class="text-xs text-gray-500">{{ $col->municipio }}
-                                                    ({{ $col->estado }}) - CP: {{ $col->cp }}</p>
+                                                    ({{ $col->estado }})
+                                                    - CP: {{ $col->cp }}</p>
                                             </div>
                                         @empty
                                             <div class="p-3 text-sm text-gray-500 text-center">No se encontraron
@@ -249,14 +300,6 @@
                     @enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Fecha del Evento (Solicitada) *</label>
-                    <input type="datetime-local" wire:model.defer="fecha_solicitada"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                    @error('fecha_solicitada')
-                        <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div>
                     <label class="block text-sm font-medium text-gray-700">Método de Pago Preferido *</label>
                     <select wire:model.defer="metodo_pago_id"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
@@ -297,7 +340,8 @@
             <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">4. Selección de Mobiliario (Cotizador)</h3>
             @if (!$fecha_entrega)
                 <div class="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded">
-                    ⚠️ Debe ingresar la <strong>Fecha de Entrega Física</strong> en el paso anterior para poder calcular la disponibilidad del inventario.
+                    ⚠️ Debe ingresar la <strong>Fecha de Entrega Física</strong> en el paso anterior para poder calcular
+                    la disponibilidad del inventario.
                 </div>
             @endif
 
@@ -325,21 +369,23 @@
                                                 ->where('status_id', 5)
                                                 ->sum('cantidad');
                                             $en_renta = $cp->en_renta_calculado ?? 0;
-                                            
+
                                             $en_carrito = 0;
-                                            foreach($carrito_productos as $c_item) {
-                                                if($c_item['catalago_precio_id'] == $cp->id) {
+                                            foreach ($carrito_productos as $c_item) {
+                                                if ($c_item['catalago_precio_id'] == $cp->id) {
                                                     $en_carrito += $c_item['cantidad'];
                                                 }
                                             }
-                                            
-                                            $disponible = $cp->producto->cantidad - $en_reparacion - $en_renta - $en_carrito;
+
+                                            $disponible =
+                                                $cp->producto->cantidad - $en_reparacion - $en_renta - $en_carrito;
                                         @endphp
                                         <p class="text-xs text-gray-500 mt-1">Disp: <span
                                                 class="{{ $disponible > 0 ? 'font-bold text-gray-700' : 'font-bold text-red-600' }}">{{ $disponible }}</span>
                                             <span class="text-[10px] text-gray-400">(Total:
                                                 {{ $cp->producto->cantidad }}, Rep: {{ $en_reparacion }}, Renta:
-                                                {{ $en_renta }}{{ $en_carrito > 0 ? ', En Carrito: '.$en_carrito : '' }})</span></p>
+                                                {{ $en_renta }}{{ $en_carrito > 0 ? ', En Carrito: ' . $en_carrito : '' }})</span>
+                                        </p>
                                         <p class="text-xs text-green-600 font-bold mt-1">
                                             ${{ number_format($cp->precio, 2) }}</p>
                                     </div>
@@ -375,16 +421,20 @@
                 <table class="min-w-[700px] w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100">
                         <tr>
-                            <th class="px-4 py-2 text-left text-xs text-gray-500 font-bold uppercase tracking-wider">Producto</th>
-                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold uppercase tracking-wider">Precio U.</th>
-                            <th class="px-4 py-2 text-center text-xs text-gray-500 font-bold uppercase tracking-wider">Cantidad</th>
-                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold uppercase tracking-wider">Subtotal</th>
+                            <th class="px-4 py-2 text-left text-xs text-gray-500 font-bold uppercase tracking-wider">
+                                Producto</th>
+                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold uppercase tracking-wider">
+                                Precio U.</th>
+                            <th class="px-4 py-2 text-center text-xs text-gray-500 font-bold uppercase tracking-wider">
+                                Cantidad</th>
+                            <th class="px-4 py-2 text-right text-xs text-gray-500 font-bold uppercase tracking-wider">
+                                Subtotal</th>
                             <th class="px-4 py-2 text-center text-xs text-gray-500"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @php 
-                            $sum_total = 0; 
+                        @php
+                            $sum_total = 0;
                             $dias = $this->dias_alquiler;
                         @endphp
                         @forelse($carrito_productos as $index => $item)
@@ -396,7 +446,8 @@
                                 <td class="px-4 py-3 text-sm text-gray-800 font-medium">{{ $item['nombre'] }} <span
                                         class="text-xs text-gray-500">({{ $item['color'] }})</span></td>
                                 <td class="px-4 py-3 text-sm text-right text-gray-600">
-                                    ${{ number_format($item['precio'], 2) }} <span class="text-xs text-gray-400">/día</span></td>
+                                    ${{ number_format($item['precio'], 2) }} <span
+                                        class="text-xs text-gray-400">/día</span></td>
                                 <td class="px-4 py-3 text-sm text-center text-gray-800">{{ $item['cantidad'] }}</td>
                                 <td class="px-4 py-3 text-sm text-right font-semibold text-gray-800">
                                     ${{ number_format($subtotal, 2) }}</td>
@@ -419,38 +470,63 @@
                             </tr>
                         @endforelse
 
-                        @foreach($costos_adicionales as $c_idx => $costo)
+                        @foreach ($costos_adicionales as $c_idx => $costo)
                             @php
-                                $monto = (float)($costo['monto'] ?: 0);
+                                $monto = (float) ($costo['monto'] ?: 0);
                                 $sum_total += $monto;
                             @endphp
                             <tr class="bg-yellow-50">
                                 <td colspan="5" class="px-4 py-3">
                                     <div class="flex flex-col md:flex-row items-center gap-3">
                                         <div class="w-full md:w-1/2">
-                                            <label class="md:hidden block text-xs font-bold text-gray-500 uppercase mb-1">Concepto</label>
-                                            <input type="text" wire:model="costos_adicionales.{{ $c_idx }}.concepto" placeholder="Concepto (ej. Flete)" class="w-full text-sm rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                            @error('costos_adicionales.'.$c_idx.'.concepto') <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                                            <label
+                                                class="md:hidden block text-xs font-bold text-gray-500 uppercase mb-1">Concepto</label>
+                                            <input type="text"
+                                                wire:model="costos_adicionales.{{ $c_idx }}.concepto"
+                                                placeholder="Concepto (ej. Flete)"
+                                                class="w-full text-sm rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            @error('costos_adicionales.' . $c_idx . '.concepto')
+                                                <span class="text-red-500 text-xs block mt-1">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="w-full md:w-1/3 flex flex-col md:flex-row md:items-center gap-2">
-                                            <label class="md:hidden block text-xs font-bold text-gray-500 uppercase">Monto ($)</label>
-                                            <span class="hidden md:block text-gray-500 font-bold uppercase text-xs whitespace-nowrap">Costo Extra:</span>
+                                            <label
+                                                class="md:hidden block text-xs font-bold text-gray-500 uppercase">Monto
+                                                ($)
+                                            </label>
+                                            <span
+                                                class="hidden md:block text-gray-500 font-bold uppercase text-xs whitespace-nowrap">Costo
+                                                Extra:</span>
                                             <div class="w-full flex items-center relative">
                                                 <span class="absolute left-3 text-gray-500 font-bold">$</span>
-                                                <input type="number" step="0.01" wire:model.live.debounce.300ms="costos_adicionales.{{ $c_idx }}.monto" placeholder="0.00" class="w-full pl-7 text-sm rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-right">
+                                                <input type="number" step="0.01"
+                                                    wire:model.live.debounce.300ms="costos_adicionales.{{ $c_idx }}.monto"
+                                                    placeholder="0.00"
+                                                    class="w-full pl-7 text-sm rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-right">
                                             </div>
-                                            @error('costos_adicionales.'.$c_idx.'.monto') <span class="text-red-500 text-xs block md:hidden mt-1">{{ $message }}</span> @enderror
+                                            @error('costos_adicionales.' . $c_idx . '.monto')
+                                                <span
+                                                    class="text-red-500 text-xs block md:hidden mt-1">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="w-full md:w-auto flex justify-end md:justify-center mt-2 md:mt-0">
-                                            <button type="button" wire:click="removeCostoAdicional({{ $c_idx }})" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 md:bg-transparent rounded px-3 py-2 md:p-2 border border-red-200 md:border-transparent flex items-center gap-1 transition-colors">
-                                                <svg class="h-5 w-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            <button type="button"
+                                                wire:click="removeCostoAdicional({{ $c_idx }})"
+                                                class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 md:bg-transparent rounded px-3 py-2 md:p-2 border border-red-200 md:border-transparent flex items-center gap-1 transition-colors">
+                                                <svg class="h-5 w-5 inline" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
                                                 </svg>
                                                 <span class="md:hidden text-sm font-semibold">Eliminar</span>
                                             </button>
                                         </div>
                                     </div>
-                                    @error('costos_adicionales.'.$c_idx.'.monto') <span class="hidden md:block text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                                    @error('costos_adicionales.' . $c_idx . '.monto')
+                                        <span class="hidden md:block text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
                                 </td>
                             </tr>
                         @endforeach
@@ -459,12 +535,15 @@
                             <tr class="bg-blue-50 border-t-2 border-blue-200">
                                 <td colspan="5" class="px-4 py-4">
                                     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                                        <button type="button" wire:click="addCostoAdicional" class="w-full md:w-auto text-sm bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md shadow-sm font-bold transition-colors">
+                                        <button type="button" wire:click="addCostoAdicional"
+                                            class="w-full md:w-auto text-sm bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md shadow-sm font-bold transition-colors">
                                             + Agregar Costo Adicional
                                         </button>
-                                        <div class="w-full md:w-auto bg-white md:bg-transparent p-3 md:p-0 rounded border md:border-0 border-blue-200 flex flex-col md:flex-row items-center md:justify-end gap-2 text-center md:text-right">
+                                        <div
+                                            class="w-full md:w-auto bg-white md:bg-transparent p-3 md:p-0 rounded border md:border-0 border-blue-200 flex flex-col md:flex-row items-center md:justify-end gap-2 text-center md:text-right">
                                             <span class="font-bold text-gray-700 uppercase text-xs md:text-sm">
-                                                Total Estimado ({{ $dias }} {{ $dias == 1 ? 'día' : 'días' }}):
+                                                Total Estimado ({{ $dias }}
+                                                {{ $dias == 1 ? 'día' : 'días' }}):
                                             </span>
                                             <span class="font-black text-blue-700 text-2xl md:text-xl">
                                                 ${{ number_format($sum_total, 2) }}
@@ -483,7 +562,8 @@
                     <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg> {{ $message }}</div>
+                    </svg> {{ $message }}
+                </div>
             @enderror
         </div>
 

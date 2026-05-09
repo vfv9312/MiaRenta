@@ -195,6 +195,16 @@
                                         class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Estadisticas</a>
                                 </li>
 
+                                <li>
+                                    <a href="{{ route('facturas-solicitadas') }}"
+                                        class="flex items-center w-full p-2 text-base font-medium text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                                        <span class="flex items-center gap-2">
+                                            <i class="bi bi-receipt-cutoff text-yellow-500"></i>
+                                            Facturas Solicitadas
+                                        </span>
+                                    </a>
+                                </li>
+
                             </ul>
                         </li>
 

@@ -52,7 +52,7 @@ class Index extends Component
         ];
 
         if ($this->image) {
-            $data['path'] = Utility::saveToPublic($this->image, 'gallery');
+            $data['path'] = Utility::saveFile($this->image, 'gallery');
         }
         DB::beginTransaction();
         try {
@@ -104,7 +104,7 @@ class Index extends Component
                     }
                 }
             }
-            $data['path'] = Utility::saveToPublic($this->image, 'gallery');
+            $data['path'] = Utility::saveFile($this->image, 'gallery');
         }
         DB::beginTransaction();
         try {

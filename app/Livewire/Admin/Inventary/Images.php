@@ -42,9 +42,9 @@ class Images extends Component
                 $query->whereHas('producto', function ($q) {
                     $q->where('nombre', 'like', '%' . $this->search . '%');
                 })
-                ->orWhereHas('combinacion', function ($q) {
-                    $q->where('nombre', 'like', '%' . $this->search . '%');
-                });
+                    ->orWhereHas('combinacion', function ($q) {
+                        $q->where('nombre', 'like', '%' . $this->search . '%');
+                    });
             })
             ->latest()
             ->paginate(12);
@@ -103,7 +103,7 @@ class Images extends Component
 
         $imagePath = null;
         if ($this->imagen) {
-            $imagePath = Utility::saveToPublic($this->imagen, 'productos/imagenes');
+            $imagePath = Utility::saveFile($this->imagen, 'productos/imagenes');
         }
 
         if ($this->tipo_imagen === 'producto') {

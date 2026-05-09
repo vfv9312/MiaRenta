@@ -21,5 +21,7 @@ class FacturaSolicitada extends Model
         'email',
         'constancia_path',
         'nota_path',
+        'factura_path',
+        'estatus',
     ];
 }

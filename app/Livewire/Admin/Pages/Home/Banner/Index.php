@@ -81,7 +81,7 @@ class Index extends Component
         ];
 
         if ($this->new_imagen) {
-            $data['imagen'] = Utility::saveToPublic($this->new_imagen, 'carousel');
+            $data['imagen'] = Utility::saveFile($this->new_imagen, 'carousel');
         }
         DB::beginTransaction();
         try {

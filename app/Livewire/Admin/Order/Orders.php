@@ -26,6 +26,12 @@ class Orders extends Component
     public $showProductsModal = false;
     public $showDetailsModal = false;
     public $showEditModal = false;
+    public $showConfirmStatusModal = false;
+
+    // Confirm Modal state
+    public $confirm_action = '';
+    public $confirm_order_id = null;
+    public $confirm_message = '';
 
     // Selected order
     public $selected_order_id = null;
@@ -44,6 +50,7 @@ class Orders extends Component
 
     // Payment Form
     public $monto_a_pagar = '';
+    public $max_monto_a_pagar = 0;
     public $evidencia_pago; // file upload
 
     // Products Form
@@ -100,6 +107,35 @@ class Orders extends Component
 
     // --- State Machine Actions ---
 
+    public function confirmStatusChange($action, $id, $message)
+    {
+        $this->confirm_action = $action;
+        $this->confirm_order_id = $id;
+        $this->confirm_message = $message;
+        $this->showConfirmStatusModal = true;
+    }
+
+    public function executeStatusChange()
+    {
+        if ($this->confirm_action === 'validarCotizacion') {
+            $this->validarCotizacion($this->confirm_order_id);
+        } elseif ($this->confirm_action === 'validarRenta') {
+            $this->validarRenta($this->confirm_order_id);
+        } elseif ($this->confirm_action === 'finalizarRenta') {
+            $this->finalizarRenta($this->confirm_order_id);
+        }
+        
+        $this->closeConfirmStatusModal();
+    }
+
+    public function closeConfirmStatusModal()
+    {
+        $this->showConfirmStatusModal = false;
+        $this->confirm_action = '';
+        $this->confirm_order_id = null;
+        $this->confirm_message = '';
+    }
+
     public function validarCotizacion($id)
     {
         $alquiler = Alquiler::findOrFail($id);
@@ -135,6 +171,11 @@ class Orders extends Component
     public function openPaymentModal($id)
     {
         $this->selected_order_id = $id;
+        $order = Alquiler::findOrFail($id);
+        $total = $order->total ?: 0;
+        $pagado = $order->monto_pagado ?: 0;
+        $this->max_monto_a_pagar = max(0, $total - $pagado);
+
         $this->monto_a_pagar = '';
         $this->evidencia_pago = null;
         $this->showPaymentModal = true;
@@ -149,7 +190,7 @@ class Orders extends Component
     public function processPayment()
     {
         $this->validate([
-            'monto_a_pagar' => 'required|numeric|min:1',
+            'monto_a_pagar' => 'required|numeric|min:1|max:' . $this->max_monto_a_pagar,
             'evidencia_pago' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120'
         ]);
 
@@ -328,16 +369,33 @@ class Orders extends Component
 
         $order = Alquiler::findOrFail($this->selected_order_id);
 
-        $order->update([
+        $statusChanged = false;
+        $old_recepcion = $order->fecha_recepcion ? \Carbon\Carbon::parse($order->fecha_recepcion)->format('Y-m-d\TH:i') : null;
+        $new_recepcion = \Carbon\Carbon::parse($this->edit_fecha_recepcion)->format('Y-m-d\TH:i');
+
+        $updateData = [
             'fecha_entrega' => $this->edit_fecha_entrega,
             'fecha_recepcion' => $this->edit_fecha_recepcion,
             'direcciónes_clientes_id' => $this->edit_catalogo_cliente_id
-        ]);
+        ];
+
+        if ($old_recepcion !== $new_recepcion) {
+            $updateData['status_id'] = 7; // Pendiente de pago
+            $statusChanged = true;
+        }
+
+        $order->update($updateData);
 
         $this->recalculateTotal();
 
         $this->closeEditModal();
-        $this->dispatch('swal:success', ['message' => 'Orden actualizada exitosamente.']);
+        
+        $msg = 'Orden actualizada exitosamente.';
+        if ($statusChanged) {
+            $msg .= ' El estatus regresó a "Pendiente de Pago" por el cambio en la fecha de recolección.';
+        }
+        
+        $this->dispatch('swal:success', ['message' => $msg]);
     }
 
     public function selectCatalogoPrecio($id)

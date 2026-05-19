@@ -11,6 +11,13 @@ class Estadisticas extends Component
 {
     public $fecha_inicio;
     public $fecha_fin;
+    public $productos_seleccionados = [];
+    public $todos_productos = [];
+
+    public function mount()
+    {
+        $this->todos_productos = \App\Models\Producto::where('status_id', 1)->pluck('nombre', 'id')->toArray();
+    }
 
     public function filtrar()
     {
@@ -74,30 +81,113 @@ class Estadisticas extends Component
         ksort($rentasPorMesMap);
 
         // Colonias (basados en created_at)
-        $qColonias = DB::table('alquileres')
-            ->join('catalago_clientes', 'alquileres.direcciónes_clientes_id', '=', 'catalago_clientes.id')
-            ->join('direcciones', 'catalago_clientes.direccion_id', '=', 'direcciones.id')
-            ->join('colonias', 'direcciones.colonias_id', '=', 'colonias.id')
-            ->select('colonias.localidad as nombre_colonia', DB::raw('count(alquileres.id) as total_rentas'))
-            ->groupBy('colonias.localidad')
-            ->orderByDesc('total_rentas')
-            ->take(5);
-        if (!empty($this->fecha_inicio)) $qColonias->whereDate('alquileres.created_at', '>=', $this->fecha_inicio);
-        if (!empty($this->fecha_fin)) $qColonias->whereDate('alquileres.created_at', '<=', $this->fecha_fin);
+        $qColonias = Alquiler::with('direccionCliente.direccion.colonia');
+        if (!empty($this->fecha_inicio)) $qColonias->whereDate('created_at', '>=', $this->fecha_inicio);
+        if (!empty($this->fecha_fin)) $qColonias->whereDate('created_at', '<=', $this->fecha_fin);
         
-        $coloniasTop_db = $qColonias->get();
-        $labelsColonias = [];
-        $dataColonias = [];
-        foreach ($coloniasTop_db as $col) {
-            $labelsColonias[] = $col->nombre_colonia;
-            $dataColonias[] = $col->total_rentas;
+        $todasColonias = $qColonias->get();
+        $coloniasMap = [];
+        
+        foreach ($todasColonias as $alq) {
+            $coloniaNombre = $alq->direccionCliente->direccion->colonia->localidad ?? 'Desconocida';
+            if (!isset($coloniasMap[$coloniaNombre])) {
+                $coloniasMap[$coloniaNombre] = 0;
+            }
+            $coloniasMap[$coloniaNombre]++;
+        }
+        
+        arsort($coloniasMap);
+        $coloniasMap = array_slice($coloniasMap, 0, 5, true);
+        
+        $labelsColonias = array_keys($coloniasMap);
+        $dataColonias = array_values($coloniasMap);
+
+        // Productos Top / Seleccionados
+        $alquileresProductos = DB::table('alquileres_productos')
+            ->join('alquileres', 'alquileres_productos.alquiler_id', '=', 'alquileres.id')
+            ->join('catalago_precios', 'alquileres_productos.Catalogo_precio_id', '=', 'catalago_precios.id')
+            ->join('productos', 'catalago_precios.producto_id', '=', 'productos.id')
+            ->select(
+                'productos.id as producto_id',
+                'productos.nombre as nombre_producto', 
+                'alquileres_productos.cantidad',
+                'catalago_precios.precio',
+                'alquileres.fecha_entrega',
+                'alquileres.fecha_recepcion'
+            );
+            
+        if (!empty($this->fecha_inicio)) $alquileresProductos->whereDate('alquileres.created_at', '>=', $this->fecha_inicio);
+        if (!empty($this->fecha_fin)) $alquileresProductos->whereDate('alquileres.created_at', '<=', $this->fecha_fin);
+        
+        $allRentals = $alquileresProductos->get();
+        $productosStats = [];
+
+        foreach ($allRentals as $rent) {
+            $prodId = $rent->producto_id;
+            if (!isset($productosStats[$prodId])) {
+                $productosStats[$prodId] = [
+                    'nombre' => $rent->nombre_producto,
+                    'cantidad' => 0,
+                    'dinero' => 0
+                ];
+            }
+            
+            $dias = 1;
+            if ($rent->fecha_entrega && $rent->fecha_recepcion) {
+                try {
+                    $f_inicio = \Carbon\Carbon::parse($rent->fecha_entrega)->startOfDay();
+                    $f_fin = \Carbon\Carbon::parse($rent->fecha_recepcion)->startOfDay();
+                    if (!$f_fin->lt($f_inicio)) {
+                        $dias_diff = $f_inicio->diffInDays($f_fin);
+                        $dias = $dias_diff == 0 ? 1 : $dias_diff;
+                    }
+                } catch (\Exception $e) {}
+            }
+
+            $productosStats[$prodId]['cantidad'] += $rent->cantidad;
+            $productosStats[$prodId]['dinero'] += ($rent->cantidad * $rent->precio * $dias);
+        }
+
+        // Filter by selected products if any
+        if (!empty($this->productos_seleccionados)) {
+            $filteredStats = [];
+            foreach ($this->productos_seleccionados as $pid) {
+                if (isset($productosStats[$pid])) {
+                    $filteredStats[$pid] = $productosStats[$pid];
+                } else {
+                    // Include it with 0 if selected but no data
+                    $prodName = $this->todos_productos[$pid] ?? 'Desconocido';
+                    $filteredStats[$pid] = [
+                        'nombre' => $prodName,
+                        'cantidad' => 0,
+                        'dinero' => 0
+                    ];
+                }
+            }
+            $productosStats = array_values($filteredStats);
+        } else {
+            // Sort by cantidad descending and take top 5
+            usort($productosStats, function($a, $b) {
+                return $b['cantidad'] <=> $a['cantidad'];
+            });
+            $productosStats = array_slice($productosStats, 0, 5);
+        }
+
+        $labelsProductos = [];
+        $dataProductos = [];
+        $dataDineroProductos = [];
+        foreach ($productosStats as $stat) {
+            $labelsProductos[] = $stat['nombre'];
+            $dataProductos[] = $stat['cantidad'];
+            $dataDineroProductos[] = $stat['dinero'];
         }
 
         return [
             'labelsDinero' => array_keys($dineroPorMesMap), 'dataDinero' => array_values($dineroPorMesMap),
             'labelsClientes' => $labelsClientes, 'dataClientes' => $dataClientes,
             'labelsRentas' => array_keys($rentasPorMesMap), 'dataRentas' => array_values($rentasPorMesMap),
-            'labelsColonias' => $labelsColonias, 'dataColonias' => $dataColonias
+            'labelsColonias' => $labelsColonias, 'dataColonias' => $dataColonias,
+            'labelsProductos' => $labelsProductos, 'dataProductos' => $dataProductos, 'dataDineroProductos' => $dataDineroProductos
         ];
     }
 

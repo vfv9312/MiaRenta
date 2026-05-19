@@ -74,7 +74,7 @@
                             </button>
 
                             @if($alq->status_id == 6)
-                                <button wire:click="validarCotizacion({{ $alq->id }})" class="text-indigo-600 hover:text-indigo-900" title="Validar Cotizacion">
+                                <button wire:click="confirmStatusChange('validarCotizacion', {{ $alq->id }}, '¿Estás seguro que deseas validar esta cotización? Pasará a Pendiente de Pago.')" class="text-indigo-600 hover:text-indigo-900" title="Validar Cotizacion">
                                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 </button>
                             @endif
@@ -86,13 +86,13 @@
                             @endif
 
                             @if($alq->status_id == 10)
-                                <button wire:click="validarRenta({{ $alq->id }})" class="text-teal-600 hover:text-teal-900" title="Validar Renta (Entregar)">
+                                <button wire:click="confirmStatusChange('validarRenta', {{ $alq->id }}, '¿Estás seguro que deseas validar esta renta y marcarla como Entregada/En Curso?')" class="text-teal-600 hover:text-teal-900" title="Validar Renta (Entregar)">
                                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                                 </button>
                             @endif
 
                             @if($alq->status_id == 11)
-                                <button wire:click="finalizarRenta({{ $alq->id }})" class="text-gray-600 hover:text-gray-900" title="Finalizar Alquiler">
+                                <button wire:click="confirmStatusChange('finalizarRenta', {{ $alq->id }}, '¿Estás seguro que deseas finalizar este alquiler? Esta acción es irreversible.')" class="text-gray-600 hover:text-gray-900" title="Finalizar Alquiler">
                                     <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 </button>
                             @endif
@@ -302,8 +302,11 @@
                 <form wire:submit.prevent="processPayment">
                     <div class="p-6 space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Monto a abonar *</label>
-                            <input type="number" step="0.01" wire:model.defer="monto_a_pagar" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <label class="block text-sm font-medium text-gray-700 flex justify-between">
+                                <span>Monto a abonar *</span>
+                                <span class="text-xs text-gray-500 font-semibold">Saldo restante: ${{ number_format($max_monto_a_pagar, 2) }}</span>
+                            </label>
+                            <input type="number" step="0.01" max="{{ $max_monto_a_pagar }}" wire:model.defer="monto_a_pagar" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="Monto máximo: {{ $max_monto_a_pagar }}">
                             @error('monto_a_pagar') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
                         <div>
@@ -523,6 +526,28 @@
                         <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm font-medium transition-colors">Guardar Cambios</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    @endif
+
+    <!-- CONFIRM STATUS MODAL -->
+    @if($showConfirmStatusModal)
+        <div class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden animate-fadeInUp">
+                <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800">Confirmar Acción</h3>
+                    <button wire:click="closeConfirmStatusModal" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="p-6 text-center text-gray-700">
+                    <svg class="w-16 h-16 text-yellow-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="mb-4 font-medium">{{ $confirm_message }}</p>
+                </div>
+                <div class="bg-gray-50 border-t p-4 flex justify-end space-x-3">
+                    <button wire:click="closeConfirmStatusModal" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded shadow-sm font-medium transition-colors">Cancelar</button>
+                    <button wire:click="executeStatusChange" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm font-medium transition-colors">Aceptar</button>
+                </div>
             </div>
         </div>
     @endif

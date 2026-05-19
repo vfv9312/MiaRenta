@@ -15,6 +15,15 @@
                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Fecha Fin</label>
                 <input type="date" wire:model="fecha_fin" class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             </div>
+            <div class="w-full sm:w-auto flex-1 max-w-sm">
+                <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Comparar Productos</label>
+                <select multiple wire:model="productos_seleccionados" class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-12 text-sm" style="padding-top: 0.3rem;">
+                    @foreach($todos_productos as $id => $nombre)
+                        <option value="{{ $id }}">{{ $nombre }}</option>
+                    @endforeach
+                </select>
+                <p class="text-xs text-gray-500 mt-1">Mantén Ctrl (Windows) o Cmd (Mac) para seleccionar varios.</p>
+            </div>
             <div class="w-full sm:w-auto">
                 <button wire:click="filtrar" class="w-full text-white bg-blue-600 hover:bg-blue-700 transition shadow-lg shadow-blue-200 dark:shadow-none focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-xl text-sm px-6 py-3 text-center dark:focus:ring-blue-800">
                     <i class="fas fa-filter mr-2"></i> Aplicar Filtro
@@ -62,6 +71,16 @@
                     <canvas id="coloniasTop"></canvas>
                 </div>
             </div>
+
+            <!-- Productos Top -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                    <i class="fas fa-box-open text-indigo-500 mr-2"></i> Top 5 Productos (Más rentados)
+                </h3>
+                <div class="relative h-64">
+                    <canvas id="productosTop"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -75,13 +94,14 @@
             Chart.defaults.color = isDarkMode ? '#9ca3af' : '#4b5563';
             Chart.defaults.font.family = "'Inter', sans-serif";
 
-            let chartIngresos, chartRentas, chartClientes, chartColonias;
+            let chartIngresos, chartRentas, chartClientes, chartColonias, chartProductos;
 
             function renderCharts(chartData) {
                 if (chartIngresos) chartIngresos.destroy();
                 if (chartRentas) chartRentas.destroy();
                 if (chartClientes) chartClientes.destroy();
                 if (chartColonias) chartColonias.destroy();
+                if (chartProductos) chartProductos.destroy();
 
                 const ctxIngresos = document.getElementById('ingresosMes').getContext('2d');
                 chartIngresos = new Chart(ctxIngresos, {
@@ -158,6 +178,62 @@
                         }]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
+                });
+
+                const ctxProductos = document.getElementById('productosTop').getContext('2d');
+                chartProductos = new Chart(ctxProductos, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.labelsProductos,
+                        datasets: [
+                            {
+                                label: 'Cantidad Rentada',
+                                data: chartData.dataProductos,
+                                backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                                borderColor: 'rgba(79, 70, 229, 1)',
+                                borderWidth: 1,
+                                borderRadius: 6,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Dinero Ganado ($)',
+                                data: chartData.dataDineroProductos,
+                                backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                                borderColor: 'rgba(34, 197, 94, 1)',
+                                borderWidth: 1,
+                                borderRadius: 6,
+                                yAxisID: 'y' // Usando el mismo eje, si prefieres escalas separadas puedes usar xAxisID: 'x2'
+                            }
+                        ]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Hace que la gráfica de barras sea horizontal
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.datasetIndex === 1) { // Si es Dinero Ganado
+                                            label += '$' + Number(context.raw).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                                        } else {
+                                            label += context.raw;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
                 });
             }
 

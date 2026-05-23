@@ -7,29 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ asset('/storage/Login/logo.jpeg') }}" type="image/x-icon">
 
-    <title>{{ config('app.name') }} - Renta para Eventos en Tuxtla</title>
+    <title>@yield('title', config('app.name') . ' - Renta para Eventos en Tuxtla')</title>
 
     <!-- Meta Tags para SEO -->
     <meta name="description"
-        content="Mía Renta - Renta de sillas, mesas, mantelería y cristalería para eventos en Tuxtla Gutiérrez y Chiapas. Especialistas en bodas, XV años, cumpleaños y reuniones empresariales.">
+        content="@yield('meta_description', 'Mía Renta - Renta de sillas, mesas, mantelería y cristalería para eventos en Tuxtla Gutiérrez y Chiapas. Especialistas en bodas, XV años, cumpleaños y reuniones empresariales.')">
     <meta name="keywords"
-        content="renta de sillas, renta de mesas, mantelería, cristalería, eventos, bodas, XV años, cumpleaños, reuniones, Tuxtla Gutiérrez, Chiapas, Mía Renta">
+        content="@yield('meta_keywords', 'renta de sillas, renta de mesas, mantelería, cristalería, eventos, bodas, XV años, cumpleaños, reuniones, Tuxtla Gutiérrez, Chiapas, Mía Renta')">
     <meta name="author" content="Vladimir Farrera">
 
     <!-- Open Graph / Facebook / Instagram -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ config('app.url') }}">
-    <meta property="og:title" content="Mía Renta - Todo para tu Evento">
+    <meta property="og:title" content="@yield('title', 'Mía Renta - Todo para tu Evento')">
     <meta property="og:description"
-        content="Renta de sillas, mesas y mantelería para bodas, XV años y reuniones en Tuxtla Gutiérrez.">
+        content="@yield('meta_description', 'Renta de sillas, mesas y mantelería para bodas, XV años y reuniones en Tuxtla Gutiérrez.')">
     <meta property="og:image" content="{{ asset('/storage/Login/logo.jpeg') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ config('app.url') }}">
-    <meta property="twitter:title" content="Mía Renta - Todo para tu Evento">
+    <meta property="twitter:title" content="@yield('title', 'Mía Renta - Todo para tu Evento')">
     <meta property="twitter:description"
-        content="Renta de sillas, mesas y mantelería para bodas, XV años y reuniones en Tuxtla Gutiérrez.">
+        content="@yield('meta_description', 'Renta de sillas, mesas y mantelería para bodas, XV años y reuniones en Tuxtla Gutiérrez.')">
     <meta property="twitter:image" content="{{ asset('/storage/Login/logo.jpeg') }}">
 
     <!-- Fonts -->
